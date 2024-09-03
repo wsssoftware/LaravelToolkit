@@ -2,6 +2,7 @@
 
 namespace LaravelToolkit;
 
+use LaravelToolkit\Commands\LaravelToolkitCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
