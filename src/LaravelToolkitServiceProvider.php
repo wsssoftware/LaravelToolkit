@@ -19,8 +19,8 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
             ->name('laraveltoolkit')
             ->hasConfigFile('laraveltoolkit')
             ->hasRoute('web');
-//            ->hasViews()
-//            ->hasMigration('create_laraveltoolkit_table')
-//            ->hasCommand(LaravelToolkitCommand::class);
+        //            ->hasViews()
+        //            ->hasMigration('create_laraveltoolkit_table')
+        //            ->hasCommand(LaravelToolkitCommand::class);
     }
 }

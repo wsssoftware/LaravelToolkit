@@ -6,8 +6,6 @@ use PHPUnit\Framework\Assert as PHPUnit;
 
 trait FlashTests
 {
-
-
     public function assertFlashed(?Severity $severity = null, null|int|string $countOrMessage = null): void
     {
         $messages = $this->messages;

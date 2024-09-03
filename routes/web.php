@@ -1,6 +1,5 @@
 <?php
 
-
 use LaravelToolkit\Actions\Flash\GetMessages;
 
 Route::middleware('web')->get('/lt/flash-get-messages', GetMessages::class)
