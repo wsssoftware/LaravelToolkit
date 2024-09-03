@@ -1,0 +1,27 @@
+name: Fix PHP code style issues
+
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  publish-npm-tag:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Fix PHP code style issues
+        uses: aglipanci/laravel-pint-action@2.4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Changed NPM Tag

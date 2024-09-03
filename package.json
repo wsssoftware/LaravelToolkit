@@ -1,0 +1,22 @@
+{
+    "name": "laraveltoolkit",
+    "version": "0.0.1",
+    "description": "A Laravel Tools",
+    "main": "resources/js/index.js",
+    "directories": {
+        "test": "tests"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/wsssoftware/laraveltoolkit.git"
+    },
+    "author": "Allan Carvalho",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/wsssoftware/laraveltoolkit/issues"
+    },
+    "homepage": "https://github.com/wsssoftware/laraveltoolkit#readme"
+}
