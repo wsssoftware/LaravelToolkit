@@ -1,6 +1,6 @@
 <?php
 
-// config for Allan Mariucci Carvalho/LaravelToolkit
+// config for LaravelToolkit
 return [
 
 ];

@@ -1,9 +1,9 @@
 # A Laravel Toolkit with basics tools
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/allanmcarvalho/laraveltoolkit.svg?style=flat-square)](https://packagist.org/packages/allanmcarvalho/laraveltoolkit)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/allanmcarvalho/laraveltoolkit/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/allanmcarvalho/laraveltoolkit/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/allanmcarvalho/laraveltoolkit/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/allanmcarvalho/laraveltoolkit/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/allanmcarvalho/laraveltoolkit.svg?style=flat-square)](https://packagist.org/packages/allanmcarvalho/laraveltoolkit)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/wsssoftware/laraveltoolkit.svg?style=flat-square)](https://packagist.org/packages/wsssoftware/laraveltoolkit)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/wsssoftware/laraveltoolkit/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/wsssoftware/laraveltoolkit/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/wsssoftware/laraveltoolkit/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/wsssoftware/laraveltoolkit/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
+[![Total Downloads](https://img.shields.io/packagist/dt/wsssoftware/laraveltoolkit.svg?style=flat-square)](https://packagist.org/packages/wsssoftware/laraveltoolkit)
 
 This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
 
@@ -20,7 +20,7 @@ We highly appreciate you sending us a postcard from your hometown, mentioning wh
 You can install the package via composer:
 
 ```bash
-composer require allanmcarvalho/laraveltoolkit
+composer require wsssoftware/laraveltoolkit
 ```
 
 You can publish and run the migrations with:
@@ -52,7 +52,7 @@ php artisan vendor:publish --tag="laraveltoolkit-views"
 ## Usage
 
 ```php
-$laravelToolkit = new Allan Mariucci Carvalho\LaravelToolkit();
+$laravelToolkit = new LaravelToolkit();
 echo $laravelToolkit->echoPhrase('Hello, Allan Mariucci Carvalho!');
 ```
 
@@ -76,7 +76,7 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 ## Credits
 
-- [Allan Mariucci Carvalho](https://github.com/allanmcarvalho)
+- [Allan Mariucci Carvalho](https://github.com/wsssoftware)
 - [All Contributors](../../contributors)
 
 ## License
