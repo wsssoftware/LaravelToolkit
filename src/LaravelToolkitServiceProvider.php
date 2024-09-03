@@ -2,9 +2,9 @@
 
 namespace LaravelToolkit;
 
+use LaravelToolkit\Commands\LaravelToolkitCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use LaravelToolkit\Commands\LaravelToolkitCommand;
 
 class LaravelToolkitServiceProvider extends PackageServiceProvider
 {
