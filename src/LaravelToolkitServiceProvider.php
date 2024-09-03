@@ -4,7 +4,6 @@ namespace LaravelToolkit;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use LaravelToolkit\Commands\LaravelToolkitCommand;
 
 class LaravelToolkitServiceProvider extends PackageServiceProvider
 {
@@ -17,9 +16,10 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('laraveltoolkit')
-            ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_laraveltoolkit_table')
-            ->hasCommand(LaravelToolkitCommand::class);
+            ->hasConfigFile('laraveltoolkit')
+            ->hasRoute('web');
+//            ->hasViews()
+//            ->hasMigration('create_laraveltoolkit_table')
+//            ->hasCommand(LaravelToolkitCommand::class);
     }
 }
