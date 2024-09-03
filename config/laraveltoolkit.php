@@ -7,6 +7,6 @@ return [
             'closable' => null,
             'life' => null,
             'group' => null,
-        ]
+        ],
     ],
 ];
