@@ -27,7 +27,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Changing NPM tag
-        run: npm version ${{ github.ref_name }}
+        run: npm --no-git-tag-version version ${{ github.ref_name }}
 
       - name: Push changes
         uses: ad-m/github-push-action@master
