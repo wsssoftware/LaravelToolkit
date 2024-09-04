@@ -26,7 +26,7 @@ jobs:
           node-version: '20.x'
 
       - name: Changing NPM tag
-        run: npm version 0.0.2
+        run: npm version ${{ github.ref_name }}
 
       - name: Push changes
         uses: ad-m/github-push-action@master
