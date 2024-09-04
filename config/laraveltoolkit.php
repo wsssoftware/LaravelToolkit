@@ -6,7 +6,7 @@ return [
         'defaults' => [
             'closable' => null,
             'life' => null,
-            'group' => null,
+            'group' => 'lt-default',
         ],
     ],
 ];

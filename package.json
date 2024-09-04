@@ -18,5 +18,12 @@
     "bugs": {
         "url": "https://github.com/wsssoftware/laraveltoolkit/issues"
     },
-    "homepage": "https://github.com/wsssoftware/laraveltoolkit#readme"
+    "homepage": "https://github.com/wsssoftware/laraveltoolkit#readme",
+    "devDependencies": {
+        "@inertiajs/vue3": "^1.2.0",
+        "axios": "^1.7.7",
+        "lodash.debounce": "^4.0.8",
+        "primevue": "^4.0.5",
+        "vue": "^3.5.1"
+    }
 }
