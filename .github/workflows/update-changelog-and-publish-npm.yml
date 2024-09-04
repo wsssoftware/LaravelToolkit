@@ -38,11 +38,11 @@ jobs:
         with:
           token: ${{ secrets.NPM_TOKEN }}
 
-      - name: Push changes
-        uses: ad-m/github-push-action@master
+      - name: Commit updated package.json
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: 'main'
+          branch: main
+          commit_message: Update package.json version to ${{ github.ref_name }}
 
   update-change-log:
     needs: publish-npm-tag
