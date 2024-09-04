@@ -30,13 +30,13 @@ jobs:
       - name: Changing NPM tag
         run: npm --no-git-tag-version version ${{ github.ref_name }}
 
+      - name: NPM Publish
+        uses: JS-DevTools/npm-publish@v3
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: 'main'
-
-      - name: NPM Publish
-        uses: JS-DevTools/npm-publish@v3
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
