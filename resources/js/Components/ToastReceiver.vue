@@ -40,7 +40,7 @@ export default defineComponent({
     },
     mounted() {
         this.finishEvent = router.on('finish', () => {
-            getFlashMessages(this.$toast)
+            getFlashMessages(this.add)
         })
         getFlashMessages(this.add);
     },

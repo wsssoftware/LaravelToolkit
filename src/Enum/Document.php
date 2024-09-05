@@ -17,9 +17,9 @@ use LaravelToolkit\Actions\Document\ValidateDocument;
 use LaravelToolkit\Actions\Mask\UnmaskNumber;
 use LaravelToolkit\Support\RegexTools;
 
-enum Document: string
+enum Document: string implements ArrayableEnum
 {
-    use RegexTools;
+    use RegexTools, HasArrayableEnum;
 
     case CNPJ = 'cnpj';
     case CPF = 'cpf';
@@ -68,5 +68,14 @@ enum Document: string
     public function unmask(string $document): string
     {
         return app(UnmaskNumber::class)->handle($document);
+    }
+
+    public function label(): string
+    {
+        return match ($this) {
+            self::CNPJ => 'CNPJ',
+            self::CPF => 'CPF',
+            self::GENERIC => 'Genérico'
+        };
     }
 }

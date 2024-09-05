@@ -2,7 +2,7 @@
 
 namespace LaravelToolkit;
 
-use LaravelToolkit\Commands\LaravelToolkitCommand;
+use LaravelToolkit\Macros\CollectionMacro;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -18,9 +18,17 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
         $package
             ->name('laraveltoolkit')
             ->hasConfigFile('laraveltoolkit')
-            ->hasRoute('web');
+            ->hasRoute('web')
+            ->hasTranslations();
         //            ->hasViews()
         //            ->hasMigration('create_laraveltoolkit_table')
         //            ->hasCommand(LaravelToolkitCommand::class);
+    }
+
+    public function boot(): self
+    {
+        (new CollectionMacro())();
+        return parent::boot();
+
     }
 }
