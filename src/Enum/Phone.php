@@ -86,6 +86,7 @@ enum Phone: string implements ArrayableEnum
             return $number;
         }
         $handler = app(MaskNumber::class);
+
         return match ($type) {
             self::LANDLINE => $handler->handle('(##) ####-####', $number),
             self::LOCAL_FARE => $handler->handle('####-####', $number),
