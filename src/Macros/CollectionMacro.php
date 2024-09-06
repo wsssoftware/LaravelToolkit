@@ -22,9 +22,21 @@ class CollectionMacro
             }
         );
         Collection::macro(
+            'localeSortByDesc',
+            function (array|string|callable $callback) {
+                return $this->sortBy($callback, SORT_LOCALE_STRING, true);
+            }
+        );
+        Collection::macro(
             'localeSort',
             function () {
                 return $this->sort(SORT_LOCALE_STRING);
+            }
+        );
+        Collection::macro(
+            'localeSortDesc',
+            function () {
+                return $this->sortDesc(SORT_LOCALE_STRING);
             }
         );
     }
@@ -42,10 +54,10 @@ class CollectionMacro
         );
         Collection::macro(
             'toValueLabelFromObject',
-            function (string $value, string $key, string $labelKey = 'label', string $valueKey = 'value'): Collection {
+            function (string $label, string $value, string $labelKey = 'label', string $valueKey = 'value'): Collection {
                 return $this->map(fn (object $item) => [
-                    $valueKey => $item->{$key},
-                    $labelKey => $item->{$value},
+                    $valueKey => $item->{$value},
+                    $labelKey => $item->{$label},
                 ]);
             }
         );

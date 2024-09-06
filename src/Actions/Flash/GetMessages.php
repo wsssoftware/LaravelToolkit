@@ -11,6 +11,6 @@ class GetMessages
 {
     public function __invoke(Request $request): JsonResponse
     {
-        return response()->json(FlashResource::collection(Flash::getMessages()));
+        return response()->json(FlashResource::collection(Flash::pullMessages()));
     }
 }

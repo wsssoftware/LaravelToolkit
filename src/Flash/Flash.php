@@ -27,10 +27,11 @@ class Flash
 
     public function clear(): void
     {
+        session()->put(self::SESSION_KEY, []);
         $this->messages = collect();
     }
 
-    public function getMessages(): Collection
+    public function pullMessages(): Collection
     {
         return collect(session()->pull(self::SESSION_KEY, []))
             ->ensure(Message::class)

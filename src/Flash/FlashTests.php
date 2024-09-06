@@ -10,10 +10,11 @@ trait FlashTests
     {
         $messages = $this->messages;
         if ($severity) {
-            $messages = $messages->filter(fn (Message $message) => $message->severity === $severity);
+            $messages = $messages->filter(fn(Message $message) => $message->severity === $severity);
         }
+        $severity = $severity?->value ?? 'any';
         if (is_string($countOrMessage)) {
-            $messages = $messages->filter(fn (Message $message) => $message->detail === $countOrMessage);
+            $messages = $messages->filter(fn(Message $message) => $message->detail === $countOrMessage);
         }
         if (is_int($countOrMessage)) {
             PHPUnit::assertCount(
@@ -21,26 +22,17 @@ trait FlashTests
                 sprintf(
                     'Was expected %s flashes from "%s" severity but was found %s',
                     $countOrMessage,
-                    $severity?->value ?? 'any',
+                    $severity,
                     $messages->count()
                 )
             );
-        } elseif (is_string($countOrMessage)) {
-            PHPUnit::assertTrue(
-                $messages->isNotEmpty(),
-                sprintf(
-                    'Was expected a flash of "%s" severity with detail of "%s" but was not found',
-                    $severity?->value ?? 'any',
-                    $countOrMessage,
-                )
-            );
         } else {
+            $commonStart = sprintf('Was expected a flash of "%s" severity', $severity);
             PHPUnit::assertTrue(
                 $messages->isNotEmpty(),
-                sprintf(
-                    'Was expected a flash of "%s" severity but was not found',
-                    $severity?->value ?? 'any',
-                )
+                is_string($countOrMessage)
+                    ? sprintf('%s with detail of "%s" but was not found', $commonStart, $countOrMessage)
+                    : sprintf('%s but was not found', $commonStart)
             );
         }
 
@@ -50,15 +42,12 @@ trait FlashTests
     {
         $messages = $this->messages;
         if ($severity) {
-            $messages = $messages->filter(fn (Message $message) => $message->severity === $severity);
+            $messages = $messages->filter(fn(Message $message) => $message->severity === $severity);
         }
+        $severity = $severity?->value ?? 'any';
         PHPUnit::assertTrue(
             $messages->isEmpty(),
-            sprintf(
-                'Was expected none flashes of "%s" severity but was found %s',
-                $severity?->value ?? 'any',
-                $messages->count()
-            )
+            sprintf('Was expected none flashes of "%s" severity but was found %s', $severity, $messages->count())
         );
     }
 }
