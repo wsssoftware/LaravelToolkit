@@ -1,12 +1,12 @@
 # A Laravel Toolkit with basics tools
 
-![Packagist Version](https://img.shields.io/packagist/v/wsssoftware/laraveltoolkit)
-![NPM Version](https://img.shields.io/npm/v/laraveltoolkit)
+[![Packagist Version](https://img.shields.io/packagist/v/wsssoftware/laraveltoolkit)](https://packagist.org/packages/wsssoftware/laraveltoolkit)
+[![NPM Version](https://img.shields.io/npm/v/laraveltoolkit)](https://www.npmjs.com/package/laraveltoolkit)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/wsssoftware/laraveltoolkit/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/wsssoftware/laraveltoolkit/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/wsssoftware/laraveltoolkit/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/wsssoftware/laraveltoolkit/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![codecov](https://codecov.io/gh/wsssoftware/laraveltoolkit/graph/badge.svg?token=nzaXcoyc3q)](https://codecov.io/gh/wsssoftware/laraveltoolkit)
-![Packagist Downloads](https://img.shields.io/packagist/dt/wsssoftware/laraveltoolkit?label=Packagist%20downloads)
-![NPM Downloads](https://img.shields.io/npm/d18m/laraveltoolkit?label=NPM%20downloads)
+[![Packagist Downloads](https://img.shields.io/packagist/dt/wsssoftware/laraveltoolkit?label=Packagist%20downloads)](https://packagist.org/packages/wsssoftware/laraveltoolkit)
+[![NPM Downloads](https://img.shields.io/npm/d18m/laraveltoolkit?label=NPM%20downloads)](https://www.npmjs.com/package/laraveltoolkit)
 
 A helpful and useful tools for Laravel projects
 
