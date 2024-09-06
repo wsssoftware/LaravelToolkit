@@ -8,15 +8,7 @@
 ![Packagist Downloads](https://img.shields.io/packagist/dt/wsssoftware/laraveltoolkit?label=Packagist%20downloads)
 ![NPM Downloads](https://img.shields.io/npm/d18m/laraveltoolkit?label=NPM%20downloads)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
-
-## Support us
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/LaravelToolkit.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/LaravelToolkit)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+A helpful and useful tools for Laravel projects
 
 ## Installation Laravel
 
@@ -53,6 +45,10 @@ php artisan vendor:publish --tag="laraveltoolkit-views"
 ```
 
 ## Installation JS
+
+```bash
+npm i -D laraveltoolkit
+```
 
 To Laravel Toolkit be able to compile its tailwind you must add this line on tailwind config file
 

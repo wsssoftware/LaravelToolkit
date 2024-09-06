@@ -42,6 +42,8 @@ it('can validate a CPF', function () {
         ->and(app(ValidateDocument::class)->handle('16.598.847/0001-50'))
         ->toBeTrue()
         ->and(app(ValidateDocument::class)->handle('16.598.847/0001-42'))
+        ->toBeFalse()
+        ->and(app(ValidateDocument::class)->handle('16'))
         ->toBeFalse();
 });
 

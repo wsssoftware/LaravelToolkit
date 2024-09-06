@@ -79,3 +79,8 @@ it('can mask', function () {
         ->and(Document::GENERIC->mask('58110408000104'))
         ->toEqual('58.110.408/0001-04');
 });
+
+it('can get label', function (Document $document) {
+    expect($document->label())
+        ->toBeString();
+})->with(Document::cases());

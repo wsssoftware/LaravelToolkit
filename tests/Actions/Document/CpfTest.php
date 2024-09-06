@@ -13,7 +13,9 @@ it('can create a valid CPF', function () {
         ->and(app(GetCpfCheckDigits::class)->handle('213.879.670'))
         ->toBe('10')
         ->and(app(GetCpfCheckDigits::class)->handle('598.504.710'))
-        ->toBe('50');
+        ->toBe('50')
+        ->and(app(GetCpfCheckDigits::class)->handle('598.504'))
+        ->toBe('30');
 });
 
 it('can create a fake CPF', function () {
@@ -30,6 +32,8 @@ it('can validate a CPF', function () {
         ->and(app(ValidateCpf::class)->handle('297.616.150-06'))
         ->toBeTrue()
         ->and(app(ValidateCpf::class)->handle('297.616.150-16'))
+        ->toBeFalse()
+        ->and(app(ValidateCpf::class)->handle('297.616.-16'))
         ->toBeFalse();
 });
 

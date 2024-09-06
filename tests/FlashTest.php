@@ -18,3 +18,8 @@ it('can send flash', function () {
         ->each
         ->toBeInstanceOf(Message::class);
 });
+
+it('can ge', function () {
+    $this->get(route('lt.flash.get_messages'))
+        ->assertSuccessful();
+});

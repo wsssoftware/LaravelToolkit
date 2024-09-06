@@ -13,7 +13,9 @@ it('can create a valid CNPJ', function () {
         ->and(app(GetCnpjCheckDigits::class)->handle('42.044.452/0001'))
         ->toBe('15')
         ->and(app(GetCnpjCheckDigits::class)->handle('62.731.562/0001'))
-        ->toBe('62');
+        ->toBe('62')
+        ->and(app(GetCnpjCheckDigits::class)->handle('62.731/0001'))
+        ->toBe('91');
 });
 
 it('can create a fake CNPJ', function () {
@@ -30,6 +32,8 @@ it('can validate a CNPJ', function () {
         ->and(app(ValidateCnpj::class)->handle('70.521.738/0001-80'))
         ->toBeTrue()
         ->and(app(ValidateCnpj::class)->handle('70.521.738/0001-88'))
+        ->toBeFalse()
+        ->and(app(ValidateCnpj::class)->handle('70.521.738/01-88'))
         ->toBeFalse();
 });
 
