@@ -1,14 +1,14 @@
 <?php
 
 use Illuminate\Support\Collection;
-use LaravelToolkit\Tests\Enum\FakeValidEnum;
 use LaravelToolkit\Tests\Enum\FakeInvalidEnum;
+use LaravelToolkit\Tests\Enum\FakeValidEnum;
 
 it('can convert enum into an array', function () {
     expect(FakeValidEnum::toEnumArray())
         ->toBeArray()
         ->toHaveCount(count(FakeValidEnum::cases()))
-        ->and(fn() => FakeInvalidEnum::toEnumArray())
+        ->and(fn () => FakeInvalidEnum::toEnumArray())
         ->toThrow('LaravelToolkit\Tests\Enum\FakeInvalidEnum is not a valid enum');
 });
 

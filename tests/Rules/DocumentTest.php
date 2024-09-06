@@ -3,8 +3,8 @@
 use LaravelToolkit\Rules\Document;
 
 it('can\'t pass due not string value', function () {
-    $data = ['cpf1' => 02121,];
-    $rules = ['cpf1' => Document::cpf(),];
+    $data = ['cpf1' => 02121];
+    $rules = ['cpf1' => Document::cpf()];
     $result = Validator::make($data, $rules)->errors();
     expect(Arr::get($result->get('cpf1'), 0))
         ->toEqual('The cpf1 field must be a string.');

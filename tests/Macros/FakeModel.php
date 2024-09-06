@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class FakeModel extends Model
 {
-
     /**
      * The attributes that are mass assignable.
      *
@@ -20,5 +19,4 @@ class FakeModel extends Model
         'id',
         'name',
     ];
-
 }

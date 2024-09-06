@@ -16,5 +16,4 @@ it('can get', function () {
         ->each
         ->toHaveKeys(['severity', 'detail', 'group']);
 
-
 });
