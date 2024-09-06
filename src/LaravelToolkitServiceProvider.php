@@ -31,10 +31,14 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
 
         setlocale(
             LC_ALL,
-            config('app.locale'),
             config('app.locale').'.UTF-8',
+            config('app.locale'),
+            config('app.fallback_locale').'.UTF-8',
+            config('app.fallback_locale'),
+            'en.UTF-8',
+            'en',
             'en_US.UTF-8',
-            'en_US'
+            'en_US',
         );
 
         return parent::boot();
