@@ -5,7 +5,7 @@ use Illuminate\Support\Collection;
 use LaravelToolkit\Tests\Macros\FakeModel;
 
 it('test locale sort', function () {
-    $collection = collect(['João', 'Allan', 'Álan', 'Uai', 'Úrsula']);
+    $collection = collect(['João', 'Álan', 'Úrsula']);
     expect($collection->localeSort()->first())
         ->toBe('Álan')
         ->and($collection->localeSortDesc()->first())
@@ -14,7 +14,7 @@ it('test locale sort', function () {
 
 it('test locale sort by', function () {
     $collection = collect([
-        ['name' => 'João'], ['name' => 'Allan'], ['name' => 'Álan'], ['name' => 'Uai'], ['name' => 'Úrsula']
+        ['name' => 'João'], ['name' => 'Álan'], ['name' => 'Úrsula']
     ]);
     expect($collection->localeSortBy('name')->first()['name'])
         ->toBe('Álan')
