@@ -3,6 +3,7 @@
 namespace LaravelToolkit\Enum;
 
 use Exception;
+use Illuminate\Support\Collection;
 
 trait HasArrayableEnum
 {
@@ -11,6 +12,11 @@ trait HasArrayableEnum
         return collect(self::cases())
             ->mapWithKeys(fn ($value, $key) => [$value->value => $value->label()])
             ->toArray();
+    }
+
+    public static function toValueLabel(string $labelKey = 'label', string $valueKey = 'value'): Collection
+    {
+        return collect(self::toEnumArray())->toValueLabelFromArray($labelKey, $valueKey);
     }
 
     public function label(): string {

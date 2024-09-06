@@ -3,50 +3,50 @@
 namespace LaravelToolkit\Macros;
 
 use Illuminate\Support\Collection;
+use LaravelToolkit\Enum\ArrayableEnum;
 
 class CollectionMacro
 {
     public function __invoke(): void
     {
-        $this->toPriveVueSelectFromArray();
-        $this->toPriveVueSelectFromEnum();
-        $this->toPriveVueSelectFromObject();
+        $this->toValueLabel();
+        $this->localeSort();
     }
 
-    public function toPriveVueSelectFromArray(): void
+    public function localeSort(): void
+    {
+        setlocale(LC_ALL, config('app.locale'));
+        Collection::macro(
+            'localeSortBy',
+            function (array|string|callable $callback, bool $descending = false) {
+               return $this->sortBy($callback, SORT_LOCALE_STRING, $descending);
+            }
+        );
+        Collection::macro(
+            'localeSort',
+            function () {
+                return $this->sort(SORT_LOCALE_STRING);
+            }
+        );
+    }
+
+    public function toValueLabel(): void
     {
         Collection::macro(
-            'toPriveVueSelectFromArray',
-            function (string $optionLabel = 'label', string $optionValue = 'value'): Collection {
+            'toValueLabelFromArray',
+            function (string $labelKey = 'label', string $valueKey = 'value'): Collection {
                 return $this->map(fn(mixed $item, mixed $key) => [
-                    $optionValue => $key,
-                    $optionLabel => $item,
+                    $valueKey => $key,
+                    $labelKey => $item,
                 ])->values();
             }
         );
-    }
-
-    public function toPriveVueSelectFromEnum(): void
-    {
         Collection::macro(
-            'toPriveVueSelectFromEnum',
-            function (string $value, string $key, string $optionLabel = 'label', string $optionValue = 'value'): Collection {
-                return $this->map(fn(mixed $item, mixed $key) => [
-                    $optionValue => $key,
-                    $optionLabel => $item,
-                ]);
-            }
-        );
-    }
-
-    public function toPriveVueSelectFromObject(): void
-    {
-        Collection::macro(
-            'toPriveVueSelectFromObject',
-            function (string $value, string $key, string $optionLabel = 'label', string $optionValue = 'value'): Collection {
+            'toValueLabelFromObject',
+            function (string $value, string $key, string $labelKey = 'label', string $valueKey = 'value'): Collection {
                 return $this->map(fn(object $item) => [
-                    $optionValue => $item->{$key},
-                    $optionLabel => $item->{$value},
+                    $valueKey => $item->{$key},
+                    $labelKey => $item->{$value},
                 ]);
             }
         );
