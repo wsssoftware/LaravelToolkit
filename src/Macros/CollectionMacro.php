@@ -3,7 +3,6 @@
 namespace LaravelToolkit\Macros;
 
 use Illuminate\Support\Collection;
-use LaravelToolkit\Enum\ArrayableEnum;
 
 class CollectionMacro
 {
@@ -19,7 +18,7 @@ class CollectionMacro
         Collection::macro(
             'localeSortBy',
             function (array|string|callable $callback, bool $descending = false) {
-               return $this->sortBy($callback, SORT_LOCALE_STRING, $descending);
+                return $this->sortBy($callback, SORT_LOCALE_STRING, $descending);
             }
         );
         Collection::macro(
@@ -35,7 +34,7 @@ class CollectionMacro
         Collection::macro(
             'toValueLabelFromArray',
             function (string $labelKey = 'label', string $valueKey = 'value'): Collection {
-                return $this->map(fn(mixed $item, mixed $key) => [
+                return $this->map(fn (mixed $item, mixed $key) => [
                     $valueKey => $key,
                     $labelKey => $item,
                 ])->values();
@@ -44,7 +43,7 @@ class CollectionMacro
         Collection::macro(
             'toValueLabelFromObject',
             function (string $value, string $key, string $labelKey = 'label', string $valueKey = 'value'): Collection {
-                return $this->map(fn(object $item) => [
+                return $this->map(fn (object $item) => [
                     $valueKey => $item->{$key},
                     $labelKey => $item->{$value},
                 ]);

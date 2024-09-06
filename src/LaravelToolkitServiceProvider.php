@@ -27,7 +27,8 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
 
     public function boot(): self
     {
-        (new CollectionMacro())();
+        (new CollectionMacro)();
+
         return parent::boot();
 
     }

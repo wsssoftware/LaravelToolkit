@@ -19,7 +19,7 @@ use LaravelToolkit\Support\RegexTools;
 
 enum Document: string implements ArrayableEnum
 {
-    use RegexTools, HasArrayableEnum;
+    use HasArrayableEnum, RegexTools;
 
     case CNPJ = 'cnpj';
     case CPF = 'cpf';
@@ -28,6 +28,7 @@ enum Document: string implements ArrayableEnum
     public function calculateCheckDigits(string $document): string
     {
         $document = $this->regexOnlyNumbers($document);
+
         return match ($this) {
             self::CNPJ => app(GetCnpjCheckDigits::class)->handle($document),
             self::CPF => app(GetCpfCheckDigits::class)->handle($document),
@@ -41,8 +42,8 @@ enum Document: string implements ArrayableEnum
             self::CNPJ => app(FakeCnpj::class)->handle(),
             self::CPF => app(FakeCpf::class)->handle(),
             self::GENERIC => Lottery::odds(0.5)
-                ->winner(fn() => app(FakeCnpj::class)->handle())
-                ->loser(fn() => app(FakeCpf::class)->handle())
+                ->winner(fn () => app(FakeCnpj::class)->handle())
+                ->loser(fn () => app(FakeCpf::class)->handle())
                 ->choose(),
         };
     }

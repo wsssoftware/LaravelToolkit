@@ -1,6 +1,5 @@
 <?php
 
-
 use LaravelToolkit\Actions\Document\GetDocumentCheckDigits;
 use LaravelToolkit\Actions\Document\MaskDocument;
 use LaravelToolkit\Actions\Document\ValidateDocument;
@@ -23,7 +22,7 @@ it('can create a valid CNPJ', function () {
         ->toBe('47')
         ->and($handler->handle('79.883.544/0001-07'))
         ->toBe('07')
-        ->and(fn() => $handler->handle('3212325421'))
+        ->and(fn () => $handler->handle('3212325421'))
         ->toThrow('Invalid document');
 });
 
@@ -46,7 +45,6 @@ it('can validate a CPF', function () {
         ->toBeFalse();
 });
 
-
 it('can mask a CNPJ', function () {
     expect(app(MaskDocument::class)->handle('03212105062'))
         ->toEqual('032.121.050-62')
@@ -56,6 +54,6 @@ it('can mask a CNPJ', function () {
         ->toEqual('24.776.086/0001-07')
         ->and(app(MaskDocument::class)->handle('70521738000180'))
         ->toEqual('70.521.738/0001-80')
-        ->and(fn() => app(MaskDocument::class)->handle('705217'))
+        ->and(fn () => app(MaskDocument::class)->handle('705217'))
         ->toThrow('Invalid document');
 });

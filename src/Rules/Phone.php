@@ -2,11 +2,11 @@
 
 namespace LaravelToolkit\Rules;
 
-use LaravelToolkit\Support\PhoneTools;
-use LaravelToolkit\Support\RegexTools;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use InvalidArgumentException;
+use LaravelToolkit\Support\PhoneTools;
+use LaravelToolkit\Support\RegexTools;
 
 readonly class Phone implements ValidationRule
 {

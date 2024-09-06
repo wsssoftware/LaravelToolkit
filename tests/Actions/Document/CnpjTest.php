@@ -6,7 +6,7 @@ use LaravelToolkit\Actions\Document\MaskCnpj;
 use LaravelToolkit\Actions\Document\ValidateCnpj;
 
 it('can create a valid CNPJ', function () {
-        expect(app(GetCnpjCheckDigits::class)->handle('45.857.098/0001'))
+    expect(app(GetCnpjCheckDigits::class)->handle('45.857.098/0001'))
         ->toBe('36')
         ->and(app(GetCnpjCheckDigits::class)->handle('76.044.083/0001'))
         ->toBe('82')
@@ -32,7 +32,6 @@ it('can validate a CNPJ', function () {
         ->and(app(ValidateCnpj::class)->handle('70.521.738/0001-88'))
         ->toBeFalse();
 });
-
 
 it('can mask a CNPJ', function () {
     expect(app(MaskCnpj::class)->handle('24776086000107'))

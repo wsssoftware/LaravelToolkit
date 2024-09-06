@@ -7,8 +7,10 @@ use Illuminate\Support\Collection;
 
 trait HasArrayableEnum
 {
-    public static function toEnumArray(): array {
-        throw_if(!enum_exists(self::class), Exception::class, self::class . ' is not a valid enum');
+    public static function toEnumArray(): array
+    {
+        throw_if(! enum_exists(self::class), Exception::class, self::class.' is not a valid enum');
+
         return collect(self::cases())
             ->mapWithKeys(fn ($value, $key) => [$value->value => $value->label()])
             ->toArray();
@@ -19,7 +21,8 @@ trait HasArrayableEnum
         return collect(self::toEnumArray())->toValueLabelFromArray($labelKey, $valueKey);
     }
 
-    public function label(): string {
+    public function label(): string
+    {
         return $this->value;
     }
 }

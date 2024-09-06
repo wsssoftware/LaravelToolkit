@@ -12,13 +12,12 @@ it('can validate a cpf', function () {
         'cpf2' => Document::cpf(),
     ];
     $result = Validator::make($data, $rules)->errors();
-//    dd($result);
-//    ray($result);
-////    expect($result->has('cpf1'))
-////        ->toBeFalse()
-////        ->and($result->has('cpf2'))
-////        ->toBeTrue();
+    //    dd($result);
+    //    ray($result);
+    ////    expect($result->has('cpf1'))
+    ////        ->toBeFalse()
+    ////        ->and($result->has('cpf2'))
+    ////        ->toBeTrue();
     expect(1)
         ->toEqual(1);
 });
-
