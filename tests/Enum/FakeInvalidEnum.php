@@ -7,5 +7,4 @@ use LaravelToolkit\Enum\HasArrayableEnum;
 class FakeInvalidEnum
 {
     use HasArrayableEnum;
-
 }
