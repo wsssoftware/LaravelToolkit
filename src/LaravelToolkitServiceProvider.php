@@ -29,6 +29,14 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
     {
         (new CollectionMacro)();
 
+        setlocale(
+            LC_ALL,
+            config('app.locale'),
+            config('app.locale').'.UTF-8',
+            'en_US.UTF-8',
+            'en_US'
+        );
+
         return parent::boot();
 
     }
