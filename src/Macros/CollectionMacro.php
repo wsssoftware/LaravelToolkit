@@ -14,7 +14,7 @@ class CollectionMacro
 
     public function localeSort(): void
     {
-        setlocale(LC_ALL, config('app.locale'));
+        setlocale(LC_ALL, config('app.locale'), config('app.locale').'.utf-8');
         Collection::macro(
             'localeSortBy',
             function (array|string|callable $callback, bool $descending = false) {

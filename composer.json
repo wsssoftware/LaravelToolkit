@@ -20,6 +20,7 @@
         "illuminate/contracts": "^11.0"
     },
     "require-dev": {
+        "ext-intl": "*",
         "laravel/pint": "^1.14",
         "nunomaduro/collision": "^8.1.1",
         "orchestra/testbench": "^9.0.0",
