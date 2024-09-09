@@ -2,7 +2,6 @@
 
 namespace LaravelToolkit\Actions\Phone;
 
-use Exception;
 use LaravelToolkit\Actions\Mask\MaskNumber;
 use LaravelToolkit\Enum\Phone;
 use LaravelToolkit\Support\RegexTools;

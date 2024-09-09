@@ -3,7 +3,6 @@
 use LaravelToolkit\Enum\Phone;
 use LaravelToolkit\Rules\PhoneRule;
 
-
 it('remove duplicated types', function () {
     $rule = PhoneRule::make(Phone::MOBILE, Phone::MOBILE);
     expect($rule->types)
@@ -28,7 +27,7 @@ it('remove generic when has other types', function () {
 });
 
 it('pass on validation from single type', function (Phone $phone) {
-    $phoneN =  $phone->fake();
+    $phoneN = $phone->fake();
     $data = [
         'phone' => $phoneN,
     ];

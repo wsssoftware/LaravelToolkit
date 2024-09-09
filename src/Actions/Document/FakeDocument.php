@@ -16,8 +16,8 @@ class FakeDocument
             Document::CNPJ => $this->cnpj(),
             Document::CPF => $this->cpf(),
             Document::GENERIC => Lottery::odds(0.5)
-                ->winner(fn() => $this->cnpj())
-                ->loser(fn() => $this->cpf())
+                ->winner(fn () => $this->cnpj())
+                ->loser(fn () => $this->cpf())
                 ->choose()
         };
 

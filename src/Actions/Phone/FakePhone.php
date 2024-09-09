@@ -6,7 +6,6 @@ use LaravelToolkit\Enum\Phone;
 
 class FakePhone
 {
-
     public function handle(?Phone $type): string
     {
         return match ($type) {
@@ -66,7 +65,7 @@ class FakePhone
 
     protected function generic(): string
     {
-        return match(rand(1, 5)) {
+        return match (rand(1, 5)) {
             1 => $this->landline(),
             2 => $this->localFare(),
             3 => $this->mobile(),

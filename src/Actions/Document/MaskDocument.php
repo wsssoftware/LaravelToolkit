@@ -14,6 +14,7 @@ class MaskDocument
     {
         $document = $this->regexOnlyNumbers($document);
         throw_if(! in_array(strlen($document), [11, 14]), Exception::class, 'Invalid document');
+
         return app(MaskNumber::class)->handle(
             strlen($document) === 11 ? '###.###.###-##' : '##.###.###/####-##',
             $document

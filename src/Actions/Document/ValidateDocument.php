@@ -9,9 +9,10 @@ class ValidateDocument
 {
     use RegexTools;
 
-    public function handle(Document $type ,string $document): bool
+    public function handle(Document $type, string $document): bool
     {
         $document = $this->regexOnlyNumbers($document);
+
         return match ($type) {
             Document::CNPJ => $this->cnpj($document),
             Document::CPF => $this->cpf($document),

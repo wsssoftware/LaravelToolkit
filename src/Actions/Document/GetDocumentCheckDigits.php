@@ -13,6 +13,7 @@ class GetDocumentCheckDigits
     public function handle(Document $type, string $document): string
     {
         $document = $this->regexOnlyNumbers($document);
+
         return match ($type) {
             Document::CNPJ => $this->cnpj($document),
             Document::CPF => $this->cpf($document),
@@ -68,6 +69,7 @@ class GetDocumentCheckDigits
     public function generic(string $document): string
     {
         throw_if(! in_array(strlen($document), [9, 11, 12, 14]), Exception::class, 'Invalid document');
+
         return in_array(strlen($document), [9, 11])
             ? $this->cpf($document)
             : $this->cnpj($document);

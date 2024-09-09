@@ -32,27 +32,27 @@ return [
         'multiple' => 'O campo :attribute não é um telefone válido (:available).',
         'generic' => [
             'invalid' => 'O campo :attribute não é um telefone válido.',
-            'label' => 'telefone'
+            'label' => 'telefone',
         ],
         'landline' => [
             'invalid' => 'O campo :attribute não é um telefone fixo válido.',
-            'label' => 'telefone fixo'
+            'label' => 'telefone fixo',
         ],
         'local_fare' => [
             'invalid' => 'O campo :attribute não é um telefone de tarifa local válido.',
-            'label' => 'telefone de tarifa local'
+            'label' => 'telefone de tarifa local',
         ],
         'mobile' => [
             'invalid' => 'O campo :attribute não é um celular válido.',
-            'label' => 'celular'
+            'label' => 'celular',
         ],
         'non_regional' => [
             'invalid' => 'O campo :attribute não é um telefone não regional válido.',
-            'label' => 'telefone não regional'
+            'label' => 'telefone não regional',
         ],
         'public_services' => [
             'invalid' => 'O campo :attribute não é um telefone de serviços públicos válido.',
-            'label' => 'telefone de serviços públicos'
+            'label' => 'telefone de serviços públicos',
         ],
     ],
 

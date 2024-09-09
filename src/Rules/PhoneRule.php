@@ -23,6 +23,7 @@ readonly class PhoneRule implements ValidationRule
             ->unique()
             ->reduce(function (Collection $types, Phone $type) {
                 $types->put($type->value, $type);
+
                 return $types->count() > 1 ? $types->except(Phone::GENERIC->value) : $types;
             }, collect());
     }
@@ -71,23 +72,24 @@ readonly class PhoneRule implements ValidationRule
     {
         if ($this->types->count() === 1) {
             $type = $this->types->first();
-            if (!$type->isValid($value)) {
+            if (! $type->isValid($value)) {
                 $fail("laraveltoolkit::validation.phone.$type->value.invalid")->translate();
             }
+
             return;
         }
         $results = collect();
         foreach ($this->types as $type) {
             $results->put($type->value, $type->isValid($value));
         }
-        if ($results->filter(fn(bool $r) => $r === true)->count() === 0) {
+        if ($results->filter(fn (bool $r) => $r === true)->count() === 0) {
             $labels = [];
             foreach ($this->types as $type) {
                 $labels[] = __("laraveltoolkit::validation.phone.$type->value.label");
             }
             $fail('laraveltoolkit::validation.phone.multiple')
                 ->translate([
-                    'available' => Arr::join($labels, ',', ' ' . __('laraveltoolkit::validation.phone.and') . ' ')
+                    'available' => Arr::join($labels, ',', ' '.__('laraveltoolkit::validation.phone.and').' '),
                 ]);
         }
     }
