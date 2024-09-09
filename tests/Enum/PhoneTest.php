@@ -89,3 +89,9 @@ it('can get label', function (Phone $phone) {
     expect($phone->label())
         ->toBeString();
 })->with(Phone::cases());
+
+it('can create a fake', function (Phone $phone) {
+    expect($phone->isValid($phone->fake()))
+        ->toBeTrue();
+})->with(Phone::cases())
+    ->repeat(4);

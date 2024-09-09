@@ -3,7 +3,8 @@
 namespace LaravelToolkit\Enum;
 
 use Exception;
-use LaravelToolkit\Actions\Mask\MaskNumber;
+use LaravelToolkit\Actions\Phone\FakePhone;
+use LaravelToolkit\Actions\Phone\MaskPhone;
 use LaravelToolkit\Support\RegexTools;
 
 enum Phone: string implements ArrayableEnum
@@ -48,6 +49,11 @@ enum Phone: string implements ArrayableEnum
         return preg_match($pattern, $string) === 1;
     }
 
+    public function fake(): string
+    {
+        return app(FakePhone::class)->handle($this);
+    }
+
     public function isValid(string $number): bool
     {
         $this->regexOnlyNumbers($number);
@@ -80,19 +86,6 @@ enum Phone: string implements ArrayableEnum
 
     public function mask(string $number): string
     {
-        $this->regexOnlyNumbers($number);
-        $type = $this === self::GENERIC ? self::guessType($number) : $this;
-        if ($type === null) {
-            return $number;
-        }
-        $handler = app(MaskNumber::class);
-
-        return match ($type) {
-            self::LANDLINE => $handler->handle('(##) ####-####', $number),
-            self::LOCAL_FARE => $handler->handle('####-####', $number),
-            self::MOBILE => $handler->handle('(##) # ####-####', $number),
-            self::NON_REGIONAL => $handler->handle('####-###-####', $number),
-            self::PUBLIC_SERVICES => $handler->handle('###', $number),
-        };
+        return app(MaskPhone::class)->handle($this === self::GENERIC ? self::guessType($number) : $this, $number);
     }
 }

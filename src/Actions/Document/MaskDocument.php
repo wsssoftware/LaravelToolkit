@@ -3,6 +3,7 @@
 namespace LaravelToolkit\Actions\Document;
 
 use Exception;
+use LaravelToolkit\Actions\Mask\MaskNumber;
 use LaravelToolkit\Support\RegexTools;
 
 class MaskDocument
@@ -13,8 +14,9 @@ class MaskDocument
     {
         $document = $this->regexOnlyNumbers($document);
         throw_if(! in_array(strlen($document), [11, 14]), Exception::class, 'Invalid document');
-        $handler = strlen($document) === 11 ? app(MaskCpf::class) : app(MaskCnpj::class);
-
-        return $handler->handle($document);
+        return app(MaskNumber::class)->handle(
+            strlen($document) === 11 ? '###.###.###-##' : '##.###.###/####-##',
+            $document
+        );
     }
 }
