@@ -1,10 +1,10 @@
 <?php
 
-use LaravelToolkit\Rules\Document;
+use LaravelToolkit\Rules\DocumentRule;
 
 it('can\'t pass due not string value', function () {
     $data = ['cpf1' => 02121];
-    $rules = ['cpf1' => Document::cpf()];
+    $rules = ['cpf1' => DocumentRule::cpf()];
     $result = Validator::make($data, $rules)->errors();
     expect(Arr::get($result->get('cpf1'), 0))
         ->toEqual('The cpf1 field must be a string.');
@@ -17,9 +17,9 @@ it('can validate a CPF', function () {
         'cpf3' => '927.758.5-20',
     ];
     $rules = [
-        'cpf1' => Document::cpf(),
-        'cpf2' => Document::cpf(),
-        'cpf3' => Document::cpf(),
+        'cpf1' => DocumentRule::cpf(),
+        'cpf2' => DocumentRule::cpf(),
+        'cpf3' => DocumentRule::cpf(),
     ];
     $result = Validator::make($data, $rules)->errors();
     expect($result->has('cpf1'))
@@ -37,9 +37,9 @@ it('can validate a CNPJ', function () {
         'cnpj3' => '45.010.043/01-96',
     ];
     $rules = [
-        'cnpj1' => Document::cnpj(),
-        'cnpj2' => Document::cnpj(),
-        'cnpj3' => Document::cnpj(),
+        'cnpj1' => DocumentRule::cnpj(),
+        'cnpj2' => DocumentRule::cnpj(),
+        'cnpj3' => DocumentRule::cnpj(),
     ];
     $result = Validator::make($data, $rules)->errors();
     expect($result->has('cnpj1'))
@@ -60,12 +60,12 @@ it('can validate a Generic', function () {
         'cnpj3' => '45.010.043/01-96',
     ];
     $rules = [
-        'cpf1' => Document::both(),
-        'cpf2' => Document::both(),
-        'cpf3' => Document::both(),
-        'cnpj1' => Document::both(),
-        'cnpj2' => Document::both(),
-        'cnpj3' => Document::both(),
+        'cpf1' => DocumentRule::both(),
+        'cpf2' => DocumentRule::both(),
+        'cpf3' => DocumentRule::both(),
+        'cnpj1' => DocumentRule::both(),
+        'cnpj2' => DocumentRule::both(),
+        'cnpj3' => DocumentRule::both(),
     ];
     $result = Validator::make($data, $rules)->errors();
     expect($result->has('cpf1'))

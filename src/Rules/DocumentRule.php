@@ -4,12 +4,12 @@ namespace LaravelToolkit\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
-use LaravelToolkit\Enum\Document as DocumentEnum;
+use LaravelToolkit\Enum\Document;
 
-readonly class Document implements ValidationRule
+readonly class DocumentRule implements ValidationRule
 {
-    public function __construct(
-        public DocumentEnum $type = DocumentEnum::GENERIC
+    protected function __construct(
+        public Document $type = Document::GENERIC
     ) {
         //
     }
@@ -21,12 +21,12 @@ readonly class Document implements ValidationRule
 
     public static function cnpj(): self
     {
-        return new self(DocumentEnum::CNPJ);
+        return new self(Document::CNPJ);
     }
 
     public static function cpf(): self
     {
-        return new self(DocumentEnum::CPF);
+        return new self(Document::CPF);
     }
 
     /**
@@ -44,21 +44,21 @@ readonly class Document implements ValidationRule
         $value = preg_replace('/[^0-9]/i', '', $value);
         $length = strlen($value);
 
-        if ($this->type === DocumentEnum::GENERIC) {
+        if ($this->type === Document::GENERIC) {
             match (true) {
                 ! in_array($length, [11, 14]) => $fail('laraveltoolkit::validation.document.generic.size')->translate(),
                 ! $this->type->isValid($value) => $fail('laraveltoolkit::validation.document.generic.invalid')->translate(),
                 default => true,
             };
         }
-        if ($this->type === DocumentEnum::CNPJ) {
+        if ($this->type === Document::CNPJ) {
             match (true) {
                 $length !== 14 => $fail('laraveltoolkit::validation.document.cnpj.size')->translate(),
                 ! $this->type->isValid($value) => $fail('laraveltoolkit::validation.document.cnpj.invalid')->translate(),
                 default => true,
             };
         }
-        if ($this->type === DocumentEnum::CPF) {
+        if ($this->type === Document::CPF) {
             match (true) {
                 $length !== 11 => $fail('laraveltoolkit::validation.document.cpf.size')->translate(),
                 ! $this->type->isValid($value) => $fail('laraveltoolkit::validation.document.cpf.invalid')->translate(),
