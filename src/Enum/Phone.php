@@ -11,21 +11,21 @@ enum Phone: string implements ArrayableEnum
 {
     use HasArrayableEnum, RegexTools;
 
+    case GENERIC = 'generic';
     case LANDLINE = 'landline';
     case LOCAL_FARE = 'local_fare';
     case MOBILE = 'mobile';
     case NON_REGIONAL = 'non_regional';
     case PUBLIC_SERVICES = 'public_services';
-    case GENERIC = 'generic';
 
     public static function guessType(string $number): ?Phone
     {
         return match (true) {
+            strlen($number) === 3 && self::PUBLIC_SERVICES->appearsToBe($number) => self::PUBLIC_SERVICES,
             self::MOBILE->appearsToBe($number) => self::MOBILE,
             self::LOCAL_FARE->appearsToBe($number) => self::LOCAL_FARE,
             self::NON_REGIONAL->appearsToBe($number) => self::NON_REGIONAL,
             self::LANDLINE->appearsToBe($number) => self::LANDLINE,
-            self::PUBLIC_SERVICES->appearsToBe($number) => self::PUBLIC_SERVICES,
             default => null,
         };
     }
@@ -42,8 +42,8 @@ enum Phone: string implements ArrayableEnum
             self::PUBLIC_SERVICES => '/^1[0-9]{2}$/',
         };
         $string = match ($this) {
-            self::LANDLINE, self::NON_REGIONAL => substr($number, 0, 4),
             self::LOCAL_FARE, self::PUBLIC_SERVICES, self::MOBILE => substr($number, 0, 3),
+            self::LANDLINE, self::NON_REGIONAL => substr($number, 0, 4),
         };
 
         return preg_match($pattern, $string) === 1;
