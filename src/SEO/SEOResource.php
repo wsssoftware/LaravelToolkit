@@ -1,0 +1,34 @@
+<?php
+
+namespace LaravelToolkit\SEO;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+/**
+ * @property \LaravelToolkit\SEO\Payload $resource
+ */
+class SEOResource extends JsonResource
+{
+    public function __construct($resource)
+    {
+        self::withoutWrapping();
+        parent::__construct($resource);
+    }
+
+    /**
+     * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(Request $request): array
+    {
+        return [
+            'title' => $this->when(!empty($this->resource->title), $this->resource->title),
+            'twitter_card' => $this->when(
+                !empty($this->resource->twitterCard->title),
+                fn() => TwitterCardResource::make($this->resource->twitterCard)
+            )
+        ];
+    }
+}
