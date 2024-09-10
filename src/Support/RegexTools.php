@@ -4,9 +4,9 @@ namespace LaravelToolkit\Support;
 
 trait RegexTools
 {
-    public function regexOnlyNumbers(string $payload): string
+    public function regexOnlyNumbers(?string $payload): string
     {
-        return preg_replace('/[^0-9]/', '', $payload);
+        return preg_replace('/[^0-9]/', '', $payload ?? '');
     }
 
     public function regexIsSequenceOfUniqueChar(string $payload): bool

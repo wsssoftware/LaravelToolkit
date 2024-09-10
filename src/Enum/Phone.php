@@ -18,7 +18,7 @@ enum Phone: string implements ArrayableEnum
     case NON_REGIONAL = 'non_regional';
     case PUBLIC_SERVICES = 'public_services';
 
-    public static function guessType(string $number): ?Phone
+    public static function guessType(?string $number): ?Phone
     {
         return match (true) {
             strlen($number) === 3 && self::PUBLIC_SERVICES->appearsToBe($number) => self::PUBLIC_SERVICES,
@@ -30,7 +30,7 @@ enum Phone: string implements ArrayableEnum
         };
     }
 
-    public function appearsToBe(string $number): bool
+    public function appearsToBe(?string $number): bool
     {
         $this->regexOnlyNumbers($number);
         throw_if($this === self::GENERIC, Exception::class, 'Appears to be method is not allowed to generic type');
@@ -54,7 +54,7 @@ enum Phone: string implements ArrayableEnum
         return app(FakePhone::class)->handle($this);
     }
 
-    public function isValid(string $number): bool
+    public function isValid(?string $number): bool
     {
         $this->regexOnlyNumbers($number);
         $type = $this === self::GENERIC ? self::guessType($number) : $this;
