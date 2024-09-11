@@ -3,6 +3,7 @@
 namespace LaravelToolkit;
 
 use Illuminate\Support\Facades\Blade;
+use LaravelToolkit\Console\Commands\InstallSitemapCommand;
 use LaravelToolkit\Macros\CollectionMacro;
 use LaravelToolkit\SEO\SEOComponent;
 use Spatie\LaravelPackageTools\Package;
@@ -22,9 +23,9 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
             ->hasConfigFile('laraveltoolkit')
             ->hasRoute('web')
             ->hasTranslations()
-            ->hasViews();
+            ->hasViews()
+            ->hasCommand(InstallSitemapCommand::class);
         //            ->hasMigration('create_laraveltoolkit_table')
-        //            ->hasCommand(LaravelToolkitCommand::class);
     }
 
     public function boot(): self

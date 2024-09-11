@@ -59,4 +59,16 @@ return [
             ],
         ],
     ],
+    /*
+    |--------------------------------------------------------------------------
+    | Sitemap configurations
+    |--------------------------------------------------------------------------
+    |
+    | This configurations will help to configure the behavior of Sitemap facade
+    |
+    */
+    'sitemap' => [
+        'default_route' => true,
+        'timeout' => null,
+    ]
 ];
