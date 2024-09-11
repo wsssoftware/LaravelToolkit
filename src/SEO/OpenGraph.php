@@ -9,7 +9,7 @@ class OpenGraph
     public ?string $type;
     public ?string $title;
     public ?string $description;
-    public ?string $url;
+    public null|string|false $url;
     public ?Image $image;
 
     public function __construct(

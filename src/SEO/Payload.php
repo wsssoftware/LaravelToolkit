@@ -9,7 +9,7 @@ class Payload
     public bool $propagation;
     public ?string $title;
     public ?string $description;
-    public ?string $canonical;
+    public null|string|false $canonical;
     public Collection $robots;
     public ?OpenGraph $openGraph;
     public ?TwitterCard $twitterCard;

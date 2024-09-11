@@ -40,10 +40,10 @@ class SEO
     {
 //        dd($this->payload);
         return once(function () {
-            if (empty($this->payload->canonical)) {
+            if (empty($this->payload->canonical) && $this->payload->canonical !== false) {
                 $this->payload->canonical = request()->url();
             }
-            if (empty($this->payload->openGraph->url)) {
+            if (empty($this->payload->openGraph->url) && $this->payload->openGraph->url !== false) {
                 $this->payload->openGraph->url = request()->url();
             }
             return SEOResource::make($this->payload)->response()->getData(true);
@@ -52,7 +52,7 @@ class SEO
 
     public function withoutCanonical(bool $propagate = null): self
     {
-        $this->payload->canonical = null;
+        $this->payload->canonical = false;
         if ($propagate ?? $this->payload->propagation) {
             $this->payload->openGraph->url = null;
         }
