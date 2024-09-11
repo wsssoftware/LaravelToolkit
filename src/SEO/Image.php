@@ -25,8 +25,9 @@ readonly class Image
         $lastChange = Cache::remember(
             "seo_image:$this->disk:$this->path",
             604_800,
-            fn() => $this->getLastModified($disk)
+            fn () => $this->getLastModified($disk)
         );
+
         return $disk->url($this->path.$lastChange);
     }
 

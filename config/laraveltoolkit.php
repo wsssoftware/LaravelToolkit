@@ -44,7 +44,7 @@ return [
                     'disk' => null,
                     'path' => null,
                     'alt' => null,
-                ]
+                ],
             ],
             'twitter_card' => [
                 'site' => null,
@@ -55,8 +55,8 @@ return [
                     'disk' => null,
                     'path' => null,
                     'alt' => null,
-                ]
-            ]
-        ]
+                ],
+            ],
+        ],
     ],
 ];

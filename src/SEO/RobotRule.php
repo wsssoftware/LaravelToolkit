@@ -4,7 +4,6 @@ namespace LaravelToolkit\SEO;
 
 enum RobotRule: string
 {
-
     case ALL = 'all';
     case NOINDEX = 'noindex';
     case NOFOLLOW = 'nofollow';

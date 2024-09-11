@@ -3,7 +3,6 @@
 use LaravelToolkit\Facades\SEO;
 use LaravelToolkit\SEO\Image;
 use LaravelToolkit\SEO\RobotRule;
-use const LaravelToolkit\SEO\ALL;
 
 it('test friendly url string', function () {
     expect(SEO::friendlyUrlString('Testing a string with some diferente 3,000 words'))
@@ -75,7 +74,7 @@ it('test valid robots', function () {
 });
 
 it('test invalid robots', function () {
-    expect(fn() => SEO::withRobots('foo_bar'))
+    expect(fn () => SEO::withRobots('foo_bar'))
         ->toThrow(ValueError::class);
 });
 

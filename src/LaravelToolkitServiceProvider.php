@@ -3,7 +3,6 @@
 namespace LaravelToolkit;
 
 use Illuminate\Support\Facades\Blade;
-use LaravelToolkit\Facades\SEO;
 use LaravelToolkit\Macros\CollectionMacro;
 use LaravelToolkit\SEO\SEOComponent;
 use Spatie\LaravelPackageTools\Package;
