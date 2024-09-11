@@ -1,0 +1,289 @@
+<?php
+
+namespace LaravelToolkit\SEO;
+
+use Jaybizzle\CrawlerDetect\CrawlerDetect;
+
+class SEO
+{
+    private Payload $payload;
+
+    public function __construct()
+    {
+        $this->payload = new Payload;
+        $robots = config('laraveltoolkit.seo.defaults.robots', []);
+        $robots = is_array($robots) ? $robots : [];
+        $this->withRobots(...$robots);
+    }
+
+    public function friendlyUrlString(string $string): string
+    {
+        $separator = '-';
+        $accents_regex = '~&([a-z]{1,2})(?:acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i';
+        $special_cases = ['&' => 'and', "'" => ''];
+        $string = mb_strtolower(trim($string), 'UTF-8');
+        $string = str_replace(array_keys($special_cases), array_values($special_cases), $string);
+        $string = preg_replace($accents_regex, '$1', htmlentities($string, ENT_QUOTES, 'UTF-8'));
+        $string = preg_replace('/[^a-z0-9]/u', "$separator", $string);
+        $string = trim($string, '-');
+
+        return preg_replace("/[$separator]+/u", "$separator", $string);
+    }
+
+    public function isCrawler(?string $agent = null): bool
+    {
+        return (new CrawlerDetect)->isCrawler($agent);
+    }
+
+    public function payload(): array
+    {
+        //        dd($this->payload);
+        return once(function () {
+            if (empty($this->payload->canonical) && $this->payload->canonical !== false) {
+                $this->payload->canonical = request()->url();
+            }
+            if (empty($this->payload->openGraph->url) && $this->payload->openGraph->url !== false) {
+                $this->payload->openGraph->url = request()->url();
+            }
+
+            return SEOResource::make($this->payload)->response()->getData(true);
+        });
+    }
+
+    public function withoutCanonical(?bool $propagate = null): self
+    {
+        $this->payload->canonical = false;
+        if ($propagate ?? $this->payload->propagation) {
+            $this->payload->openGraph->url = null;
+        }
+
+        return $this;
+    }
+
+    public function withoutDescription(?bool $propagate = null): self
+    {
+        $this->payload->description = null;
+        if ($propagate ?? $this->payload->propagation) {
+            $this->payload->openGraph->description = null;
+            $this->payload->twitterCard->description = null;
+        }
+
+        return $this;
+    }
+
+    public function withoutOpenGraphType(): self
+    {
+        $this->payload->openGraph->type = null;
+
+        return $this;
+    }
+
+    public function withoutOpenGraphTitle(): self
+    {
+        $this->payload->openGraph->title = null;
+
+        return $this;
+    }
+
+    public function withoutOpenGraphDescription(): self
+    {
+        $this->payload->openGraph->description = null;
+
+        return $this;
+    }
+
+    public function withoutOpenGraphUrl(): self
+    {
+        $this->payload->openGraph->url = null;
+
+        return $this;
+    }
+
+    public function withoutOpenGraphImage(): self
+    {
+        $this->payload->openGraph->image = null;
+
+        return $this;
+    }
+
+    public function withoutPropagation(): self
+    {
+        $this->payload->propagation = false;
+
+        return $this;
+    }
+
+    public function withoutRobots(): self
+    {
+        $this->payload->robots = collect();
+
+        return $this;
+    }
+
+    public function withoutTitle(?bool $propagate = null): self
+    {
+        $this->payload->title = null;
+        if ($propagate ?? $this->payload->propagation) {
+            $this->payload->openGraph->title = null;
+            $this->payload->twitterCard->title = null;
+        }
+
+        return $this;
+    }
+
+    public function withoutTwitterCardSite(): self
+    {
+        $this->payload->twitterCard->site = null;
+
+        return $this;
+    }
+
+    public function withoutTwitterCardCreator(): self
+    {
+        $this->payload->twitterCard->creator = null;
+
+        return $this;
+    }
+
+    public function withoutTwitterCardTitle(): self
+    {
+        $this->payload->twitterCard->title = null;
+
+        return $this;
+    }
+
+    public function withoutTwitterCardDescription(): self
+    {
+        $this->payload->twitterCard->description = null;
+
+        return $this;
+    }
+
+    public function withoutTwitterCardImage(): self
+    {
+        $this->payload->twitterCard->image = null;
+
+        return $this;
+    }
+
+    public function withCanonical(string $canonical, ?bool $propagate = null): self
+    {
+        $this->payload->canonical = $canonical;
+        if ($propagate ?? $this->payload->propagation) {
+            $this->payload->openGraph->url = $canonical;
+        }
+
+        return $this;
+    }
+
+    public function withDescription(string $description, ?bool $propagate = null): self
+    {
+        $this->payload->description = $description;
+        if ($propagate ?? $this->payload->propagation) {
+            $this->payload->openGraph->description = $description;
+            $this->payload->twitterCard->description = $description;
+        }
+
+        return $this;
+    }
+
+    public function withOpenGraphType(string $type): self
+    {
+        $this->payload->openGraph->type = $type;
+
+        return $this;
+    }
+
+    public function withOpenGraphTitle(string $title): self
+    {
+        $this->payload->openGraph->title = $title;
+
+        return $this;
+    }
+
+    public function withOpenGraphDescription(string $description): self
+    {
+        $this->payload->openGraph->description = $description;
+
+        return $this;
+    }
+
+    public function withOpenGraphUrl(string $url): self
+    {
+        $this->payload->openGraph->url = $url;
+
+        return $this;
+    }
+
+    public function withOpenGraphImage(Image $image): self
+    {
+        $this->payload->openGraph->image = $image;
+
+        return $this;
+    }
+
+    public function withPropagation(): self
+    {
+        $this->payload->propagation = true;
+
+        return $this;
+    }
+
+    public function withRobots(RobotRule|string ...$items): self
+    {
+        $this->payload->robots = collect($items)
+            ->map(
+                fn (string|RobotRule $item) => is_string($item)
+                    ? [RobotRule::from(explode(':', $item)[0]), explode(':', $item)[1] ?? null]
+                    : [$item, null]
+            );
+
+        return $this;
+    }
+
+    public function withTitle(string $title, ?bool $propagate = null): self
+    {
+        $this->payload->title = $title;
+        if ($propagate ?? $this->payload->propagation) {
+            $this->payload->openGraph->title = $title;
+            $this->payload->twitterCard->title = $title;
+        }
+
+        return $this;
+    }
+
+    public function withTwitterCardSite(string $site): self
+    {
+        $this->payload->twitterCard->site = $site;
+
+        return $this;
+    }
+
+    public function withTwitterCardCreator(string $creator): self
+    {
+        $this->payload->twitterCard->creator = $creator;
+
+        return $this;
+    }
+
+    public function withTwitterCardTitle(string $title): self
+    {
+        $this->payload->twitterCard->title = $title;
+
+        return $this;
+    }
+
+    public function withTwitterCardDescription(string $description): self
+    {
+        $this->payload->twitterCard->description = $description;
+
+        return $this;
+    }
+
+    public function withTwitterCardImage(Image $image): self
+    {
+        $this->payload->twitterCard->image = $image;
+
+        return $this;
+    }
+}
