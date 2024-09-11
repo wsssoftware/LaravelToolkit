@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @property \LaravelToolkit\SEO\TwitterCard $resource
+ * @property \LaravelToolkit\SEO\OpenGraph $resource
  */
-class TwitterCardResource extends JsonResource
+class OpenGraphResource extends JsonResource
 {
     public function __construct($resource)
     {
@@ -24,11 +24,10 @@ class TwitterCardResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'card' => !empty($this->resource->image) ? 'summary_large_image' : 'summary',
-            'site' => $this->when(!empty($this->resource->site), $this->resource->site),
-            'creator' => $this->when(!empty($this->resource->creator), $this->resource->creator),
+            'type' => $this->resource->type,
             'title' => $this->resource->title,
-            'description' => $this->when(!empty($this->resource->description), $this->resource->description),
+            'description' => $this->when(!empty($this->resource->description), fn() => $this->resource->description),
+            'url' => $this->when(!empty($this->resource->url), fn() => $this->resource->url),
             'image' => $this->when(!empty($this->resource->image), fn() => ImageResource::make($this->resource->image)),
         ];
     }

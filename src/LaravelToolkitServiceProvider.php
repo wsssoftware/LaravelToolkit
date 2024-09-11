@@ -2,7 +2,10 @@
 
 namespace LaravelToolkit;
 
+use Illuminate\Support\Facades\Blade;
+use LaravelToolkit\Facades\SEO;
 use LaravelToolkit\Macros\CollectionMacro;
+use LaravelToolkit\SEO\SEOComponent;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -19,8 +22,8 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
             ->name('laraveltoolkit')
             ->hasConfigFile('laraveltoolkit')
             ->hasRoute('web')
-            ->hasTranslations();
-        //            ->hasViews()
+            ->hasTranslations()
+            ->hasViews();
         //            ->hasMigration('create_laraveltoolkit_table')
         //            ->hasCommand(LaravelToolkitCommand::class);
     }
@@ -40,6 +43,8 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
             'en_US.UTF-8',
             'en_US',
         );
+
+        Blade::component('seo', SEOComponent::class);
 
         return parent::boot();
 

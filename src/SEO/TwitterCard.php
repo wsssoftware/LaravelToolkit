@@ -6,27 +6,21 @@ use Illuminate\Support\Arr;
 
 class TwitterCard
 {
-    readonly public string $card;
     public ?string $site;
+    public ?string $creator;
     public ?string $title;
     public ?string $description;
     public ?Image $image;
 
     public function __construct(
-        public bool $format,
-        public bool $propagation,
+      ?string $title = null,
+      ?string $description = null,
     ) {
-        $this->card = 'summary_large_image';
-        $this->site = config('laravel_toolkit.seo.defaults.twitter_card.site');
-        $this->title = config(
-            'laravel_toolkit.seo.defaults.twitter_card.title',
-            $this->propagation ? config('laravel_toolkit.seo.defaults.title') : null,
-        );
-        $this->description = config(
-            'laravel_toolkit.seo.defaults.twitter_card.title',
-            $this->propagation ? config('laravel_toolkit.seo.defaults.description') : null,
-        );
-        $imageConfig = config('laravel_toolkit.seo.defaults.twitter_card.image', ['disk' => null, 'path' => null, 'alt' => null]);
+        $this->site = config('laraveltoolkit.seo.defaults.twitter_card.site');
+        $this->creator = config('laraveltoolkit.seo.defaults.twitter_card.creator');
+        $this->title = config('laraveltoolkit.seo.defaults.twitter_card.title', $title);
+        $this->description = config('laraveltoolkit.seo.defaults.twitter_card.description', $description);
+        $imageConfig = config('laraveltoolkit.seo.defaults.twitter_card.image', ['disk' => null, 'path' => null, 'alt' => null]);
         if (!empty($imageConfig['disk']) && !empty($imageConfig['path'])) {
             $this->image = new Image(
                 Arr::get($imageConfig, 'disk'),

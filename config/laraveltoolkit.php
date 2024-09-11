@@ -28,20 +28,27 @@ return [
     |
     */
     'seo' => [
-        // Allow or not format provided values to respect SEO rules
-        'format' => true,
         // Allow to propagate title, description and others values to OpenGraph and Twitter Card
         'propagation' => true,
         'defaults' => [
             'title' => null,
             'description' => null,
             'canonical' => null,
-            'robots' => null,
+            'robots' => [],
             'open_graph' => [
-
+                'type' => 'website',
+                'title' => null,
+                'description' => null,
+                'url' => null,
+                'image' => [
+                    'disk' => null,
+                    'path' => null,
+                    'alt' => null,
+                ]
             ],
             'twitter_card' => [
                 'site' => null,
+                'creator' => null,
                 'title' => null,
                 'description' => null,
                 'image' => [
