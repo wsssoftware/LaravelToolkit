@@ -2,29 +2,62 @@
 
 namespace LaravelToolkit\Actions\Sitemap;
 
-use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
+use LaravelToolkit\Facades\Sitemap;
+use LaravelToolkit\Sitemap\Index;
+use LaravelToolkit\Sitemap\Url;
+use Saloon\XmlWrangler\Data\RootElement;
+use Saloon\XmlWrangler\XmlWriter;
 
 class RenderSitemap
 {
 
-    private function __construct(
-        protected ?string $group = null
-    ) {
-        //
+    protected Request $request;
+    protected ?string $group;
+    protected ?int $lastModified;
+
+    public function __invoke(Request $request, string $group = null)
+    {
+        $this->bootstrap($request, $group);
+        $cacheTtl = config('laraveltoolkit.sitemap.cache');
+        $cacheKey = 'lt.sitemap'.sha1($request->getHost().'::'.($group ?? '').'::'.$this->lastModified);
+        $xml = $cacheTtl !== false
+            ? Cache::remember($cacheKey, $cacheTtl, fn() => $this->write())
+            : $this->write();
+
+        return response($xml)->header('Content-Type', 'text/xml');
     }
 
-    public static function make(string $group = null): Closure
+    protected function bootstrap(Request $request, $group): void
     {
-        return function () use ($group) {
-            return (new static($group))();
-        };
+        $this->request = $request;
+        $this->group = $group;
+        $sitemapConfig = base_path('routes/sitemap.php');
+        abort_if(!file_exists($sitemapConfig), 404);
+        $this->lastModified = filemtime($sitemapConfig);
+        require $sitemapConfig;
+        abort_if(!Sitemap::groupExists($group), 404);
     }
 
-    public function __invoke()
+    protected function getData(Collection $items, bool $urlsetType): array
     {
-        $path = base_path('routes/sitemap.php');
-        abort_if(!file_exists($path), 404);
-        $test = require $path;
-        return ['oko'];
+        $key = $urlsetType ? 'url' : 'sitemap';
+        return $items->isEmpty() ? [] : [
+            $key => $items->map(fn(Index|Url $item) => $item->toXml())->toArray()
+        ];
+    }
+
+    protected function write(): string
+    {
+        $items = Sitemap::process($this->request->getHost(), $this->group);
+        $urlsetType = $items->filter(fn(Index|Url $item) => $item instanceof Index)->count() === 0;
+        $root = $urlsetType ? RootElement::make('urlset') : RootElement::make('sitemapindex');
+        return XmlWriter::make()->write(
+            $root->addNamespace('', 'http://www.sitemaps.org/schemas/sitemap/0.9'),
+            $this->getData($items, $urlsetType),
+            !config('app.debug')
+        );
     }
 }
