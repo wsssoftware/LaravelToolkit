@@ -11,7 +11,6 @@ use LaravelToolkit\Sitemap\ChangeFrequency;
 use LaravelToolkit\Sitemap\Index;
 use LaravelToolkit\Sitemap\Url;
 
-
 /**
  * @method static \LaravelToolkit\Sitemap\Sitemap addGroup(string $name)
  * @method static \LaravelToolkit\Sitemap\Sitemap addUrl(Url|string $url, ?Carbon $lastModified = null, ?ChangeFrequency $changeFrequency = null, ?float $priority = null)

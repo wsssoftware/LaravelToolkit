@@ -14,7 +14,7 @@ it('can instantiate collection', function () {
 it('can instantiate model', function () {
     $factory = app(UserFactory::class);
     $factory->count(10)->create();
-    $cr = new  ClosureRepository(User::query(), function ($user) {
+    $cr = new ClosureRepository(User::query(), function ($user) {
         expect($user)->toBeInstanceOf(User::class);
     });
     $cr->resolve();
@@ -23,7 +23,7 @@ it('can instantiate model', function () {
 it('can instantiate model with limit', function () {
     $factory = app(UserFactory::class);
     $factory->count(10)->create();
-    $cr = new  ClosureRepository(User::query()->limit(5), function ($user) {
+    $cr = new ClosureRepository(User::query()->limit(5), function ($user) {
         expect($user)->toBeInstanceOf(User::class);
     });
 
