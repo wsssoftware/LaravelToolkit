@@ -20,10 +20,14 @@ readonly class ClosureRepository
         if ($this->repository instanceof Collection) {
             $this->repository->each(fn (mixed $item) => $this->closure->call($this, $item));
         } else {
-            $this->repository->each(
-                fn (mixed $item) => $this->closure->call($this, $item),
-                config('laraveltoolkit.sitemap.query_count')
-            );
+            if (is_int($this->repository->getQuery()->limit)) {
+                $this->repository->get()->each(fn (mixed $item) => $this->closure->call($this, $item));
+            } else {
+                $this->repository->each(
+                    fn (mixed $item) => $this->closure->call($this, $item),
+                    config('laraveltoolkit.sitemap.query_count')
+                );
+            }
         }
     }
 }
