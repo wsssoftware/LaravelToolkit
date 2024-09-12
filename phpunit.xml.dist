@@ -16,7 +16,7 @@
     backupStaticProperties="false"
 >
     <testsuites>
-        <testsuite name="Allan Mariucci Carvalho Test Suite">
+        <testsuite name="Laravel Toolkit Test Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
