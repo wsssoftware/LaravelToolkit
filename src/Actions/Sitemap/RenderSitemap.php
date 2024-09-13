@@ -2,6 +2,7 @@
 
 namespace LaravelToolkit\Actions\Sitemap;
 
+use DOMDocument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -46,25 +47,15 @@ class RenderSitemap
         abort_if(! Sitemap::groupExists($group), 404);
     }
 
-    protected function getData(Collection $items, bool $urlsetType): array
-    {
-        $key = $urlsetType ? 'url' : 'sitemap';
-
-        return $items->isEmpty() ? [] : [
-            $key => $items->map(fn (Index|Url $item) => $item->toXml())->toArray(),
-        ];
-    }
-
     protected function write(): string
     {
         $items = Sitemap::process($this->request->getHost(), $this->group);
-        $urlsetType = $items->filter(fn (Index|Url $item) => $item instanceof Index)->count() === 0;
-        $root = $urlsetType ? RootElement::make('urlset') : RootElement::make('sitemapindex');
+        $type = $items->filter(fn (Index|Url $item) => $item instanceof Index)->count() === 0 ? 'urlset' : 'sitemapindex';
+        $xml = new DOMDocument('1.0', 'utf-8');
+        $xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9';
+        $xmlRoot = $xml->appendChild($xml->createElementNS($xmlns, $type));
+        $items->each(fn (Index|Url $item) => $item->toXml($xml, $xmlRoot));
 
-        return XmlWriter::make()->write(
-            $root->addNamespace('', 'http://www.sitemaps.org/schemas/sitemap/0.9'),
-            $this->getData($items, $urlsetType),
-            ! config('app.debug')
-        );
+        return $xml->saveXML();
     }
 }

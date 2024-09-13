@@ -68,7 +68,8 @@ return [
     |
     */
     'sitemap' => [
-        'cache' => 21_600,
+        'cache' => false,
+//        'cache' => 21_600,
         'default_routes' => true,
         'query_count' => 1_000,
         'timeout' => null,

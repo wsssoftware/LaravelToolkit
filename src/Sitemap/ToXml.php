@@ -2,9 +2,10 @@
 
 namespace LaravelToolkit\Sitemap;
 
-use Saloon\XmlWrangler\Data\Element;
+use DOMDocument;
+use DOMElement;
 
 interface ToXml
 {
-    public function toXml(): Element;
+    public function toXml(DOMDocument $xml, DOMElement $root): void;
 }

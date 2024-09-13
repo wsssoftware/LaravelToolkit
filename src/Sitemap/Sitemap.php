@@ -38,7 +38,10 @@ class Sitemap
             Exception::class,
             'You cannot combine indexes and url in same sitemap.'
         );
-        $this->items->push(new Index($name));
+        $name = trim($name);
+        if ($this->items->filter(fn(Index $item) => $item->group === $name)->isEmpty()) {
+            $this->items->push(new Index($name));
+        }
 
         return $this;
     }
@@ -54,8 +57,10 @@ class Sitemap
             Exception::class,
             'You cannot combine indexes and url in same sitemap.'
         );
-        $this->items->push($url instanceof Url ? $url : new Url($url, $lastModified, $changeFrequency,
-            $priority));
+        $url = $url instanceof Url ? $url : new Url($url, $lastModified, $changeFrequency, $priority);
+        if ($this->items->filter(fn(Url $item) => $item->loc === $url->loc)->isEmpty()) {
+            $this->items->push($url);
+        }
 
         return $this;
     }
@@ -129,7 +134,7 @@ class Sitemap
         $this->resolveClosureRepositories();
         $this->locked = false;
 
-        return $this->items;
+        return $this->items->unique('group');
     }
 
     protected function processDomain(string $domain): Collection

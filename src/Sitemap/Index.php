@@ -2,6 +2,8 @@
 
 namespace LaravelToolkit\Sitemap;
 
+use DOMDocument;
+use DOMElement;
 use Saloon\XmlWrangler\Data\Element;
 
 readonly class Index implements ToXml
@@ -11,10 +13,13 @@ readonly class Index implements ToXml
         //
     }
 
-    public function toXml(): Element
+    public function toXml(DOMDocument $xml, DOMElement $root): void
     {
-        return Element::make([
-            'loc' => route('lt.sitemap_group', ['group' => $this->group]),
-        ]);
+        $currentTrack = $xml->createElement("sitemap");
+        $currentTrack = $root->appendChild($currentTrack);
+        $currentTrack->appendChild($xml->createElement(
+            'loc',
+            route('lt.sitemap_group', ['group' => $this->group]),
+        ));
     }
 }

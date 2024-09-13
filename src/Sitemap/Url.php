@@ -2,8 +2,9 @@
 
 namespace LaravelToolkit\Sitemap;
 
+use DOMDocument;
+use DOMElement;
 use Illuminate\Support\Carbon;
-use Saloon\XmlWrangler\Data\Element;
 
 readonly class Url implements ToXml
 {
@@ -12,22 +13,21 @@ readonly class Url implements ToXml
         public ?Carbon $lastModified = null,
         public ?ChangeFrequency $changeFrequency = null,
         public ?float $priority = null,
-    ) {}
+    ) {
+    }
 
-    public function toXml(): Element
+    public function toXml(DOMDocument $xml, DOMElement $root): void
     {
-        $data = [
+        $currentTrack = $xml->createElement("url");
+        $currentTrack = $root->appendChild($currentTrack);
+        collect([
             'loc' => $this->loc,
             'lastmod' => $this->lastModified?->format('Y-m-d'),
             'changefreq' => $this->changeFrequency?->value,
             'priority' => $this->priority,
-        ];
-        foreach ($data as $key => $value) {
-            if ($value === null) {
-                unset($data[$key]);
-            }
-        }
+        ])
+            ->filter(fn($item) => $item !== null)
+            ->each(fn($value, $key) => $currentTrack->appendChild($xml->createElement($key, $value)));
 
-        return Element::make($data);
     }
 }
