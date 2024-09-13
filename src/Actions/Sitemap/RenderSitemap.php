@@ -20,13 +20,17 @@ class RenderSitemap
 
     public function __invoke(Request $request, ?string $group = null)
     {
+        $timeout = config('laraveltoolkit.sitemap.timeout');
+        if (is_int($timeout)) {
+            set_time_limit($timeout);
+        }
         $this->bootstrap($request, $group);
         $cacheTtl = config('laraveltoolkit.sitemap.cache');
         $cacheKey = 'lt.sitemap'.sha1($request->getHost().'::'.($group ?? '').'::'.$this->lastModified);
         $xml = $cacheTtl !== false
             ? Cache::remember($cacheKey, $cacheTtl, fn () => $this->write())
             : $this->write();
-        SitemapRequestedEvent::dispatch($request->getHost(), $group);
+        SitemapRequestedEvent::dispatch($request->getHost(), $group, $request->userAgent());
 
         return response($xml)->header('Content-Type', 'text/xml');
     }

@@ -13,7 +13,7 @@ class SitemapRequestedEvent
     /**
      * Create a new event instance.
      */
-    public function __construct(string $domain, ?string $group)
+    public function __construct(string $domain, ?string $group, ?string $agent)
     {
         //
     }

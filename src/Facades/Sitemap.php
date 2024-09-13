@@ -16,7 +16,7 @@ use LaravelToolkit\Sitemap\Url;
  * @method static \LaravelToolkit\Sitemap\Sitemap addUrl(Url|string $url, ?Carbon $lastModified = null, ?ChangeFrequency $changeFrequency = null, ?float $priority = null)
  * @method static void domain(string $name, Closure $closure)
  * @method static bool domainExists(string $name)
- * @method static \LaravelToolkit\Sitemap\Sitemap fromQuery(Builder $builder, Closure $closure)
+ * @method static \LaravelToolkit\Sitemap\Sitemap fromQuery(Builder $builder, Closure $closure, int $count = 1_000)
  * @method static \LaravelToolkit\Sitemap\Sitemap fromCollection(Collection $collection, Closure $closure)
  * @method static void group(string $group, Closure $closure)
  * @method static bool groupExists(string $group)

@@ -66,12 +66,14 @@ return [
     |
     | This configurations will help to configure the behavior of Sitemap facade
     |
+    | -> cache: Cache or not a sitemap. Allowed values: int and false.
+    | -> default_routes: If true, Laravel Toolkit will create sitemap routes.
+    | -> timeout: Default timeout for the request. Used for large sitemap files.
+    |
     */
     'sitemap' => [
-        'cache' => false,
-        //        'cache' => 21_600,
+        'cache' => 21_600,
         'default_routes' => true,
-        'query_count' => 1_000,
         'timeout' => null,
     ],
 ];

@@ -11,6 +11,7 @@ readonly class ClosureRepository
     public function __construct(
         protected Collection|Builder $repository,
         protected Closure $closure,
+        protected ?int $count = null,
     ) {
         //
     }
@@ -25,7 +26,7 @@ readonly class ClosureRepository
             } else {
                 $this->repository->each(
                     fn (mixed $item) => $this->closure->call($this, $item),
-                    config('laraveltoolkit.sitemap.query_count')
+                    $this->count ?? 1_000,
                 );
             }
         }

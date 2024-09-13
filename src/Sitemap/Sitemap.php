@@ -77,14 +77,14 @@ class Sitemap
         return $this->domains->offsetExists($name);
     }
 
-    public function fromQuery(Builder $builder, Closure $closure): self
+    public function fromQuery(Builder $builder, Closure $closure, int $count = 1_000): self
     {
         throw_if(
             $this->items->filter(fn (Index|Url $item) => ! $item instanceof Url)->isNotEmpty(),
             Exception::class,
             'You cannot combine indexes and url in same sitemap.'
         );
-        $this->closureRepositories->push(new ClosureRepository($builder, $closure));
+        $this->closureRepositories->push(new ClosureRepository($builder, $closure, $count));
 
         return $this;
     }
