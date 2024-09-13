@@ -9,6 +9,7 @@ return [
     |
     | This configurations will help to configure flash defaults
     |
+    | -> defaults: defaults optional properties from flash.
     */
     'flash' => [
         'defaults' => [
@@ -25,6 +26,10 @@ return [
     |
     | This configurations will help to configure the behavior of SEO facade and
     | also its defaults
+    |
+    | -> propagation: If true, will propagate title, description and canonical for open_graph and twitter card when its
+    |    change.
+    | -> defaults: Defaults values for SEO when no value was configured on requests.
     |
     */
     'seo' => [
