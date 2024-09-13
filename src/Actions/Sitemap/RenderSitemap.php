@@ -40,7 +40,9 @@ class RenderSitemap
         $sitemapConfig = base_path('routes/sitemap.php');
         abort_if(! file_exists($sitemapConfig), 404);
         $this->lastModified = filemtime($sitemapConfig);
-        require $sitemapConfig;
+        if (file_exists(base_path('routes/sitemap.php'))) {
+            require $sitemapConfig;
+        }
         abort_if(! Sitemap::groupExists($group), 404);
     }
 

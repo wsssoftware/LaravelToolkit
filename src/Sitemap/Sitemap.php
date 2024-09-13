@@ -60,11 +60,6 @@ class Sitemap
         return $this;
     }
 
-    public function configFileExists(): bool
-    {
-        return file_exists(base_path('routes/sitemap.php'));
-    }
-
     public function domain(string $name, Closure $closure): void
     {
         throw_if($this->locked, Exception::class, 'You cannot put a domain inside another domain.');

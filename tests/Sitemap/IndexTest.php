@@ -6,9 +6,9 @@ use Saloon\XmlWrangler\Data\Element;
 it('can instantiate', function () {
     $this->artisan('laraveltoolkit:install_sitemap --force')
         ->expectsOutputToContain('Published Sitemap routes file.');
-    $url = new Index('users');
-    expect($url)
+    $index = new Index('users');
+    expect($index)
         ->toBeInstanceOf(Index::class)
-        ->and($url->toXml())
+        ->and($index->toXml())
         ->toBeInstanceOf(Element::class);
 });

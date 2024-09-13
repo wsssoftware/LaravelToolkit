@@ -2,12 +2,11 @@
 
 use LaravelToolkit\Actions\Flash\GetMessages;
 use LaravelToolkit\Actions\Sitemap\RenderSitemap;
-use LaravelToolkit\Facades\Sitemap;
 
 Route::middleware('web')->get('/lt/flash-get-messages', GetMessages::class)
     ->name('lt.flash.get_messages');
 
-if (Sitemap::configFileExists() && config('laraveltoolkit.sitemap.default_routes')) {
+if (config('laraveltoolkit.sitemap.default_routes')) {
     Route::middleware('web')->group(function () {
         Route::any('sitemap.xml', RenderSitemap::class)
             ->name('lt.sitemap');
