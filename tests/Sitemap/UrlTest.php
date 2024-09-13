@@ -1,8 +1,8 @@
 <?php
 
 use LaravelToolkit\Sitemap\ChangeFrequency;
-use Saloon\XmlWrangler\Data\Element;
 use LaravelToolkit\Sitemap\Url;
+use Saloon\XmlWrangler\Data\Element;
 
 it('can instantiate', function () {
     $url = new Url(

@@ -72,5 +72,5 @@ return [
         'default_routes' => true,
         'query_count' => 1_000,
         'timeout' => null,
-    ]
+    ],
 ];

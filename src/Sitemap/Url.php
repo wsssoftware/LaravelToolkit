@@ -12,8 +12,7 @@ readonly class Url implements ToXml
         public ?Carbon $lastModified = null,
         public ?ChangeFrequency $changeFrequency = null,
         public ?float $priority = null,
-    ) {
-    }
+    ) {}
 
     public function toXml(): Element
     {
@@ -28,6 +27,7 @@ readonly class Url implements ToXml
                 unset($data[$key]);
             }
         }
+
         return Element::make($data);
     }
 }
