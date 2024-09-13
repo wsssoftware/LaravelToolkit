@@ -59,4 +59,26 @@ return [
             ],
         ],
     ],
+    /*
+    |--------------------------------------------------------------------------
+    | Sitemap configurations
+    |--------------------------------------------------------------------------
+    |
+    | This configurations will help to configure the behavior of Sitemap facade
+    |
+    | -> cache: If an int, will be the cache time in seconds or false to disable.
+    | -> default_routes: If true, Laravel Toolkit will create sitemap routes.
+    | -> timeout: If an int will change the max execution time from php. If null
+    |    it will use the php.ini default. This is helpful for large sitemaps
+    | -> max_file_items: Max amount of items on sitemap without trigger log
+    | -> max_file_size: Max sitemap size without trigger log
+    |
+    */
+    'sitemap' => [
+        'cache' => 21_600,
+        'default_routes' => true,
+        'timeout' => null,
+        'max_file_items' => 50_000,
+        'max_file_size' => 50 * 1024 * 1024,
+    ],
 ];

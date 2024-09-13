@@ -4,8 +4,10 @@ namespace LaravelToolkit\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use LaravelToolkit\LaravelToolkitServiceProvider;
+use Orchestra\Testbench\Attributes\WithMigration;
 use Orchestra\Testbench\TestCase as Orchestra;
 
+#[WithMigration]
 class TestCase extends Orchestra
 {
     protected function setUp(): void
@@ -15,6 +17,11 @@ class TestCase extends Orchestra
         Factory::guessFactoryNamesUsing(
             fn (string $modelName) => 'LaravelToolkit\\Database\\Factories\\'.class_basename($modelName).'Factory'
         );
+        $copyPath = dirname(__DIR__).'/routes/sitemap.php';
+        $sitemapRoutesPath = base_path('routes/sitemap.php');
+        if (! file_exists($sitemapRoutesPath)) {
+            copy($copyPath, $sitemapRoutesPath);
+        }
     }
 
     protected function getPackageProviders($app)
@@ -22,6 +29,11 @@ class TestCase extends Orchestra
         return [
             LaravelToolkitServiceProvider::class,
         ];
+    }
+
+    protected function defineDatabaseMigrations()
+    {
+        $this->loadMigrationsFrom(dirname(__DIR__).'/workbench/database/migrations');
     }
 
     public function getEnvironmentSetUp($app)
