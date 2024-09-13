@@ -39,7 +39,7 @@ class Sitemap
             'You cannot combine indexes and url in same sitemap.'
         );
         $name = trim($name);
-        if ($this->items->filter(fn(Index $item) => $item->group === $name)->isEmpty()) {
+        if ($this->items->filter(fn (Index $item) => $item->group === $name)->isEmpty()) {
             $this->items->push(new Index($name));
         }
 
@@ -58,7 +58,7 @@ class Sitemap
             'You cannot combine indexes and url in same sitemap.'
         );
         $url = $url instanceof Url ? $url : new Url($url, $lastModified, $changeFrequency, $priority);
-        if ($this->items->filter(fn(Url $item) => $item->loc === $url->loc)->isEmpty()) {
+        if ($this->items->filter(fn (Url $item) => $item->loc === $url->loc)->isEmpty()) {
             $this->items->push($url);
         }
 

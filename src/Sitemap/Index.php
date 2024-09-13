@@ -4,7 +4,6 @@ namespace LaravelToolkit\Sitemap;
 
 use DOMDocument;
 use DOMElement;
-use Saloon\XmlWrangler\Data\Element;
 
 readonly class Index implements ToXml
 {
@@ -15,7 +14,7 @@ readonly class Index implements ToXml
 
     public function toXml(DOMDocument $xml, DOMElement $root): void
     {
-        $currentTrack = $xml->createElement("sitemap");
+        $currentTrack = $xml->createElement('sitemap');
         $currentTrack = $root->appendChild($currentTrack);
         $currentTrack->appendChild($xml->createElement(
             'loc',

@@ -4,14 +4,11 @@ namespace LaravelToolkit\Actions\Sitemap;
 
 use DOMDocument;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use LaravelToolkit\Facades\Sitemap;
 use LaravelToolkit\Sitemap\Index;
 use LaravelToolkit\Sitemap\SitemapRequestedEvent;
 use LaravelToolkit\Sitemap\Url;
-use Saloon\XmlWrangler\Data\RootElement;
-use Saloon\XmlWrangler\XmlWriter;
 
 class RenderSitemap
 {
