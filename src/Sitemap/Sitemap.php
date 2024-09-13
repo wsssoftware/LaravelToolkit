@@ -14,7 +14,7 @@ class Sitemap
 
     protected Collection $domains;
 
-    protected Collection $groups;
+    protected Collection $indexes;
 
     protected bool $locked = false;
 
@@ -27,14 +27,14 @@ class Sitemap
     {
         $this->closureRepositories = collect();
         $this->domains = collect();
-        $this->groups = collect();
+        $this->indexes = collect();
         $this->items = collect();
     }
 
-    public function addGroup(string $name): self
+    public function addIndex(string $name): self
     {
         throw_if(
-            $this->items->filter(fn (Index|Url $item) => ! $item instanceof Index)->isNotEmpty(),
+            $this->items->filter(fn (Index|Url $item) => $item instanceof Url)->isNotEmpty(),
             Exception::class,
             'You cannot combine indexes and url in same sitemap.'
         );
@@ -53,7 +53,7 @@ class Sitemap
         ?float $priority = null
     ): self {
         throw_if(
-            $this->items->filter(fn (Index|Url $item) => ! $item instanceof Url)->isNotEmpty(),
+            $this->items->filter(fn (Index|Url $item) => $item instanceof Index)->isNotEmpty(),
             Exception::class,
             'You cannot combine indexes and url in same sitemap.'
         );
@@ -80,7 +80,7 @@ class Sitemap
     public function fromQuery(Builder $builder, Closure $closure, int $count = 1_000): self
     {
         throw_if(
-            $this->items->filter(fn (Index|Url $item) => ! $item instanceof Url)->isNotEmpty(),
+            $this->items->filter(fn (Index|Url $item) => $item instanceof Index)->isNotEmpty(),
             Exception::class,
             'You cannot combine indexes and url in same sitemap.'
         );
@@ -89,52 +89,52 @@ class Sitemap
         return $this;
     }
 
-    public function fromCollection(Collection $collection, Closure $closure): self
+    public function fromCollection(array|Collection $collection, Closure $closure): self
     {
         throw_if(
-            $this->items->filter(fn (Index|Url $item) => ! $item instanceof Url)->isNotEmpty(),
+            $this->items->filter(fn (Index|Url $item) => $item instanceof Index)->isNotEmpty(),
             Exception::class,
             'You cannot combine indexes and url in same sitemap.'
         );
-        $this->closureRepositories->push(new ClosureRepository($collection, $closure));
+        $this->closureRepositories->push(new ClosureRepository(collect($collection), $closure));
 
         return $this;
     }
 
-    public function group(string $group, Closure $closure): void
+    public function index(string $index, Closure $closure): void
     {
         throw_if($this->locked, Exception::class, 'Groups must be placed on root of sitemap.php');
-        throw_if($this->groups->offsetExists($group), Exception::class, "Group '{$group}' already declared.");
-        $this->groups->put($group, $closure);
+        throw_if($this->indexes->offsetExists($index), Exception::class, "Group '{$index}' already declared.");
+        $this->indexes->put($index, $closure);
     }
 
-    public function groupExists(?string $group): bool
+    public function indexExists(?string $index): bool
     {
-        return $group === null || $this->groups->offsetExists($group);
+        return $index === null || $this->indexes->offsetExists($index);
     }
 
     /**
      * @return \Illuminate\Support\Collection<int, Index,Url>
      */
-    public function process(string $domain, ?string $group): Collection
+    public function process(string $domain, ?string $index): Collection
     {
         return match (true) {
-            ! empty($group) => $this->processGroup($group),
+            ! empty($index) => $this->processIndex($index),
             $this->domainExists($domain) => $this->processDomain($domain),
             default => $this->processDefault()
         };
     }
 
-    protected function processGroup(string $group): Collection
+    protected function processIndex(string $name): Collection
     {
         $this->items = collect();
         $this->closureRepositories = collect();
         $this->locked = true;
-        $this->groups->get($group)->call($this);
+        $this->indexes->get($name)->call($this);
         $this->resolveClosureRepositories();
         $this->locked = false;
 
-        return $this->items->unique('group');
+        return $this->items;
     }
 
     protected function processDomain(string $domain): Collection

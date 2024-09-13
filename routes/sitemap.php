@@ -10,14 +10,14 @@
 //    Sitemap::addUrl(route('index.user', $user->id), $user->created_at);
 //});
 //// OR
-////Sitemap::addGroup('users');
+////Sitemap::addIndex('users');
 //
 //
 //Sitemap::domain('abc.dev.test', function () {
 //    Sitemap::addUrl(route('login'));
 //});
 //
-//Sitemap::group('users', function () {
+//Sitemap::index('users', function () {
 //    Sitemap::fromCollection(collect([1,2,3]), function (int $number) {
 //        Sitemap::addUrl(route('index', ['number' => $number, 'number2' => $number]));
 //    });

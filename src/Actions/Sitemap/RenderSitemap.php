@@ -16,43 +16,43 @@ class RenderSitemap
 {
     protected Request $request;
 
-    protected ?string $group;
+    protected ?string $index;
 
     protected ?int $lastModified;
 
-    public function __invoke(Request $request, ?string $group = null)
+    public function __invoke(Request $request, ?string $index = null)
     {
         $timeout = config('laraveltoolkit.sitemap.timeout');
         if (is_int($timeout)) {
             set_time_limit($timeout);
         }
-        $this->bootstrap($request, $group);
+        $this->bootstrap($request, $index);
         $cacheTtl = config('laraveltoolkit.sitemap.cache');
-        $cacheKey = 'lt.sitemap'.sha1($request->getHost().'::'.($group ?? '').'::'.$this->lastModified);
+        $cacheKey = 'lt.sitemap.'.sha1($request->getHost().'::'.($index ?? '').'::'.$this->lastModified);
         $xml = $cacheTtl !== false
             ? Cache::remember($cacheKey, $cacheTtl, fn() => $this->write())
             : $this->write();
-        SitemapRequestedEvent::dispatch($request->getHost(), $group, $request->userAgent());
+        SitemapRequestedEvent::dispatch($request->getHost(), $index, $request->userAgent());
 
         return response($xml)->header('Content-Type', 'text/xml');
     }
 
-    protected function bootstrap(Request $request, $group): void
+    protected function bootstrap(Request $request, $index): void
     {
         $this->request = $request;
-        $this->group = $group;
+        $this->index = $index;
         $sitemapConfig = base_path('routes/sitemap.php');
         abort_if(!file_exists($sitemapConfig), 404);
         $this->lastModified = filemtime($sitemapConfig);
         if (file_exists(base_path('routes/sitemap.php'))) {
             require $sitemapConfig;
         }
-        abort_if(!Sitemap::groupExists($group), 404);
+        abort_if(!Sitemap::indexExists($index), 404);
     }
 
     protected function write(): string
     {
-        $items = Sitemap::process($this->request->getHost(), $this->group);
+        $items = Sitemap::process($this->request->getHost(), $this->index);
         $count = $items->count();
         if ($count > 50_000) {
             Log::warning(sprintf(

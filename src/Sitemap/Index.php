@@ -18,7 +18,7 @@ readonly class Index implements ToXml
         $currentTrack = $root->appendChild($currentTrack);
         $currentTrack->appendChild($xml->createElement(
             'loc',
-            route('lt.sitemap_group', ['group' => $this->group]),
+            route('lt.sitemap_group', ['index' => $this->group]),
         ));
     }
 }
