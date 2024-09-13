@@ -18,30 +18,16 @@ You can install the package via composer:
 composer require wsssoftware/laraveltoolkit
 ```
 
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --tag="laraveltoolkit-migrations"
-php artisan migrate
-```
-
 You can publish the config file with:
 
 ```bash
 php artisan vendor:publish --tag="laraveltoolkit-config"
 ```
 
-This is the contents of the published config file:
-
-```php
-return [
-];
-```
-
-Optionally, you can publish the views using
+You can publish the sitemap config file with:
 
 ```bash
-php artisan vendor:publish --tag="laraveltoolkit-views"
+php artisan vendor:publish --tag="laraveltoolkit-sitemap"
 ```
 
 ## Installation JS

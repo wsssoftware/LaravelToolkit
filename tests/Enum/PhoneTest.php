@@ -95,3 +95,8 @@ it('can create a fake', function (Phone $phone) {
         ->toBeTrue();
 })->with(Phone::cases())
     ->repeat(4);
+
+it('can create a fake generic', function () {
+    expect(Phone::GENERIC->isValid(Phone::GENERIC->fake()))
+        ->toBeTrue();
+})->repeat(20);
