@@ -66,9 +66,10 @@ return [
     |
     | This configurations will help to configure the behavior of Sitemap facade
     |
-    | -> cache: Cache or not a sitemap. Allowed values: int and false.
+    | -> cache: If an int, will be the cache time in seconds or false to disable.
     | -> default_routes: If true, Laravel Toolkit will create sitemap routes.
-    | -> timeout: Default timeout for the request. Used for large sitemap files.
+    | -> timeout: If an int will change the max execution time from php. If null
+    |    it will use the php.ini default. This is helpful for large sitemaps
     |
     */
     'sitemap' => [
