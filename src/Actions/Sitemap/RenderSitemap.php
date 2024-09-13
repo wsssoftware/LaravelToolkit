@@ -53,12 +53,13 @@ class RenderSitemap
     protected function write(): string
     {
         $items = Sitemap::process($this->request->getHost(), $this->index);
+        $maxFileItems = intval(config('laraveltoolkit.sitemap.max_file_items'));
         $count = $items->count();
-        if ($count > 50_000) {
+        if ($count > $maxFileItems) {
             Log::warning(sprintf(
                 'The sitemap items count limit of %s was exceeded in %s. This may cause search engines to reject it.',
-                Number::format(50_000, 0),
-                Number::format($count - 50_000, 0),
+                Number::format($maxFileItems),
+                Number::format($count - $maxFileItems, 0),
             ));
         }
         $type = $items->filter(fn (Index|Url $item
@@ -70,7 +71,7 @@ class RenderSitemap
 
         $content = $xml->saveXML();
         $size = mb_strlen($content, '8bit');
-        $maxAllowedSize = 50 * 1024 * 1024;
+        $maxAllowedSize = intval(config('laraveltoolkit.sitemap.max_file_size'));
 
         if ($size > $maxAllowedSize) {
             Log::warning(sprintf(
