@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use LaravelToolkit\Facades\Sitemap;
 use LaravelToolkit\Sitemap\Index;
+use LaravelToolkit\Sitemap\SitemapRequestedEvent;
 use LaravelToolkit\Sitemap\Url;
 use Saloon\XmlWrangler\Data\RootElement;
 use Saloon\XmlWrangler\XmlWriter;
@@ -26,7 +27,7 @@ class RenderSitemap
         $xml = $cacheTtl !== false
             ? Cache::remember($cacheKey, $cacheTtl, fn() => $this->write())
             : $this->write();
-
+        SitemapRequestedEvent::dispatch($request->getHost(), $group);
         return response($xml)->header('Content-Type', 'text/xml');
     }
 
