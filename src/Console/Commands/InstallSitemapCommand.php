@@ -26,12 +26,12 @@ class InstallSitemapCommand extends Command
      */
     public function handle(): void
     {
-        if (file_exists($apiRoutesPath = $this->laravel->basePath('routes/sitemap.php')) &&
+        if (file_exists($sitemapRoutesPath = $this->laravel->basePath('routes/sitemap.php')) &&
             ! $this->option('force')) {
             $this->components->error('Sitemap routes file already exists.');
         } else {
             $this->components->info('Published Sitemap routes file.');
-            copy(dirname(__DIR__, 3).'/routes/sitemap.php', $apiRoutesPath);
+            copy(dirname(__DIR__, 3).'/routes/sitemap.php', $sitemapRoutesPath);
         }
     }
 }
