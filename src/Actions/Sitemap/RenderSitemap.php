@@ -29,6 +29,7 @@ class RenderSitemap
             ? Cache::remember($cacheKey, $cacheTtl, fn () => $this->write())
             : $this->write();
         SitemapRequestedEvent::dispatch($request->getHost(), $group);
+
         return response($xml)->header('Content-Type', 'text/xml');
     }
 
