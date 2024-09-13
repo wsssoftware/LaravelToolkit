@@ -2,6 +2,15 @@
 
 All notable changes to `LaravelToolkit` will be documented in this file.
 
+## 0.5.0 - 2024-09-13
+
+### What's Changed
+
+* [Feat] Search engine optimization helpers by @allanmcarvalho in https://github.com/wsssoftware/LaravelToolkit/pull/2
+* [Feat] Sitemap by @allanmcarvalho in https://github.com/wsssoftware/LaravelToolkit/pull/3
+
+**Full Changelog**: https://github.com/wsssoftware/LaravelToolkit/compare/0.4.0...0.5.0
+
 ## 0.4.0 - 2024-09-09
 
 ### What's Changed
