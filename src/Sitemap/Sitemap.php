@@ -34,7 +34,7 @@ class Sitemap
     public function addIndex(string $name): self
     {
         throw_if(
-            $this->items->filter(fn (Index|Url $item) => $item instanceof Url)->isNotEmpty(),
+            $this->items->whereInstanceOf(Url::class)->isNotEmpty(),
             Exception::class,
             'You cannot combine indexes and url in same sitemap.'
         );
@@ -53,7 +53,7 @@ class Sitemap
         ?float $priority = null
     ): self {
         throw_if(
-            $this->items->filter(fn (Index|Url $item) => $item instanceof Index)->isNotEmpty(),
+            $this->items->whereInstanceOf(Index::class)->isNotEmpty(),
             Exception::class,
             'You cannot combine indexes and url in same sitemap.'
         );
@@ -80,7 +80,7 @@ class Sitemap
     public function fromQuery(Builder $builder, Closure $closure, int $count = 1_000): self
     {
         throw_if(
-            $this->items->filter(fn (Index|Url $item) => $item instanceof Index)->isNotEmpty(),
+            $this->items->whereInstanceOf(Index::class)->isNotEmpty(),
             Exception::class,
             'You cannot combine indexes and url in same sitemap.'
         );
@@ -92,7 +92,7 @@ class Sitemap
     public function fromCollection(array|Collection $collection, Closure $closure): self
     {
         throw_if(
-            $this->items->filter(fn (Index|Url $item) => $item instanceof Index)->isNotEmpty(),
+            $this->items->whereInstanceOf(Index::class)->isNotEmpty(),
             Exception::class,
             'You cannot combine indexes and url in same sitemap.'
         );
