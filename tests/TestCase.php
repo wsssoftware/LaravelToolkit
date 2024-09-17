@@ -3,6 +3,7 @@
 namespace LaravelToolkit\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Inertia\ServiceProvider;
 use LaravelToolkit\LaravelToolkitServiceProvider;
 use Orchestra\Testbench\Attributes\WithMigration;
 use Orchestra\Testbench\TestCase as Orchestra;
@@ -28,6 +29,7 @@ class TestCase extends Orchestra
     {
         return [
             LaravelToolkitServiceProvider::class,
+            ServiceProvider::class,
         ];
     }
 
