@@ -2,6 +2,16 @@
 
 // config for LaravelToolkit
 return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Extended redirector
+    |--------------------------------------------------------------------------
+    | Extends the default Laravel redirector to handle with Inertia redirects
+    | to another domains.
+    */
+    'extended_redirector' => true,
+
     /*
     |--------------------------------------------------------------------------
     | Flash configurations

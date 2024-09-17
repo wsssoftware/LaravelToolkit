@@ -2,7 +2,10 @@
 
 namespace LaravelToolkit;
 
+use Illuminate\Routing\Redirector;
+use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\Facades\Blade;
+use LaravelToolkit\Routing\Redirector as PackageRedirector;
 use LaravelToolkit\Macros\CollectionMacro;
 use LaravelToolkit\SEO\SEOComponent;
 use Spatie\LaravelPackageTools\Package;
@@ -47,6 +50,10 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
         );
 
         Blade::component('seo', SEOComponent::class);
+
+        if (config('laraveltoolkit.extended_redirector')) {
+            $this->app->extend('redirect', fn() => app(PackageRedirector::class));
+        }
 
         return parent::boot();
 
