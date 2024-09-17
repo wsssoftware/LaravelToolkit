@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Redirector extends \Illuminate\Routing\Redirector
 {
-
     public function __construct(UrlGenerator $generator)
     {
         parent::__construct($generator);
@@ -24,8 +23,9 @@ class Redirector extends \Illuminate\Routing\Redirector
         $host = $this->generator->getRequest()->getSchemeAndHttpHost();
         $isHttp = str($path)->startsWith(['http://', 'https://']);
         $isSameHost = str($path)->startsWith($host);
+
         return match (true) {
-            Request::inertia() && $isHttp && !$isSameHost => Inertia::location($path),
+            Request::inertia() && $isHttp && ! $isSameHost => Inertia::location($path),
             default => parent::createRedirect($path, $status, $headers),
         };
     }
