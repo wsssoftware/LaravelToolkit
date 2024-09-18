@@ -11,8 +11,13 @@ class Process
     {
         $id = Filepond::generateId();
         $input = $request->file('filepond');
-        $file = is_array($input) ? $input[0] : $input;
 
+        if (empty($input) && is_numeric($request->header('upload_length'))) {
+            Filepond::disk()->createDirectory(Filepond::path($id));
+            return response($id, 200, ['Content-Type' => 'text/plain']);
+        }
+
+        $file = is_array($input) ? $input[0] : $input;
         $savedFile = $file->storeAs(
             Filepond::path($id),
             'upload_'.$file->getClientOriginalName(),
@@ -23,6 +28,6 @@ class Process
 
         defer(fn() => Filepond::garbageCollector());
 
-        return $id;
+        return response($id, 200, ['Content-Type' => 'text/plain']);
     }
 }
