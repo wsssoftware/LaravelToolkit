@@ -6,7 +6,6 @@ use LaravelToolkit\Facades\Filepond;
 
 class MergeChunkFile
 {
-
     protected mixed $file;
 
     public function __construct(
@@ -32,6 +31,7 @@ class MergeChunkFile
     protected function mergeChunk(int $carry, string $path): int
     {
         fwrite($this->file, Filepond::disk()->get($path));
+
         return $carry + 1;
     }
 }
