@@ -11,9 +11,10 @@ use LaravelToolkit\Filepond\MergeChunkFile;
 
 class ProcessChunk
 {
-
     protected Filesystem|FilesystemAdapter $disk;
+
     protected ?string $id;
+
     protected Request $request;
 
     public function __invoke(Request $request): Response
@@ -26,7 +27,7 @@ class ProcessChunk
 
         $offset = $request->server('HTTP_UPLOAD_OFFSET');
         abort_if(
-            !is_numeric($offset) || !is_numeric($request->server('HTTP_UPLOAD_LENGTH')),
+            ! is_numeric($offset) || ! is_numeric($request->server('HTTP_UPLOAD_LENGTH')),
             400, 'Invalid chunk length or offset',
             ['Content-Type' => 'text/plain']
         );
@@ -46,8 +47,8 @@ class ProcessChunk
         if ($size < $wantedSize) {
             return 204;
         }
-        $outputFilename =  $this->request->headers->get('upload-name');
-        $isInvalid = empty($outputFilename) || !is_string($outputFilename);
+        $outputFilename = $this->request->headers->get('upload-name');
+        $isInvalid = empty($outputFilename) || ! is_string($outputFilename);
         abort_if($isInvalid, 500, 'No file name provided', ['Content-Type' => 'text/plain']);
         $outputFilename = 'upload_'.$outputFilename;
 
@@ -57,6 +58,7 @@ class ProcessChunk
             Filepond::clearChunk($this->id);
             Filepond::garbageCollector();
         });
+
         return $this->disk->size(Filepond::path($this->id, $outputFilename)) === $wantedSize ? 200 : 500;
     }
 }

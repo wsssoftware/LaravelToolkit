@@ -11,24 +11,23 @@ use Illuminate\Support\Str;
 
 class Filepond
 {
-
     public function chunks(string $id): Collection
     {
         return collect($this->disk()->files($this->path($id)))
-            ->filter(fn(string $name) => str($name)->afterLast(DIRECTORY_SEPARATOR)->startsWith('patch.'))
-            ->filter(fn(string $name) => str_ends_with($name, '.tmp'))
+            ->filter(fn (string $name) => str($name)->afterLast(DIRECTORY_SEPARATOR)->startsWith('patch.'))
+            ->filter(fn (string $name) => str_ends_with($name, '.tmp'))
             ->sort(SORT_NATURAL);
     }
 
     public function clearChunk(string $id): void
     {
-        $this->chunks($id)->each(fn($chunk) => $this->disk()->delete($chunk));
+        $this->chunks($id)->each(fn ($chunk) => $this->disk()->delete($chunk));
     }
 
     public function currentChunksSize(string $id): int
     {
         return $this->chunks($id)
-            ->sum(fn($chunk) => $this->disk()->size($chunk));
+            ->sum(fn ($chunk) => $this->disk()->size($chunk));
     }
 
     public function disk(): FilesystemAdapter|Filesystem
@@ -44,7 +43,7 @@ class Filepond
     public function garbageCollector(): void
     {
         Lottery::odds(floatval(config('laraveltoolkit.filepond.garbage_collector.probability')))
-            ->winner(fn() => (new GarbageCollector())())
+            ->winner(fn () => (new GarbageCollector)())
             ->choose();
     }
 
@@ -53,7 +52,7 @@ class Filepond
         return Str::uuid()->toString();
     }
 
-    public function path(string $id, string $path = null): string
+    public function path(string $id, ?string $path = null): string
     {
         return sprintf(
             '%s%s%s%s%s',

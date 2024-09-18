@@ -2,7 +2,6 @@
 
 namespace LaravelToolkit\Facades;
 
-
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Collection;

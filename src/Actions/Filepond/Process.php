@@ -14,6 +14,7 @@ class Process
 
         if (empty($input) && is_numeric($request->header('upload_length'))) {
             Filepond::disk()->createDirectory(Filepond::path($id));
+
             return response($id, 200, ['Content-Type' => 'text/plain']);
         }
 
@@ -26,7 +27,7 @@ class Process
 
         abort_if(! $savedFile, 500, 'Could not save file', ['Content-Type' => 'text/plain']);
 
-        defer(fn() => Filepond::garbageCollector());
+        defer(fn () => Filepond::garbageCollector());
 
         return response($id, 200, ['Content-Type' => 'text/plain']);
     }

@@ -12,7 +12,6 @@ use LaravelToolkit\Actions\Sitemap\RenderSitemap;
 Route::middleware('web')->get('/lt/flash-get-messages', GetMessages::class)
     ->name('lt.flash.get_messages');
 
-
 Route::middleware('web')->prefix('lt/filepond')->group(function () {
     Route::post('process', Process::class)->name('lt.filepond.process');
     Route::patch('process-chunk', ProcessChunk::class)->name('lt.filepond.process_chunk');
