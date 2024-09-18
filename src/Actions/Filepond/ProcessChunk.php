@@ -37,7 +37,7 @@ class ProcessChunk
             ['mimetype' => 'application/octet-stream']
         );
 
-        return response($this->wasPersisted(), headers: ['Content-Type' => 'text/plain']);
+        return response(null, $this->wasPersisted(), headers: ['Content-Type' => 'text/plain']);
     }
 
     private function wasPersisted(): int
@@ -50,14 +50,13 @@ class ProcessChunk
         $outputFilename = $this->request->headers->get('upload-name');
         $isInvalid = empty($outputFilename) || ! is_string($outputFilename);
         abort_if($isInvalid, 500, 'No file name provided', ['Content-Type' => 'text/plain']);
-
         (new MergeChunkFile($this->id, $outputFilename))();
-
         defer(function () {
             Filepond::clearChunk($this->id);
             Filepond::garbageCollector();
         });
-
-        return $this->disk->size(Filepond::path($this->id, $outputFilename)) === $wantedSize ? 200 : 500;
+        $path = Filepond::path($this->id, $outputFilename);
+        $size = $this->disk->size($path);
+        return $this->disk->exists($path) && $size === $wantedSize ? 204 : 500;
     }
 }

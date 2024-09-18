@@ -13,9 +13,7 @@ class MergeChunkFile
         protected string $outputFilename
     ) {
         $filenamePath = Filepond::path($this->id, $this->outputFilename);
-        if (Filepond::disk()->exists($filenamePath)) {
-            Filepond::disk()->delete($filenamePath);
-        }
+        Filepond::disk()->delete($filenamePath);
         $this->file = fopen(Filepond::disk()->path(Filepond::path($this->id, $outputFilename)), 'w');
         abort_if($this->file === false, 500, 'Could not open file', ['Content-Type' => 'text/plain']);
     }
