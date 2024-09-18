@@ -28,7 +28,6 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
         $this->addPublishGroup('laraveltoolkit-sitemap', [
             dirname(__DIR__).'/routes/sitemap.php' => base_path('routes/sitemap.php'),
         ]);
-        //            ->hasMigration('create_laraveltoolkit_table')
     }
 
     public function boot(): self
