@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static Collection chunks(string $id)
+ * @method static string chunkPostfix(string $id)
  * @method static void clearChunk(string $id)
  * @method static int currentChunksSize(string $id)
  * @method static FilesystemAdapter|Filesystem disk()

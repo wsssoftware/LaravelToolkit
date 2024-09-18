@@ -20,7 +20,7 @@ class Process
         $file = is_array($input) ? $input[0] : $input;
         $savedFile = $file->storeAs(
             Filepond::path($id),
-            'upload_'.$file->getClientOriginalName(),
+            $file->getClientOriginalName(),
             Filepond::diskName(),
         );
 

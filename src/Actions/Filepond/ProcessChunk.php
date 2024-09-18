@@ -32,7 +32,7 @@ class ProcessChunk
         );
 
         $this->disk->put(
-            Filepond::path($this->id, "patch.$offset.tmp"), $request->getContent(),
+            Filepond::path($this->id, $offset.'.'.Filepond::chunkPostfix($this->id)), $request->getContent(),
             ['mimetype' => 'application/octet-stream']
         );
 
@@ -46,10 +46,9 @@ class ProcessChunk
         if ($size < $wantedSize) {
             return 204;
         }
-        $outputFilename =  $this->request->headers->get('upload-name');
+        $outputFilename = $this->request->headers->get('upload-name');
         $isInvalid = empty($outputFilename) || !is_string($outputFilename);
         abort_if($isInvalid, 500, 'No file name provided', ['Content-Type' => 'text/plain']);
-        $outputFilename = 'upload_'.$outputFilename;
 
         (new MergeChunkFile($this->id, $outputFilename))();
 

@@ -15,9 +15,13 @@ class Filepond
     public function chunks(string $id): Collection
     {
         return collect($this->disk()->files($this->path($id)))
-            ->filter(fn(string $name) => str($name)->afterLast(DIRECTORY_SEPARATOR)->startsWith('patch.'))
-            ->filter(fn(string $name) => str_ends_with($name, '.tmp'))
+            ->filter(fn(string $name) => str_ends_with($name, $this->chunkPostfix($id)))
             ->sort(SORT_NATURAL);
+    }
+
+    public function chunkPostfix(string $id): string
+    {
+        return str($id)->before('-')->append('.chunk')->toString();
     }
 
     public function clearChunk(string $id): void
