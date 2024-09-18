@@ -39,7 +39,7 @@ return [
         'disk' => 'local',
         'root_path' => 'lt_filepond',
         'garbage_collector' => [
-            'probability' => 1,
+            'probability' => 0.1,
             'upload_life' => 3600,
             'maximum_interactions' => 50,
         ],
