@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
-import {Collapse} from "laraveltoolkit";
+import Collapse from "../Collapse.vue";
 
 export default defineComponent({
     name: "InputGroupBottom",

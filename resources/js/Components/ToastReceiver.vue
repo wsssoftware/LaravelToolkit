@@ -8,8 +8,7 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import Toast from 'primevue/toast';
-import { getFlashMessages } from 'laraveltoolkit';
-import {Message} from "laraveltoolkit/resources/js/Flash";
+import {Message, getFlashMessages} from "../Flash";
 import {router} from "@inertiajs/vue3";
 
 type event = () => void

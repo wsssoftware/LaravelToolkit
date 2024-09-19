@@ -25,7 +25,7 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {Head as InertiaHead} from "@inertiajs/vue3";
-import {SEOEntity} from "laraveltoolkit";
+import {SEOEntity} from "../index";
 
 export default defineComponent({
     name: "Head",

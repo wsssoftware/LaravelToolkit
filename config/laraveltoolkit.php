@@ -36,12 +36,12 @@ return [
     |
     */
     'filepond' => [
-        'disk' => 'local',
-        'root_path' => 'lt_filepond',
+        'disk' => env('LT_FILEPOND_DISK', env('FILESYSTEM_DISK', 'local')),
+        'root_path' => env('LT_FILEPOND_ROOT_PATH', 'lt_filepond'),
         'garbage_collector' => [
-            'probability' => 0.1,
-            'upload_life' => 3600,
-            'maximum_interactions' => 50,
+            'probability' => env('LT_FILEPOND_GC_PROBABILITY', 0.1),
+            'upload_life' => env('LT_FILEPOND_GC_UPLOAD_LIFE', 3600),
+            'maximum_interactions' => env('LT_FILEPOND_GC_MAXIMUM_INTERACTIONS', 0.1),
         ],
     ],
 
