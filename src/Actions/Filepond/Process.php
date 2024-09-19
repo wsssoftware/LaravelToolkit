@@ -4,6 +4,7 @@ namespace LaravelToolkit\Actions\Filepond;
 
 use Illuminate\Http\Request;
 use LaravelToolkit\Facades\Filepond;
+use LaravelToolkit\Filepond\Abortable;
 
 class Process
 {
@@ -14,7 +15,7 @@ class Process
 
         if (empty($input)) {
             $dontHasLength = ! is_numeric($request->header('upload_length'));
-            abort_if($dontHasLength, 500, 'Invalid upload', ['Content-Type' => 'text/plain']);
+            abort_if($dontHasLength, Abortable::make('Invalid upload'));
             Filepond::disk()->createDirectory(Filepond::path($id));
 
             return response($id, 200, ['Content-Type' => 'text/plain']);
@@ -27,7 +28,7 @@ class Process
             Filepond::diskName(),
         );
 
-        abort_if(! $savedFile, 500, 'Could not save file', ['Content-Type' => 'text/plain']);
+        abort_if(! $savedFile, Abortable::make('Could not save file'));
 
         defer(fn () => Filepond::garbageCollector());
 

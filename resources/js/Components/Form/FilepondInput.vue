@@ -12,7 +12,7 @@
 <script lang="ts">
 import {defineComponent, PropType} from "vue";
 import {filepondServer} from "../../Filepond";
-import {registerPlugin, FilePond, create, FilePondOptions, FilePondFile} from "filepond";
+import {registerPlugin, FilePond, create, FilePondOptions, FilePondFile, FilePondInitialFile} from "filepond";
 import 'filepond/dist/filepond.min.css';
 import {InertiaForm} from "@inertiajs/vue3";
 
@@ -27,7 +27,7 @@ export default defineComponent({
         form: {type: Object as PropType<InertiaForm<object>>, required: true},
         id: String,
         invalid: Boolean,
-        modelValue: {type: [String, Array, null], required: true},
+        modelValue: {type: [String, Array, null] as PropType<string|string[]|null>, required: true},
         options: Object as PropType<FilePondOptions&{[key: string]: any}>,
         plugins: Array as PropType<any[]>,
         required: Boolean,
@@ -44,7 +44,7 @@ export default defineComponent({
     },
     computed: {
         value: {
-            get() {
+            get(): string|string[]|null {
                 return this.modelValue
             },
             set(value: string|string[]) {
@@ -56,7 +56,7 @@ export default defineComponent({
         registerPlugin(...[
             ...this.plugins ?? [],
         ])
-        this.filepond = create(this.$refs.input as HTMLInputElement, this.getOptions());
+        this.filepond = create(this.$refs.input as HTMLInputElement, this.getOptions(this.value));
         this.filepond.on('initfile', this.loading);
         this.filepond.on('processfilerevert', this.loading);
         this.filepond.on('processfiles', this.loaded);
@@ -75,8 +75,16 @@ export default defineComponent({
     },
 
     methods: {
-        getOptions(): FilePondOptions {
-            return {
+        getFiles(fileIds: string|string[]): FilePondInitialFile[] {
+            fileIds = Array.isArray(fileIds) ? fileIds : [fileIds];
+            let files : FilePondInitialFile[] = [];
+            fileIds.forEach((id: string) => {
+                files.push({source: id, options: {type: 'limbo'}})
+            })
+            return files;
+        },
+        getOptions(files: string|string[]|null = null): FilePondOptions {
+            let options = {
                 disabled: this.disabled,
                 required: this.required,
                 chunkUploads: this.chunk,
@@ -84,6 +92,10 @@ export default defineComponent({
                 server: this.server,
                 ...this.options ?? {},
             }
+            if (files !== null && !!files) {
+                options.files = this.getFiles(files);
+            }
+            return options;
         },
         loaded(): void {
             let serverIds: string[] = [];

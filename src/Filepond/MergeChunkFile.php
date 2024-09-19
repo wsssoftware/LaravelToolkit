@@ -22,16 +22,17 @@ class MergeChunkFile
         $this->outputPath = Filepond::path($this->id, $outputFilename);
         $this->disk->delete($this->outputPath);
         $this->file = tmpfile();
-        abort_if($this->file === false, 500, 'Could not open file', ['Content-Type' => 'text/plain']);
+        abort_if($this->file === false, Abortable::make('Could not open file'));
     }
 
     public function __invoke(): void
     {
         $chunks = Filepond::chunks($this->id);
-        $processedChunks = $chunks->reduce(fn (int $carry, string $path) => $this->mergeChunk($carry, $path), 0);
-        abort_if($processedChunks !== $chunks->count(), 500, 'Something went wrong', ['Content-Type' => 'text/plain']);
+        $processedChunks = $chunks->reduce(fn(int $carry, string $path) => $this->mergeChunk($carry, $path), 0);
+        abort_if($processedChunks !== $chunks->count(), Abortable::make('Something went wrong'));
         rewind($this->file);
-        abort_if(! Filepond::disk()->put($this->outputPath, $this->file), 500, 'Something went wrong', ['Content-Type' => 'text/plain']);
+        $saved = Filepond::disk()->put($this->outputPath, $this->file);
+        abort_if(!$saved, Abortable::make('Something went wrong while writing file'));
         fclose($this->file);
     }
 
