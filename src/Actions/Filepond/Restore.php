@@ -21,7 +21,7 @@ class Restore
         return response($disk->get($files[0]), 200, [
             'Content-Disposition' => 'inline',
             'Filename' => basename($files[0]),
-            'Content-Type' => $disk->mimeType($files[0])
+            'Content-Type' => $disk->mimeType($files[0]),
         ]);
     }
 }
