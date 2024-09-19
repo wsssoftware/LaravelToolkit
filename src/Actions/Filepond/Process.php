@@ -13,7 +13,7 @@ class Process
         $input = $request->file('filepond');
 
         if (empty($input)) {
-            $dontHasLength = !is_numeric($request->header('upload_length'));
+            $dontHasLength = ! is_numeric($request->header('upload_length'));
             abort_if($dontHasLength, 500, 'Invalid upload', ['Content-Type' => 'text/plain']);
             Filepond::disk()->createDirectory(Filepond::path($id));
 

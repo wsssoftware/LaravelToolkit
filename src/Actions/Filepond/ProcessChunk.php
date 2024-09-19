@@ -57,6 +57,7 @@ class ProcessChunk
         });
         $path = Filepond::path($this->id, $outputFilename);
         $size = $this->disk->size($path);
+
         return $this->disk->exists($path) && $size === $wantedSize ? 204 : 500;
     }
 }
