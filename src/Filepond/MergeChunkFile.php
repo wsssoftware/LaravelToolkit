@@ -9,7 +9,9 @@ use LaravelToolkit\Facades\Filepond;
 class MergeChunkFile
 {
     protected Filesystem|FilesystemAdapter $disk;
+
     protected mixed $file;
+
     protected string $outputPath;
 
     public function __construct(
@@ -29,7 +31,7 @@ class MergeChunkFile
         $processedChunks = $chunks->reduce(fn (int $carry, string $path) => $this->mergeChunk($carry, $path), 0);
         abort_if($processedChunks !== $chunks->count(), 500, 'Something went wrong', ['Content-Type' => 'text/plain']);
         rewind($this->file);
-        abort_if(!Filepond::disk()->put($this->outputPath, $this->file), 500, 'Something went wrong', ['Content-Type' => 'text/plain']);
+        abort_if(! Filepond::disk()->put($this->outputPath, $this->file), 500, 'Something went wrong', ['Content-Type' => 'text/plain']);
         fclose($this->file);
     }
 
