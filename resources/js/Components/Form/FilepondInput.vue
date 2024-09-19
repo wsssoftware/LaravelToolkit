@@ -79,7 +79,10 @@ export default defineComponent({
             fileIds = Array.isArray(fileIds) ? fileIds : [fileIds];
             let files : FilePondInitialFile[] = [];
             fileIds.forEach((id: string) => {
-                files.push({source: id, options: {type: 'limbo'}})
+                let regex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+                if (regex.test(id)) {
+                    files.push({source: id, options: {type: 'limbo'}})
+                }
             })
             return files;
         },

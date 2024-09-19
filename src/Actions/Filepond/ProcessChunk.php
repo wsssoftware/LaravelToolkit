@@ -23,8 +23,8 @@ class ProcessChunk
         $this->request = $request;
         $this->disk = Filepond::disk();
         $this->id = $request->input('id');
-        abort_if(empty($this->id), Abortable::make('No upload id provided'));
-        abort_if($this->disk->directoryMissing(Filepond::path($this->id)), Abortable::make('Invalid upload'));
+        abort_if(empty($this->id), Abortable::make('No upload id provided', 404));
+        abort_if($this->disk->directoryMissing(Filepond::path($this->id)), Abortable::make('Invalid upload', 404));
 
         $offset = $request->server('HTTP_UPLOAD_OFFSET');
         abort_if(
