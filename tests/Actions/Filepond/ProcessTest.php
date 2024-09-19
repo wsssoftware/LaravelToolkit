@@ -29,12 +29,19 @@ it('can process a chunk file', function () {
         $response = $this
             ->call(
                 'PATCH',
-                route('lt.filepond.process_chunk',['id' => $id]),
-                    server: ['HTTP_UPLOAD_OFFSET' => $index * 50_000, 'HTTP_UPLOAD_LENGTH' => 150_000, 'HTTP_UPLOAD_NAME' => 'file.txt'],
+                route('lt.filepond.process_chunk', ['id' => $id]),
+                server: [
+                    'HTTP_UPLOAD_OFFSET' => $index * 50_000, 'HTTP_UPLOAD_LENGTH' => 150_000,
+                    'HTTP_UPLOAD_NAME' => 'file.txt'
+                ],
                 content: $chunk
             );
 
         $response->assertSuccessful()
             ->assertNoContent();
     }
+    expect(Filepond::disk()->path(Filepond::path($id, 'file.txt')))
+        ->toBeFile()
+        ->and(Filepond::disk()->checksum(Filepond::path($id, 'file.txt')))
+        ->toEqual(md5(implode('', $chunks)));
 });
