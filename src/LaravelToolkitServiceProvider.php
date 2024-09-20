@@ -4,6 +4,7 @@ namespace LaravelToolkit;
 
 use Illuminate\Support\Facades\Blade;
 use LaravelToolkit\Macros\CollectionMacro;
+use LaravelToolkit\Macros\RequestMacro;
 use LaravelToolkit\Routing\Redirector as PackageRedirector;
 use LaravelToolkit\SEO\SEOComponent;
 use Spatie\LaravelPackageTools\Package;
@@ -33,6 +34,7 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
     public function boot(): self
     {
         (new CollectionMacro)();
+        (new RequestMacro())();
 
         setlocale(
             LC_ALL,
