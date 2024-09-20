@@ -5,11 +5,11 @@ namespace LaravelToolkit\Filepond;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\Response;
 
-class Abortable implements Responsable
+readonly class Abortable implements Responsable
 {
     private function __construct(
-        protected string $reason,
-        protected int $status = 500,
+        public string $reason,
+        public int $status = 500,
     ) {
         //
     }

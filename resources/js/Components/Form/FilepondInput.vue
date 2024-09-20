@@ -69,7 +69,7 @@ export default defineComponent({
         this.filepond.on('processfiles', this.loaded);
         this.filepond.on('addfile', this.loaded);
         this.filepond.on('removefile', this.loaded);
-        this.filepond.on('error', this.validationFail);
+        this.filepond.on('error', this.error);
     },
     updated() {
         if (this.filepond) {
@@ -130,13 +130,9 @@ export default defineComponent({
         loading() {
             this.form.processing = true;
         },
-        validationFail() {
+        error() {
             this.form.processing = false;
         },
     }
 });
 </script>
-
-<style scoped>
-
-</style>
