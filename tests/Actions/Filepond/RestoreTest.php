@@ -10,7 +10,6 @@ it('can restore a file', function () {
     $this->get(route('lt.filepond.restore', ['id' => $id]))
         ->assertSuccessful()
         ->assertContent('content example')
-        ->assertHeader('Content-Disposition', 'inline')
-        ->assertHeader('Content-Type')
-        ->assertHeader('Filename', 'foo.zip');
+        ->assertHeader('Content-Disposition', 'inline; filename="foo.zip"')
+        ->assertHeader('Content-Type');
 });
