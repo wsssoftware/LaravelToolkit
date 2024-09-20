@@ -17,7 +17,6 @@ class Fetch
         $url = $request->input('url');
         abort_if(empty($url), Abortable::make('No fetch url provided', 404));
 
-
         try {
             $response = Http::get($url);
         } catch (Exception) {
@@ -38,15 +37,16 @@ class Fetch
             'Access-Control-Expose-Headers' => 'Content-Disposition, Content-Length, X-Content-Transfer-Id',
             'Content-Type' => $file->getMimeType(),
             'Content-Length' => $file->getSize(),
-            'Content-Disposition' => 'inline; filename="' . $filename . '"',
-            'X-Content-Transfer-Id' => $id
+            'Content-Disposition' => 'inline; filename="'.$filename.'"',
+            'X-Content-Transfer-Id' => $id,
         ]);
     }
 
     protected function filename(string $url, File $file): string
     {
         $pathParts = pathinfo($url);
-        $filename = !empty($pathParts['filename']) ? $pathParts['filename'] : 'download';
+        $filename = ! empty($pathParts['filename']) ? $pathParts['filename'] : 'download';
+
         return "$filename.{$file->guessExtension()}";
     }
 }

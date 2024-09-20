@@ -19,7 +19,7 @@ class Restore
         abort_if(count($files) !== 1, Abortable::make('Invalid upload', 404));
 
         return response($disk->get($files[0]), 200, [
-            'Content-Disposition' => 'inline; filename="' . basename($files[0]) . '"',
+            'Content-Disposition' => 'inline; filename="'.basename($files[0]).'"',
             'Content-Type' => $disk->mimeType($files[0]),
         ]);
     }

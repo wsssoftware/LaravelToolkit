@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Contracts\Support\Responsable;
-use LaravelToolkit\Filepond\Abortable;
 use Illuminate\Http\Response;
+use LaravelToolkit\Filepond\Abortable;
 
 it('can create', function () {
     $a = Abortable::make('foo', 400);
