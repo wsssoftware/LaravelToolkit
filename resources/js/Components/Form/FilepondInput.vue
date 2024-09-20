@@ -1,17 +1,18 @@
 <template>
-   <div>
-       <input
-           :aria-describedby="ariaDescribedby"
-           :id="id"
-           ref="input"
-           :required="required"
-           type="file">
-   </div>
+    <div>
+        <input
+            :aria-describedby="ariaDescribedby"
+            :id="id"
+            ref="input"
+            :required="required"
+            type="file">
+    </div>
 </template>
 
 <script lang="ts">
-import {defineComponent, PropType} from "vue";
-import {filepondServer} from "../../Filepond";
+import {defineComponent, PropType, getCurrentInstance} from "vue";
+import {FilepondServer, filepondServer} from "../../Filepond";
+import {isUUID, isURL} from "../../Utils";
 import {
     create,
     FilePond,
@@ -34,33 +35,55 @@ export default defineComponent({
         form: {type: Object as PropType<InertiaForm<object>>, required: true},
         id: String,
         invalid: Boolean,
-        modelValue: {type: [String, Array, null] as PropType<string|string[]|null>, required: true},
+        modelValue: {type: [String, Array, null] as PropType<string | string[] | null>, required: true},
         multiple: Boolean,
-        options: Object as PropType<FilePondOptions&{[key: string]: any}>,
+        options: Object as PropType<FilePondOptions & { [key: string]: any }>,
         plugins: Array as PropType<any[]>,
         required: Boolean,
         server: {
-            type: Object,
-            default: () => filepondServer()
+            type: Object as PropType<FilepondServer | undefined>,
         }
     },
-    emits: ['update:modelValue'],
+    emits: {
+        'update:modelValue'(value: string | string[] | null) {
+            return true;
+        },
+        remove(source: any, load: () => void, error: (errorText: string) => void) {
+            return true;
+        }
+    },
     data() {
         return {
-            filepond: null as null|FilePond,
+            filepond: null as null | FilePond,
         }
     },
     computed: {
+        finalServer(): FilepondServer {
+            return this.server ?? filepondServer(
+                null,
+                {},
+                (source: any, load: () => void, error: (errorText: string) => void): void => {
+                    if (this.$.vnode.props?.onRemove !== undefined) {
+                        this.$emit('remove', source, load, error)
+                    } else {
+                        error('error on removing this file');
+                    }
+                }
+            )
+        },
         value: {
-            get(): string|string[]|null {
+            get(): string | string[] | null {
                 return this.modelValue
             },
-            set(value: string|string[]) {
+            set(value: string | string[]) {
                 this.$emit('update:modelValue', value)
             }
         }
     },
     mounted() {
+        if (!this.server) {
+
+        }
         registerPlugin(...[
             ...this.plugins ?? [],
         ])
@@ -83,29 +106,29 @@ export default defineComponent({
     },
 
     methods: {
-        getFiles(files: string|string[]): FilePondInitialFile[] {
+        getFiles(files: string | string[]): FilePondInitialFile[] {
             files = Array.isArray(files) ? files : [files];
-            let result : FilePondInitialFile[] = [];
+            let result: FilePondInitialFile[] = [];
             files.forEach((content: string) => {
-                let uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-                let url =  /(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?\/[a-zA-Z0-9]{2,}|((https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?)|(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})?/g
-                if (uuid.test(content)) {
+                if (isUUID(content)) {
                     result.push({source: content, options: {type: 'limbo'}})
-                }
-                if (url.test(content)) {
+                } else if (isURL(content)) {
                     result.push({source: content, options: {type: 'input'}})
+                } else if (content.substring(0, 5).toLowerCase() === 'load:') {
+                    content = content.substring(5);
+                    result.push({source: content, options: {type: 'local'}})
                 }
             })
             return result;
         },
-        getOptions(files: string|string[]|null = null): FilePondOptions {
+        getOptions(files: string | string[] | null = null): FilePondOptions {
             let options = {
                 allowMultiple: this.multiple,
                 chunkUploads: this.chunk,
                 credits: this.credits as false,
                 disabled: this.disabled,
                 required: this.required,
-                server: this.server,
+                server: this.finalServer,
                 ...this.options ?? {},
             }
             if (files !== null && !!files) {
@@ -114,18 +137,18 @@ export default defineComponent({
             return options;
         },
         loaded(): void {
-          setTimeout(() => {
-              let serverIds: string[] = [];
-              this.filepond?.getFiles().forEach((file: FilePondFile) => {
-                  if (file.serverId) {
-                      serverIds.push(file.serverId);
-                  }
-              });
-              this.value = this.getOptions()?.allowMultiple ?? false
-                  ? (serverIds.length === 0) ? null : serverIds
-                  : serverIds[0] ?? null;
-              this.form.processing = false;
-          }, 300)
+            setTimeout(() => {
+                let serverIds: string[] = [];
+                this.filepond?.getFiles().forEach((file: FilePondFile) => {
+                    if (file.serverId) {
+                        serverIds.push(file.serverId);
+                    }
+                });
+                this.value = this.getOptions()?.allowMultiple ?? false
+                    ? (serverIds.length === 0) ? null : serverIds
+                    : serverIds[0] ?? null;
+                this.form.processing = false;
+            }, 300)
         },
         loading() {
             this.form.processing = true;

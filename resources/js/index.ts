@@ -7,6 +7,7 @@ export {default as ToastReceiver} from './Components/ToastReceiver.vue'
 export {getFlashMessages} from './Flash'
 export {filepondServer} from './Filepond'
 export type {FilepondServer} from './Filepond'
+export {isUUID, isURL} from './Utils'
 
 
 

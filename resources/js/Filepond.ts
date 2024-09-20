@@ -35,7 +35,7 @@ export function filepondServer(
         process: route('lt.filepond.process'),
         revert: route('lt.filepond.revert'),
         restore: route('lt.filepond.restore')+'?id=',
-        load: route('lt.filepond.load')+'?id=',
+        load: route('lt.filepond.load')+'?source=',
         fetch: route('lt.filepond.fetch')+'?url=',
         patch: route('lt.filepond.process_chunk')+'?id=',
     }
