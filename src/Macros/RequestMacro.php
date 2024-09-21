@@ -9,14 +9,17 @@ class RequestMacro
 {
     public function __invoke(): void
     {
-        $this->filepond();
+        $this->filepondMacros();
     }
 
-    public function filepond(): void
+    public function filepondMacros(): void
     {
+        Request::macro('filepond', function (string $input): ?UploadedFile {
+            return UploadedFile::fromId($this->input($input));
+        });
         Request::macro('mergeFilepond', function (string $input): void {
             $this->merge([
-                $input => UploadedFile::fromId($this->input($input)),
+                $input => $this->filepond($input),
             ]);
         });
 

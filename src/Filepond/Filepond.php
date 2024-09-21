@@ -28,10 +28,22 @@ class Filepond
         $this->chunks($id)->each(fn ($chunk) => $this->disk()->delete($chunk));
     }
 
+    public function clearUploadFolder(): void
+    {
+        foreach ($this->disk()->directories($this->rootPath()) as $directory) {
+            $this->disk()->deleteDirectory($directory);
+        }
+    }
+
     public function currentChunksSize(string $id): int
     {
         return $this->chunks($id)
             ->sum(fn ($chunk) => $this->disk()->size($chunk));
+    }
+
+    public function delete(string $id): bool
+    {
+        return $this->disk()->deleteDirectory($this->path($id));
     }
 
     public function disk(): FilesystemAdapter|Filesystem
@@ -60,11 +72,16 @@ class Filepond
     {
         return sprintf(
             '%s%s%s%s%s',
-            config('laraveltoolkit.filepond.root_path'),
+            $this->rootPath(),
             DIRECTORY_SEPARATOR,
             $id,
             DIRECTORY_SEPARATOR,
             $path ?? '',
         );
+    }
+
+    public function rootPath(): string
+    {
+        return config('laraveltoolkit.filepond.root_path');
     }
 }
