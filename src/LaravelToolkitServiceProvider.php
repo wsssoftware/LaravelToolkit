@@ -34,7 +34,7 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
     public function boot(): self
     {
         (new CollectionMacro)();
-        (new RequestMacro())();
+        (new RequestMacro)();
 
         setlocale(
             LC_ALL,

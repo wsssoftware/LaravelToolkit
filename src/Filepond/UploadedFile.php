@@ -16,7 +16,6 @@ use Symfony\Component\HttpFoundation\File\File;
 
 class UploadedFile extends \Illuminate\Http\UploadedFile
 {
-
     private bool $forceValidOnTest = false;
 
     public static function fromId(?string $id): ?self
@@ -24,8 +23,9 @@ class UploadedFile extends \Illuminate\Http\UploadedFile
         if (empty($id)) {
             return null;
         }
-        if (!str($id)->isUuid()) {
-            Log::warning("Tried to get an uploaded file with a non-uuid identifier.");
+        if (! str($id)->isUuid()) {
+            Log::warning('Tried to get an uploaded file with a non-uuid identifier.');
+
             return null;
         }
         $disk = Filepond::disk();
@@ -49,12 +49,14 @@ class UploadedFile extends \Illuminate\Http\UploadedFile
     private function getTest(): bool
     {
         $reflection = new \ReflectionClass(\Symfony\Component\HttpFoundation\File\UploadedFile::class);
+
         return $reflection->getProperty('test')->getValue($this);
     }
 
     public function isValid(): bool
     {
-        $isOk = \UPLOAD_ERR_OK === $this->getError();
+        $isOk = $this->getError() === \UPLOAD_ERR_OK;
+
         return $this->getTest() || $this->forceValidOnTest ? $isOk : $isOk && file_exists($this->getPathname());
     }
 
@@ -75,7 +77,7 @@ class UploadedFile extends \Illuminate\Http\UploadedFile
             } finally {
                 restore_error_handler();
             }
-            if (!$moved) {
+            if (! $moved) {
                 throw new FileException(sprintf('Could not move the file "%s" to "%s" (%s).', $this->getPathname(),
                     $target, strip_tags($error)));
             }
