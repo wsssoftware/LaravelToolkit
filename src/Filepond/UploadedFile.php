@@ -16,6 +16,9 @@ use Symfony\Component\HttpFoundation\File\File;
 
 class UploadedFile extends \Illuminate\Http\UploadedFile
 {
+
+    private bool $forceValidOnTest = false;
+
     public static function fromId(?string $id): ?self
     {
         if (empty($id)) {
@@ -30,7 +33,11 @@ class UploadedFile extends \Illuminate\Http\UploadedFile
         if (count($files) !== 1) {
             return null;
         }
-        defer(fn() => once(fn() => Filepond::delete($id)));
+        defer(function () use ($id) {
+            if (session()->missing('errors')) {
+                Filepond::delete($id);
+            }
+        });
 
         return new self(
             $disk->path($files[0]),
@@ -48,7 +55,7 @@ class UploadedFile extends \Illuminate\Http\UploadedFile
     public function isValid(): bool
     {
         $isOk = \UPLOAD_ERR_OK === $this->getError();
-        return $this->getTest() ? $isOk : $isOk && file_exists($this->getPathname());
+        return $this->getTest() || $this->forceValidOnTest ? $isOk : $isOk && file_exists($this->getPathname());
     }
 
     public function move(string $directory, ?string $name = null): File
