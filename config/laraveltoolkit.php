@@ -31,6 +31,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Filepond
+    |--------------------------------------------------------------------------
+    |
+    */
+    'filepond' => [
+        'disk' => env('LT_FILEPOND_DISK', env('FILESYSTEM_DISK', 'local')),
+        'root_path' => env('LT_FILEPOND_ROOT_PATH', 'lt_filepond'),
+        'garbage_collector' => [
+            'probability' => env('LT_FILEPOND_GC_PROBABILITY', 0.1),
+            'upload_life' => env('LT_FILEPOND_GC_UPLOAD_LIFE', 60 * 60 * 24),
+            'maximum_interactions' => env('LT_FILEPOND_GC_MAXIMUM_INTERACTIONS', 0.1),
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | SEO configurations
     |--------------------------------------------------------------------------
     |

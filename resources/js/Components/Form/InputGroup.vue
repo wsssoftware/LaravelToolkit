@@ -9,9 +9,9 @@
             :required="required"/>
         <IconField v-if="!!icon" iconPosition="left">
             <InputIcon :class="icon"/>
-            <slot :aria-describedby="`${finalId}-help`" :id="finalId" :invalid="isInvalid" :required="required"/>
+            <slot :aria-describedby="`${finalId}-help`" :disabled="disabled" :id="finalId" :invalid="isInvalid" :required="required"/>
         </IconField>
-        <slot v-else :aria-describedby="`${finalId}-help`" :id="finalId" :invalid="isInvalid" :required="required"/>
+        <slot v-else :aria-describedby="`${finalId}-help`" :disabled="disabled" :id="finalId" :invalid="isInvalid" :required="required"/>
         <InputGroupBottom
             :current-length="currentLength"
             :feedback="finalFeedback"
@@ -35,6 +35,7 @@ export default defineComponent({
     name: "InputGroup",
     components: {IconField, InputIcon, InputGroupLabel, InputGroupBottom},
     props: {
+        disabled: Boolean,
         feedback: String,
         field: {type: String, required: true},
         form: {type: Object as PropType<InertiaForm<{[key: string]: any}>>, required: true},

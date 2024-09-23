@@ -4,6 +4,7 @@ namespace LaravelToolkit;
 
 use Illuminate\Support\Facades\Blade;
 use LaravelToolkit\Macros\CollectionMacro;
+use LaravelToolkit\Macros\RequestMacro;
 use LaravelToolkit\Routing\Redirector as PackageRedirector;
 use LaravelToolkit\SEO\SEOComponent;
 use Spatie\LaravelPackageTools\Package;
@@ -28,12 +29,12 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
         $this->addPublishGroup('laraveltoolkit-sitemap', [
             dirname(__DIR__).'/routes/sitemap.php' => base_path('routes/sitemap.php'),
         ]);
-        //            ->hasMigration('create_laraveltoolkit_table')
     }
 
     public function boot(): self
     {
         (new CollectionMacro)();
+        (new RequestMacro())();
 
         setlocale(
             LC_ALL,
