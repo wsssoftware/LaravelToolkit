@@ -44,3 +44,61 @@ it('can send request', function () {
     $this->post('foo-bar', ['foo' => $id])
         ->assertSuccessful();
 });
+
+it('can do a complete flow', function () {
+    $response = $this->post(route('lt.filepond.process'), ['filepond' => UploadedFile::fake()->image('image.jpg')]);
+
+    Filepond::disk()->assertExists(Filepond::path($response->content(), 'image.jpg'));
+    $response->assertSuccessful();
+    $id = $response->content();
+    expect($id)
+        ->toBeUuid()
+        ->and(Filepond::disk()->path(Filepond::path($id, 'image.jpg')))
+        ->toBeFile();
+
+    Route::post('example-route', function (Request $request) {
+        $request->mergeFilepond('id');
+        $validated = $request->validate(['id' => 'required|image']);
+        /** @var UploadedFile $filepond */
+        $filepond = $validated['id'];
+        $filepond->storeAs('/test', 'foo.jpg');
+    });
+
+    $this->post('example-route', ['id' => $id])
+        ->assertSuccessful();
+
+
+    expect(\Illuminate\Support\Facades\Storage::path('test/foo.jpg'))
+        ->toBeFile()
+        ->and(Filepond::disk()->path(Filepond::path($id, 'image.jpg')))
+        ->not
+        ->toBeFile();
+});
+
+it('can do a complete flow with fail on validation', function () {
+    $response = $this->post(route('lt.filepond.process'), ['filepond' => UploadedFile::fake()->image('image.jpg')]);
+
+    Filepond::disk()->assertExists(Filepond::path($response->content(), 'image.jpg'));
+    $response->assertSuccessful();
+    $id = $response->content();
+    expect($id)
+        ->toBeUuid()
+        ->and(Filepond::disk()->path(Filepond::path($id, 'image.jpg')))
+        ->toBeFile();
+
+    Route::post('example-route', function (Request $request) {
+        $request->mergeFilepond('id');
+        $validated = $request->validate(['id' => 'required|mimes:zip']);
+        /** @var UploadedFile $filepond */
+        $filepond = $validated['id'];
+        $filepond->storeAs('/test', 'foo.jpg');
+    });
+
+
+    $this->post('example-route', ['id' => $id])
+        ->assertRedirect()
+        ->assertSessionHasErrors();
+
+    expect(Filepond::disk()->path(Filepond::path($id, 'image.jpg')))
+        ->toBeFile();
+});
