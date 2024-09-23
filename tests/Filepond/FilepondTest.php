@@ -67,7 +67,6 @@ it('can do a complete flow', function () {
     $this->post('example-route', ['id' => $id])
         ->assertSuccessful();
 
-
     expect(\Illuminate\Support\Facades\Storage::path('test/foo.jpg'))
         ->toBeFile()
         ->and(Filepond::disk()->path(Filepond::path($id, 'image.jpg')))
@@ -93,7 +92,6 @@ it('can do a complete flow with fail on validation', function () {
         $filepond = $validated['id'];
         $filepond->storeAs('/test', 'foo.jpg');
     });
-
 
     $this->post('example-route', ['id' => $id])
         ->assertRedirect()
