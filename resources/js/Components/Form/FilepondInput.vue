@@ -129,6 +129,7 @@ export default defineComponent({
                 disabled: this.disabled,
                 required: this.required,
                 server: this.finalServer,
+                ...this.$laravelToolkit?.filepondOptions ?? {},
                 ...this.options ?? {},
             }
             if (files !== null && !!files) {

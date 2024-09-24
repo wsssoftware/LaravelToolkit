@@ -6,10 +6,10 @@ export {default as Link} from './Components/Link.vue'
 export {default as ToastReceiver} from './Components/ToastReceiver.vue'
 export {getFlashMessages} from './Flash'
 export {filepondServer} from './Filepond'
-export type {FilepondServer} from './Filepond'
+export {default as LaravelToolkitPlugin} from './LaravelToolkitPlugin'
 export {isUUID, isURL} from './Utils'
 
-
+export type {FilepondServer} from './Filepond'
 
 
 type Image = {
