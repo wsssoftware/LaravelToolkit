@@ -75,7 +75,7 @@ it('can\'t move', function () {
         ->toBeInstanceOf(UploadedFile::class)
         ->and($file->isValid())
         ->toBeTrue()
-        ->and(fn () => $file->move('foo-bar'))
+        ->and(fn () => $file->move($disk->path('foo-bar/test')))
         ->toThrow(FileException::class);
 });
 

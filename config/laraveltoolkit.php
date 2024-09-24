@@ -112,4 +112,8 @@ return [
         'max_file_items' => 50_000,
         'max_file_size' => 50 * 1024 * 1024,
     ],
+
+    'stored_assets' => [
+        'model' => \LaravelToolkit\StoredAssets\StoredAsset::class,
+    ]
 ];

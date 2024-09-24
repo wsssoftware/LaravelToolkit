@@ -3,10 +3,12 @@
 namespace LaravelToolkit;
 
 use Illuminate\Support\Facades\Blade;
+use LaravelToolkit\Macros\BlueprintMacro;
 use LaravelToolkit\Macros\CollectionMacro;
 use LaravelToolkit\Macros\RequestMacro;
 use LaravelToolkit\Routing\Redirector as PackageRedirector;
 use LaravelToolkit\SEO\SEOComponent;
+use LaravelToolkit\StoredAssets\MakeStoreRecipe;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -24,7 +26,9 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
             ->hasConfigFile('laraveltoolkit')
             ->hasRoute('web')
             ->hasTranslations()
-            ->hasViews();
+            ->hasViews()
+            ->hasCommands(MakeStoreRecipe::class)
+            ->hasMigration('create_stored_assets_table');
 
         $this->addPublishGroup('laraveltoolkit-sitemap', [
             dirname(__DIR__).'/routes/sitemap.php' => base_path('routes/sitemap.php'),
@@ -35,6 +39,7 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
     {
         (new CollectionMacro)();
         (new RequestMacro)();
+        (new BlueprintMacro())();
 
         setlocale(
             LC_ALL,

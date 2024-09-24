@@ -1,0 +1,9 @@
+<?php
+
+namespace {{ namespace }};
+
+use LaravelToolkit\StoredAssets\Recipe;
+
+class {{ class }} extends Recipe
+{
+}
