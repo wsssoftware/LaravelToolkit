@@ -49,4 +49,12 @@ class StoredAsset extends Model
     {
         return $this->morphTo();
     }
+
+    /**
+     * @return class-string<self>
+     */
+    public static function getFinalStoredAssetModel(): string
+    {
+        return config('laraveltoolkit.stored_assets.model');
+    }
 }

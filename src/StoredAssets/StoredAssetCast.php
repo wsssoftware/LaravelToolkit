@@ -7,6 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class StoredAssetCast implements CastsAttributes
 {
+
+    /**
+     * @param class-string<\LaravelToolkit\StoredAssets\Recipe> $recipe
+     */
+    public function __construct(
+        protected string $recipe
+    ) {
+        //
+    }
+
     /**
      * Cast the given value.
      *
@@ -24,6 +34,6 @@ class StoredAssetCast implements CastsAttributes
      */
     public function set(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        return $value;
+        return $this->recipe::parse($model, $key, $value);
     }
 }

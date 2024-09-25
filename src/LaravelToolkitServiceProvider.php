@@ -8,7 +8,7 @@ use LaravelToolkit\Macros\CollectionMacro;
 use LaravelToolkit\Macros\RequestMacro;
 use LaravelToolkit\Routing\Redirector as PackageRedirector;
 use LaravelToolkit\SEO\SEOComponent;
-use LaravelToolkit\StoredAssets\MakeStoreRecipe;
+use LaravelToolkit\StoredAssets\MakeStoreRecipeCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -27,7 +27,7 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
             ->hasRoute('web')
             ->hasTranslations()
             ->hasViews()
-            ->hasCommands(MakeStoreRecipe::class)
+            ->hasCommands(MakeStoreRecipeCommand::class)
             ->hasMigration('create_stored_assets_table');
 
         $this->addPublishGroup('laraveltoolkit-sitemap', [

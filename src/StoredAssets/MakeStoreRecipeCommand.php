@@ -6,7 +6,7 @@ namespace LaravelToolkit\StoredAssets;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;
 
-class MakeStoreRecipe extends GeneratorCommand
+class MakeStoreRecipeCommand extends GeneratorCommand
 {
     /**
      * The name and signature of the console command.
@@ -42,7 +42,7 @@ class MakeStoreRecipe extends GeneratorCommand
     protected function getNameInput(): string
     {
         $name = parent::getNameInput();
-        if (Str::endsWith($name, 'Recipe')) {
+        if (Str::endsWith($name, ['Recipe', 'recipe'])) {
             $name = Str::substr($name, 0, -6);
         }
         return $name.'Recipe';

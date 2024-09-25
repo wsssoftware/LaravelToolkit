@@ -6,4 +6,16 @@ use LaravelToolkit\StoredAssets\Recipe;
 
 class {{ class }} extends Recipe
 {
+    /**
+     * @inheritDoc
+     */
+    protected function prepareForSave(Asset $baseAsset): Asset|Collection
+    {
+//        return collect([
+//            $baseAsset->withDisk('local')->withLabel('default'),
+//            $baseAsset->withDisk('local')->withLabel('thumbnail'),
+//        ]); or
+
+        return $baseAsset->withDisk('local')->withLabel('default');
+    }
 }

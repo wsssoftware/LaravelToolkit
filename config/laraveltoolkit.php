@@ -114,6 +114,8 @@ return [
     ],
 
     'stored_assets' => [
+        'disk' => env('LT_STORED_ASSETS_DISK', env('FILESYSTEM_DISK', 'local')),
+        'path' => env('LT_STORED_ASSETS_PATH', 'assets'),
         'model' => \LaravelToolkit\StoredAssets\StoredAsset::class,
     ]
 ];
