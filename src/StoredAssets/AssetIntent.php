@@ -61,27 +61,15 @@ class AssetIntent
     {
         error_clear_last();
         $contents = @fopen($this->pathname, 'rb');
-
         if ($contents === false) {
             throw UnableToReadFile::fromLocation($this->pathname, error_get_last()['message'] ?? '');
         }
-
         return $contents;
     }
 
     public function getKey(): string
     {
         return $this->key;
-    }
-
-    public function getPublic(): bool
-    {
-        return $this->public;
-    }
-
-    public function getSize(): int
-    {
-        return File::size($this->pathname);
     }
 
     public function store(string $uuid): Asset

@@ -11,6 +11,7 @@ use LaravelToolkit\StoredAssets\StoredAssetModel;
  * @method static string basePath()
  * @method static string defaultDisk()
  * @method static FilenameStoreType defaultFilenameStoreType()
+ * @method static bool isValidUuidImage(string $uuid)
  * @method static StoredAssetModel newModel(array $attributes = [])
  * @method static string modelFQN()
  * @method static Builder modelQuery()

@@ -4,6 +4,8 @@ namespace LaravelToolkit\StoredAssets\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
+use LaravelToolkit\StoredAssets\AssetIntent;
+use LaravelToolkit\StoredAssets\HasStoredAssets;
 
 class StoredAssetCast implements CastsAttributes
 {
@@ -24,6 +26,13 @@ class StoredAssetCast implements CastsAttributes
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
+        if ($value instanceof AssetIntent) {
+            return $value;
+        }
+        if ($model->isRelation($key) && in_array(HasStoredAssets::class, class_uses_recursive($model::class))) {
+            return $model->getRelationValue($key)->assets;
+        }
+
         return $value;
     }
 
@@ -34,6 +43,6 @@ class StoredAssetCast implements CastsAttributes
      */
     public function set(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        return $this->recipe::parse($model, $key, $value);
+        return $value;
     }
 }

@@ -3,22 +3,22 @@
 namespace LaravelToolkit\StoredAssets;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 trait HasStoredAssets
 {
-    private bool $storedAssetFieldAsModel = true;
     private static array $storedAssetFields = [];
+    private static array $storedAssetUuidMap = [];
 
     protected static function bootHasStoredAssets(): void
     {
-        self::registryStoredAssetFieldsRelations();
+        self::initStoredAssetFieldsAndRelations();
         self::saving(function (Model $model) {
             foreach ($model->getDirty() as $field => $item) {
                 if (!$item instanceof Recipe) {
                     continue;
-                }
-                if (Str::isUuid($uuid = $item->save())) {
+                } elseif (Str::isUuid($uuid = $item->save())) {
                     $model->setAttribute($field, $uuid);
                 } else {
                     return false;
@@ -28,50 +28,40 @@ trait HasStoredAssets
         });
     }
 
-    private static function registryStoredAssetFieldsRelations(): void
+    private static function initStoredAssetFieldsAndRelations(): void
     {
         $model = static::newModelInstance();
         foreach ($model->getCasts() as $field => $cast) {
             $validClass = class_exists($cast) && is_subclass_of($cast, Recipe::class);
             if ($validClass && !$model->isRelation($field)) {
+                $uuidField = "{$field}_uuid";
                 static::$storedAssetFields[$field] = $field;
+                static::$storedAssetUuidMap[$uuidField] = $field;
                 static::resolveRelationUsing(
                     $field,
-                    fn(Model $model) => $model->morphOne(StoredAssetModel::class, 'asset', 'model', 'id', $field)
+                    fn(Model $model) => $model->morphOne(StoredAssetModel::class, 'asset', 'model', 'id', $uuidField)
                 );
             }
         }
     }
 
-    public function asStoredAssetModel(): self
+    public function setAttribute($key, $value)
     {
-        $this->storedAssetFieldAsModel = true;
-        return $this;
-    }
-
-    public function asStoredAssetUuid(): self
-    {
-        $this->storedAssetFieldAsModel = false;
-        return $this;
-    }
-
-    public function toArray(): array
-    {
-        $data = parent::toArray();
-        foreach ($data as $key => $item) {
-            if (in_array($key, static::$storedAssetFields) && $this->isRelation($key) && $this->storedAssetFieldAsModel) {
-                $data[$key] = $this->getRelationValue($key)?->assets;
+        if (isset(self::$storedAssetFields[$key])) {
+            if ($this->hasCast($key)) {
+                /** @var class-string<\LaravelToolkit\StoredAssets\Recipe> $cast */
+                $cast = $this->casts()[$key];
+                $value = $cast::parse($this, $key, $value);
             }
         }
-
-        return $data;
+        return parent::setAttribute($key, $value);
     }
 
-    public function __get($key)
+    public function getAttribute($key)
     {
-        if (in_array($key, static::$storedAssetFields) && $this->isRelation($key) && $this->storedAssetFieldAsModel) {
-            return $this->getRelationValue($key)?->assets;
+        if (isset(self::$storedAssetUuidMap[$key])) {
+            return Arr::get($this->getAttributes(), self::$storedAssetUuidMap[$key]);
         }
-        return parent::__get($key);
+        return parent::getAttribute($key);
     }
 }

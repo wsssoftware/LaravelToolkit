@@ -36,18 +36,21 @@ abstract class Recipe implements Castable
      */
     abstract protected function prepareForSave(AssetIntent $baseAsset): AssetIntent|Collection;
 
-    public function save(): string|false
+    public function ensureNotDuplicated(Collection $assets): void
     {
-        $result = $this->prepareForSave($this->baseAsset);
-        $assets = ($result instanceof AssetIntent ? collect([$result]) : $result)
-            ->ensure(AssetIntent::class);
         $assets->groupBy(fn(AssetIntent $intent) => $intent->getKey())
             ->each(fn(Collection $group, string $key) => throw_if($group->count() > 1, Exception::class, sprintf(
                 'You may not has two asset with same name key. %s found on "%s"',
                 $group->count(),
                 $key
             )));
+    }
 
+    public function save(): string|false
+    {
+        $result = $this->prepareForSave($this->baseAsset);
+        $assets = ($result instanceof AssetIntent ? collect([$result]) : $result)->ensure(AssetIntent::class);
+        $this->ensureNotDuplicated($assets);
         $uuid = Str::uuid()->toString();
 
         $assets = $assets->reduce(
@@ -56,38 +59,27 @@ abstract class Recipe implements Castable
             new Assets($uuid)
         );
 
-        $storedAsset = StoredAssets::newModel([
-            'id' => $uuid,
-            'model' => $this->model::class,
-            'assets' => $assets,
-        ]);
-
-        return $storedAsset->save() ? $uuid : false;
+        return StoredAssets::newModel(['id' => $uuid, 'model' => $this->model::class, 'assets' => $assets,])->save()
+            ? $uuid
+            : false;
     }
 
     public static function parse(Model $model, string $field, mixed $source): self|string
     {
         if (is_file($source) || $source instanceof File || $source instanceof UploadedFile) {
             return new static($model, $field, $source);
+        } elseif ($source instanceof self) {
+            return $source;
         }
-        throw_if($message = self::isInvalidUuid($model, $field, $source), Exception::class, $message);
+        throw_if(!StoredAssets::isValidUuidImage($source), Exception::class, sprintf(
+            'On field "%s" from model "%s", the the provided value "%s" does not appears to be a valid uuid or does not exists on "%s" table.',
+            $field,
+            $model::class,
+            $source,
+            StoredAssets::newModel()->getTable()
+        ));
 
         return $source;
-    }
-
-    private static function isInvalidUuid(Model $model, string $field, string $uuid): false|string
-    {
-        $base = sprintf('On field "%s" form model "%s", ', $field, $model::class);
-        if (!Str::isUuid($uuid)) {
-            return $base.sprintf('the the provided value "%s" does not appears to be a valid uuid.', $uuid);
-        }
-        $model = StoredAssets::newModel();
-        $storedAssetTable = $model->getTable();
-        if (StoredAssets::modelQuery()->whereId($uuid)->doesntExist()) {
-            return $base.sprintf('the uuid "%s" does not exists on "%s" table.', $uuid, $storedAssetTable);
-        }
-
-        return false;
     }
 
     public static function castUsing(array $arguments): StoredAssetCast

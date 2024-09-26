@@ -3,6 +3,7 @@
 namespace LaravelToolkit\StoredAssets;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 
 /**
  * @see \LaravelToolkit\Facades\StoredAssets
@@ -24,6 +25,14 @@ class StoredAssets
     {
         $value = config('laraveltoolkit.stored_assets.filename_store_type');
         return $value instanceof FilenameStoreType ? $value : FilenameStoreType::from($value);
+    }
+
+    public function isValidUuidImage(string $uuid): bool
+    {
+        if (!Str::isUuid($uuid)) {
+            return false;
+        }
+       return StoredAssets::modelQuery()->where('id', $uuid)->exists();
     }
 
     public function newModel(array $attributes = []): StoredAssetModel

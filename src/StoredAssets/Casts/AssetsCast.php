@@ -16,17 +16,14 @@ class AssetsCast implements CastsAttributes
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        if (json_validate($value)) {
-            $uuid = $model->id;
-            $assets = new Assets(
-                $uuid,
+        return json_validate($value)
+            ? new Assets(
+                $model->id,
                 collect(json_decode($value, true))
-                ->mapWithKeys(fn(array $asset) => [$asset['k'] => Asset::fromDatabase($uuid, $asset)])
-                ->all()
-            );
-            return $assets;
-        }
-        return $value;
+                    ->mapWithKeys(fn(array $asset) => [$asset['k'] => Asset::fromDatabase($model->id, $asset)])
+                    ->all()
+            )
+            : $value;
     }
 
     /**
@@ -36,9 +33,6 @@ class AssetsCast implements CastsAttributes
      */
     public function set(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        if ($value instanceof Assets) {
-            return json_encode($value->toDatabase());
-        }
-        return $value;
+        return $value instanceof Assets ? json_encode($value->toDatabase()) : $value;
     }
 }
