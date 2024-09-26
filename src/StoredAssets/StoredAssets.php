@@ -54,6 +54,8 @@ class StoredAssets
             ->append(DIRECTORY_SEPARATOR)
             ->append($part2)
             ->append(DIRECTORY_SEPARATOR)
+            ->append($uuid)
+            ->append(DIRECTORY_SEPARATOR)
             ->append($path ?? '')
             ->deduplicate(DIRECTORY_SEPARATOR);
     }
