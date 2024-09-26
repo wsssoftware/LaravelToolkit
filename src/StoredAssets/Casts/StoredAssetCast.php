@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelToolkit\StoredAssets;
+namespace LaravelToolkit\StoredAssets\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
@@ -9,7 +9,7 @@ class StoredAssetCast implements CastsAttributes
 {
 
     /**
-     * @param class-string<\LaravelToolkit\StoredAssets\Recipe> $recipe
+     * @param  class-string<\LaravelToolkit\StoredAssets\Recipe>  $recipe
      */
     public function __construct(
         protected string $recipe

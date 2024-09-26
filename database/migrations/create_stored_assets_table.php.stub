@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('stored_assets', function (Blueprint $table) {
             $table->uuid("id")->primary()->unique();
             $table->string("model");
-            $table->json('files');
+            $table->json('assets');
             $table->timestamp('created_at')->nullable();
 
             $table->index(["id", "type"]);

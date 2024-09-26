@@ -9,13 +9,13 @@ use Illuminate\Http\File;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use LaravelToolkit\StoredAssets\AssetIntents\AssetIntent;
-use LaravelToolkit\StoredAssets\AssetIntents\PathAssetIntent;
+use LaravelToolkit\Facades\StoredAssets;
+use LaravelToolkit\StoredAssets\Casts\StoredAssetCast;
 
 abstract class Recipe implements Castable
 {
 
-    readonly private PathAssetIntent $baseAsset;
+    readonly private AssetIntent $baseAsset;
 
     protected function __construct(
         readonly protected Model $model,
@@ -27,28 +27,39 @@ abstract class Recipe implements Castable
             $source instanceof UploadedFile => $source->getPathname(),
             is_file($source) => new $source,
         };
-
-        $this->baseAsset = new PathAssetIntent($pathname);
+        $this->baseAsset = AssetIntent::create($pathname);
     }
 
     /**
-     * @param  \LaravelToolkit\StoredAssets\AssetIntents\AssetIntent  $baseAsset
-     * @return \LaravelToolkit\StoredAssets\AssetIntents\AssetIntent|\Illuminate\Support\Collection<int, \LaravelToolkit\StoredAssets\AssetIntents\AssetIntent>
+     * @param  \LaravelToolkit\StoredAssets\AssetIntent  $baseAsset
+     * @return \LaravelToolkit\StoredAssets\AssetIntent|\Illuminate\Support\Collection<int, \LaravelToolkit\StoredAssets\AssetIntent>
      */
     abstract protected function prepareForSave(AssetIntent $baseAsset): AssetIntent|Collection;
 
     public function save(): string|false
     {
         $result = $this->prepareForSave($this->baseAsset);
-        $assets =  ($result instanceof AssetIntent ? collect([$result]) : $result)
+        $assets = ($result instanceof AssetIntent ? collect([$result]) : $result)
             ->ensure(AssetIntent::class);
+        $assets->groupBy(fn(AssetIntent $intent) => $intent->getKey())
+            ->each(fn(Collection $group, string $key) => throw_if($group->count() > 1, Exception::class, sprintf(
+                'You may not has two asset with same name key. %s found on "%s"',
+                $group->count(),
+                $key
+            )));
 
         $uuid = Str::uuid()->toString();
 
-        $storedAsset = StoredAsset::getFinalStoredAssetModel()::newModelInstance([
+        $assets = $assets->reduce(
+            fn(Assets $carry, AssetIntent $assetIntent) => $carry->put($assetIntent->getKey(),
+                $assetIntent->store($uuid)),
+            new Assets($uuid)
+        );
+
+        $storedAsset = StoredAssets::newModel([
             'id' => $uuid,
             'model' => $this->model::class,
-            'files' => [],
+            'assets' => $assets,
         ]);
 
         return $storedAsset->save() ? $uuid : false;
@@ -67,12 +78,13 @@ abstract class Recipe implements Castable
     private static function isInvalidUuid(Model $model, string $field, string $uuid): false|string
     {
         $base = sprintf('On field "%s" form model "%s", ', $field, $model::class);
-        if (! Str::isUuid($uuid)) {
-            return $base . sprintf('the the provided value "%s" does not appears to be a valid uuid.', $uuid);
+        if (!Str::isUuid($uuid)) {
+            return $base.sprintf('the the provided value "%s" does not appears to be a valid uuid.', $uuid);
         }
-        $storedAssetTable = (new (StoredAsset::getFinalStoredAssetModel())())->getTable();
-        if (StoredAsset::getFinalStoredAssetModel()::query()->whereId($uuid)->doesntExist()) {
-            return $base . sprintf('the uuid "%s" does not exists on "%s" table.', $uuid, $storedAssetTable);
+        $model = StoredAssets::newModel();
+        $storedAssetTable = $model->getTable();
+        if (StoredAssets::modelQuery()->whereId($uuid)->doesntExist()) {
+            return $base.sprintf('the uuid "%s" does not exists on "%s" table.', $uuid, $storedAssetTable);
         }
 
         return false;

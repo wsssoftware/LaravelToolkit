@@ -115,7 +115,9 @@ return [
 
     'stored_assets' => [
         'disk' => env('LT_STORED_ASSETS_DISK', env('FILESYSTEM_DISK', 'local')),
+        'model' => \LaravelToolkit\StoredAssets\StoredAssetModel::class,
         'path' => env('LT_STORED_ASSETS_PATH', 'assets'),
-        'model' => \LaravelToolkit\StoredAssets\StoredAsset::class,
+        'filename_store_type' => \LaravelToolkit\StoredAssets\FilenameStoreType::UUID,
+        'subdirectory_chars' => env('LT_STORED_ASSETS_SUBDIRECTORY_CHARS', 2),
     ]
 ];

@@ -12,10 +12,10 @@ class {{ class }} extends Recipe
     protected function prepareForSave(Asset $baseAsset): Asset|Collection
     {
 //        return collect([
-//            $baseAsset->withDisk('local')->withLabel('default'),
-//            $baseAsset->withDisk('local')->withLabel('thumbnail'),
+//            $baseAsset->withDisk('local')->withKey('default'),
+//            AssetIntent::create($baseAsset->getPathname())->withDisk('local')->withKey('thumbnail'),
 //        ]); or
 
-        return $baseAsset->withDisk('local')->withLabel('default');
+        return $baseAsset->withDisk('local')->withKey('default');
     }
 }

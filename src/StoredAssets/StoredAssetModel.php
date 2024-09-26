@@ -8,12 +8,14 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 /**
  * @property string $id
  * @property string $model
- * @property array $files
+ * @property \LaravelToolkit\StoredAssets\Assets $assets
  * @property \Illuminate\Support\Carbon $created_at
  */
-class StoredAsset extends Model
+class StoredAssetModel extends Model
 {
     public const UPDATED_AT = null;
+
+    protected $table = 'stored_assets';
 
     /**
      * The attributes that are mass assignable.
@@ -23,7 +25,7 @@ class StoredAsset extends Model
     protected $fillable = [
         'id',
         'model',
-        'files',
+        'assets',
         'created_at',
     ];
 
@@ -37,7 +39,7 @@ class StoredAsset extends Model
         return [
             'id' => 'string',
             'model' => 'string',
-            'files' => 'json',
+            'assets' => Assets::class,
             'created_at' => 'datetime',
         ];
     }
@@ -48,13 +50,5 @@ class StoredAsset extends Model
     public function assetable(): MorphTo
     {
         return $this->morphTo();
-    }
-
-    /**
-     * @return class-string<self>
-     */
-    public static function getFinalStoredAssetModel(): string
-    {
-        return config('laraveltoolkit.stored_assets.model');
     }
 }
