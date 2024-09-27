@@ -59,7 +59,8 @@ abstract class Recipe implements Castable
             new Assets()
         );
 
-        return StoredAssets::newModel(['id' => $uuid, 'model' => $this->model::class, 'assets' => $assets])->save()
+        $data = ['id' => $uuid, 'model' => $this->model::class, 'field' => $this->field, 'assets' => $assets];
+        return StoredAssets::newModel($data)->save()
             ? $uuid
             : false;
     }

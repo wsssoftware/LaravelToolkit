@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('stored_assets', function (Blueprint $table) {
             $table->uuid("id")->primary()->unique();
             $table->string("model");
+            $table->string("field");
             $table->json('assets');
             $table->timestamp('created_at')->nullable();
 
-            $table->index(["id", "type"]);
+            $table->index(["id", "type", "field"]);
         });
     }
 

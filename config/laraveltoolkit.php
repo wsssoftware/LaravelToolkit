@@ -138,6 +138,10 @@ return [
     |    More is useful for very huge file database. 2 it's acceptable for 50kk
     |    or fewer files. A file with uuid: "7c23b...2f1505" with 2 chars will
     |    be stored on "/assets/7c/05/7c23b...2f1505/..."
+    | -> trash_bin: Trash bin configurations
+    |    -> folder: Folder of trash bin inside base path
+    |    -> deadline: How many minutes trash will be alive on folder before
+    |       to be definitely deleted.
     */
     'stored_assets' => [
         'disk' => env('LT_STORED_ASSETS_DISK', env('FILESYSTEM_DISK', 'local')),
@@ -145,5 +149,9 @@ return [
         'path' => env('LT_STORED_ASSETS_PATH', 'assets'),
         'filename_store_type' => \LaravelToolkit\StoredAssets\FilenameStoreType::UUID,
         'subdirectory_chars' => env('LT_STORED_ASSETS_SUBDIRECTORY_CHARS', 2),
+        'trash_bin' => [
+            'folder' => env('LT_STORED_ASSETS_TRASH_BIN_FOLDER', '$TRASH_BIN'),
+            'deadline' => env('LT_STORED_ASSETS_TRASH_BIN_DEADLINE', 60 * 24 * 15),
+        ],
     ]
 ];

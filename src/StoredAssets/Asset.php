@@ -26,6 +26,16 @@ readonly class Asset implements Arrayable
         return Storage::disk($this->disk);
     }
 
+    public function get(): string
+    {
+        return $this->disk()->get($this->pathname);
+    }
+
+    public function readStream()
+    {
+        return $this->disk()->readStream($this->pathname);
+    }
+
     public function url(): string
     {
         return $this->disk()->url($this->pathname);

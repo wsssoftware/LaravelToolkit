@@ -3,6 +3,8 @@
 namespace LaravelToolkit\StoredAssets;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
@@ -16,6 +18,19 @@ class StoredAssets
         return config('laraveltoolkit.stored_assets.path');
     }
 
+    public function clearTrashBin(string $disk): int
+    {
+        $disk = Storage::disk($disk);
+        $uuids = collect($disk->directories($this->trashBinPath()))
+            ->map(fn(string $path) => substr($path, -36, 36))
+            ->filter(fn(string $uuid) => Str::isUuid($uuid));
+        if ($uuids->isEmpty()) {
+            return 0;
+        }
+        $this->modelQuery()->whereIn('id', $uuids)->delete();
+        return  $disk->deleteDirectory($this->trashBinPath()) ? $uuids->count() : 0;
+    }
+
     public function defaultDisk(): string
     {
         return config('laraveltoolkit.stored_assets.disk');
@@ -27,12 +42,26 @@ class StoredAssets
         return $value instanceof FilenameStoreType ? $value : FilenameStoreType::from($value);
     }
 
+    public function deleteFromTrashBin(string $disk, string $uuid): bool
+    {
+        $disk = Storage::disk($disk);
+
+        $path = collect($disk->directories($this->trashBinPath()))
+            ->filter(fn(string $path) => str_ends_with($path, $uuid))
+            ->first();
+        if (empty($path)) {
+            return false;
+        }
+        $this->modelQuery()->where('id', $uuid)->delete();
+        return $disk->deleteDirectory($path);
+    }
+
     public function isValidUuidImage(string $uuid): bool
     {
         if (!Str::isUuid($uuid)) {
             return false;
         }
-       return StoredAssets::modelQuery()->where('id', $uuid)->exists();
+       return $this->modelQuery()->where('id', $uuid)->exists();
     }
 
     public function newModel(array $attributes = []): StoredAssetModel
@@ -53,6 +82,12 @@ class StoredAssets
         return $this->modelFQN()::query();
     }
 
+    public function moveToTrashBin(string $disk, string $uuid): bool
+    {
+        $trashBinUuidFolderName = sprintf('%s-%s', $this->trashBinDeadlineTimestamp(), $uuid);
+        return Storage::disk($disk)->move($this->path($uuid), $this->trashBinPath($trashBinUuidFolderName));
+    }
+
     public function path(string $uuid, ?string $path = null): string
     {
         $part1 = substr($uuid, 0, $this->subdirectoryChars());
@@ -69,8 +104,38 @@ class StoredAssets
             ->deduplicate(DIRECTORY_SEPARATOR);
     }
 
+    public function restoreFromTrashBin(string $disk, string $uuid): bool
+    {
+        $disk = Storage::disk($disk);
+
+        $path = collect($disk->directories($this->trashBinPath()))
+            ->filter(fn(string $path) => str_ends_with($path, $uuid))
+            ->first();
+        if (empty($path)) {
+            return false;
+        }
+        return $disk->move($path, $this->path($uuid));
+    }
+
     public function subdirectoryChars(): int
     {
         return config('laraveltoolkit.stored_assets.subdirectory_chars');
+    }
+
+    public function trashBinDeadlineTimestamp(Carbon $from = null): int
+    {
+        $increment = intval(config('laraveltoolkit.stored_assets.trash_bin.deadline'));
+        return ($from ?? now())->addMinutes($increment)->startOfHour()->getTimestamp();
+    }
+
+    public function trashBinPath(string $path = null): string
+    {
+        return str($this->basePath())
+            ->append(DIRECTORY_SEPARATOR)
+            ->append(config('laraveltoolkit.stored_assets.trash_bin.folder'))
+            ->append(DIRECTORY_SEPARATOR)
+            ->append($path ?? '')
+            ->append(DIRECTORY_SEPARATOR)
+            ->deduplicate(DIRECTORY_SEPARATOR);
     }
 }
