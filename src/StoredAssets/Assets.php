@@ -15,7 +15,7 @@ class Assets extends Collection implements Castable
         array $assets = [],
     ) {
         parent::__construct($assets);
-        $this->setUuid($this->first);
+        $this->setUuid($this->first());
     }
 
     public static function castUsing(array $arguments): string
@@ -42,7 +42,7 @@ class Assets extends Collection implements Castable
 
     public function toDatabase(): array
     {
-        return $this->map(fn(Asset $asset) => $asset->toDatabase())->values()->toArray();
+        return collect($this->items)->map(fn(Asset $asset) => $asset->toDatabase())->values()->toArray();
     }
 
     public function __get($key): ?Asset
