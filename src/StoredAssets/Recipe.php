@@ -38,7 +38,8 @@ abstract class Recipe implements Castable
 
     public function ensureNotDuplicated(Collection $assets): void
     {
-        $assets->groupBy(fn(AssetIntent $intent) => $intent->getKey())
+        $assets->unique(fn($o) => spl_object_id($o))
+            ->groupBy(fn(AssetIntent $intent) => $intent->getKey())
             ->each(fn(Collection $group, string $key) => throw_if($group->count() > 1, Exception::class, sprintf(
                 'You may not has two asset with same name key. %s found on "%s"',
                 $group->count(),
@@ -54,12 +55,11 @@ abstract class Recipe implements Castable
         $uuid = Str::uuid()->toString();
 
         $assets = $assets->reduce(
-            fn(Assets $carry, AssetIntent $assetIntent) => $carry->put($assetIntent->getKey(),
-                $assetIntent->store($uuid)),
-            new Assets($uuid)
+            fn(Assets $carry, AssetIntent $intent) => $carry->put($intent->getKey(), $intent->store($uuid)),
+            new Assets()
         );
 
-        return StoredAssets::newModel(['id' => $uuid, 'model' => $this->model::class, 'assets' => $assets,])->save()
+        return StoredAssets::newModel(['id' => $uuid, 'model' => $this->model::class, 'assets' => $assets])->save()
             ? $uuid
             : false;
     }

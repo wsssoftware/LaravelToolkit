@@ -101,16 +101,20 @@ class AssetIntent
         return $this;
     }
 
-    public function withKey(string $key): self
+    public function withFilenameStoreType(FilenameStoreType $type): self
     {
-        throw_if(!Regex::isLikePhpVariableChars($key), Exception::class, 'Invalid key name');
-        $this->key = $key;
+        $this->filenameStoreType = $type;
         return $this;
     }
 
-    public function withNameStoreType(FilenameStoreType $type): self
+    public function withKey(string $key): self
     {
-        $this->filenameStoreType = $type;
+        throw_if(
+            !Regex::isLikePhpVariableChars($key),
+            Exception::class,
+            "\"$key\" is not a valid asset key."
+        );
+        $this->key = $key;
         return $this;
     }
 

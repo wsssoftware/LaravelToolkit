@@ -9,12 +9,13 @@ use LaravelToolkit\StoredAssets\Casts\AssetsCast;
 
 class Assets extends Collection implements Castable
 {
+    readonly public ?string $uuid;
 
     public function __construct(
-        readonly public string $uuid,
-        array $assets = []
+        array $assets = [],
     ) {
         parent::__construct($assets);
+        $this->setUuid($this->first);
     }
 
     public static function castUsing(array $arguments): string
@@ -22,9 +23,26 @@ class Assets extends Collection implements Castable
         return AssetsCast::class;
     }
 
+    private function setUuid($value): void
+    {
+        if (!empty($this->uuid)) {
+            return;
+        } elseif ($value instanceof Asset) {
+            $this->uuid = $value->assetsUuid;
+        } elseif (is_array($value)) {
+            $this->uuid = $value['assets_uuid'];
+        }
+    }
+
+    public function put($key, $value): self
+    {
+        $this->setUuid($value);
+        return parent::put($key, $value);
+    }
+
     public function toDatabase(): array
     {
-        return collect($this->assets)->map(fn(Asset $asset) => $asset->toDatabase())->values()->toArray();
+        return $this->map(fn(Asset $asset) => $asset->toDatabase())->values()->toArray();
     }
 
     public function __get($key): ?Asset

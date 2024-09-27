@@ -26,10 +26,9 @@ class StoredAssetCast implements CastsAttributes
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        if ($value instanceof AssetIntent) {
+        if (empty($value) || $value instanceof AssetIntent) {
             return $value;
-        }
-        if ($model->isRelation($key) && in_array(HasStoredAssets::class, class_uses_recursive($model::class))) {
+        } elseif ($model->isRelation($key) && in_array(HasStoredAssets::class, class_uses_recursive($model::class))) {
             return $model->getRelationValue($key)->assets;
         }
 

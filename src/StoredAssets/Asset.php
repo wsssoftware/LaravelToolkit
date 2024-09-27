@@ -2,13 +2,16 @@
 
 namespace LaravelToolkit\StoredAssets;
 
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 
 readonly class Asset implements Arrayable
 {
     public function __construct(
-        public string $uuid,
+        public string $assetsUuid,
         public string $disk,
         public string $key,
         public string $pathname,
@@ -18,15 +21,25 @@ readonly class Asset implements Arrayable
     ) {
     }
 
+    public function disk(): Filesystem|FilesystemAdapter
+    {
+        return Storage::disk($this->disk);
+    }
+
+    public function url(): string
+    {
+        return $this->disk()->url($this->pathname);
+    }
+
     public function toArray(): array
     {
         return [
-            'uuid' => $this->uuid,
+            'assets_uuid' => $this->assetsUuid,
             'disk' => $this->disk,
             'key' => $this->key,
             'pathname' => $this->pathname,
             'extension' => $this->extension,
-            'mimeType' => $this->mimeType,
+            'mime_type' => $this->mimeType,
             'size' => $this->size,
         ];
     }
