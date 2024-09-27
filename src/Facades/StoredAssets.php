@@ -14,7 +14,7 @@ use LaravelToolkit\StoredAssets\StoredAssetModel;
  * @method static string defaultDisk()
  * @method static FilenameStoreType defaultFilenameStoreType()
  * @method static bool deleteFromTrashBin(string $disk, string $uuid)
- * @method static bool isValidUuidImage(string $uuid)
+ * @method static bool isValidUuidAsset(string $uuid)
  * @method static StoredAssetModel newModel(array $attributes = [])
  * @method static string modelFQN()
  * @method static Builder modelQuery()
@@ -23,7 +23,7 @@ use LaravelToolkit\StoredAssets\StoredAssetModel;
  * @method static bool restoreFromTrashBin(string $disk, string $uuid)
  * @method static int subdirectoryChars()
  * @method static int trashBinDeadlineTimestamp(Carbon $from = null)
- * @method static string trashBinPath(string $uuid = null)
+ * @method static string trashBinPath(string $path = null)
  *
  * @see \LaravelToolkit\StoredAssets\StoredAssets
  */

@@ -44,9 +44,7 @@ class TestCase extends Orchestra
         config()->set('app.locale', 'pt_BR');
         config()->set('app.key', 'base64:Z1sxfk3d54CWnssAxvEFshoZVGmAO7KrbZGMzU5xko4=');
 
-        /*
-        $migration = include __DIR__.'/../database/migrations/create_laraveltoolkit_table.php.stub';
+        $migration = include __DIR__.'/../database/migrations/create_stored_assets_table.php.stub';
         $migration->up();
-        */
     }
 }

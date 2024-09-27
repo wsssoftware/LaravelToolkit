@@ -56,7 +56,7 @@ class StoredAssets
         return $disk->deleteDirectory($path);
     }
 
-    public function isValidUuidImage(string $uuid): bool
+    public function isValidUuidAsset(string $uuid): bool
     {
         if (!Str::isUuid($uuid)) {
             return false;
@@ -84,8 +84,13 @@ class StoredAssets
 
     public function moveToTrashBin(string $disk, string $uuid): bool
     {
+        $disk = Storage::disk($disk);
+        $originalPath = $this->path($uuid);
         $trashBinUuidFolderName = sprintf('%s-%s', $this->trashBinDeadlineTimestamp(), $uuid);
-        return Storage::disk($disk)->move($this->path($uuid), $this->trashBinPath($trashBinUuidFolderName));
+        if (!$disk->exists($originalPath)) {
+            return false;
+        }
+        return $disk->move($originalPath, $this->trashBinPath($trashBinUuidFolderName));
     }
 
     public function path(string $uuid, ?string $path = null): string

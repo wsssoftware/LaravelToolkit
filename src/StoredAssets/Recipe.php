@@ -72,7 +72,7 @@ abstract class Recipe implements Castable
         } elseif ($source instanceof self) {
             return $source;
         }
-        throw_if(!StoredAssets::isValidUuidImage($source), Exception::class, sprintf(
+        throw_if(!StoredAssets::isValidUuidAsset($source), Exception::class, sprintf(
             'On field "%s" from model "%s", the the provided value "%s" does not appears to be a valid uuid or does not exists on "%s" table.',
             $field,
             $model::class,
