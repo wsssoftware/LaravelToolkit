@@ -16,18 +16,17 @@ class SEO
         $this->withRobots(...$robots);
     }
 
-    public function friendlyUrlString(string $string): string
-    {
-        $separator = '-';
-        $accents_regex = '~&([a-z]{1,2})(?:acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i';
-        $special_cases = ['&' => 'and', "'" => ''];
-        $string = mb_strtolower(trim($string), 'UTF-8');
-        $string = str_replace(array_keys($special_cases), array_values($special_cases), $string);
-        $string = preg_replace($accents_regex, '$1', htmlentities($string, ENT_QUOTES, 'UTF-8'));
-        $string = preg_replace('/[^a-z0-9]/u', "$separator", $string);
-        $string = trim($string, '-');
+    public function friendlyUrlString(
+        string $string,
+        string $separator = null,
+        string $language = null,
+        array $dictionary = null,
+    ): string {
+        $separator = $separator ?? config('laraveltoolkit.seo.friendly_url.separator') ?? '-';
+        $language = $language ?? config('laraveltoolkit.seo.friendly_url.language') ?? config('app.locale');
+        $dictionary = $dictionary ?? config('laraveltoolkit.seo.friendly_url.dictionary') ?? [];
 
-        return preg_replace("/[$separator]+/u", "$separator", $string);
+        return str($string)->slug($separator, $language, $dictionary);
     }
 
     public function isCrawler(?string $agent = null): bool
@@ -233,7 +232,7 @@ class SEO
     {
         $this->payload->robots = collect($items)
             ->map(
-                fn (string|RobotRule $item) => is_string($item)
+                fn(string|RobotRule $item) => is_string($item)
                     ? [RobotRule::from(explode(':', $item)[0]), explode(':', $item)[1] ?? null]
                     : [$item, null]
             );

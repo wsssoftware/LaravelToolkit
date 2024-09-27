@@ -1,6 +1,5 @@
 <?php
 
-// config for LaravelToolkit
 return [
 
     /*
@@ -31,9 +30,16 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Filepond
+    | Filepond configurations
     |--------------------------------------------------------------------------
+    | This configuration will be responsible by some filepond behaviors.
     |
+    | -> disk: Default disk used for store tmp files from filepond.
+    | -> root_path: Root path from tmp folder.
+    | -> garbage_collector: Garbage collector configs
+    |    -> probability: The change of gc run. 0.0 mean 0% and 1.0 mean 100%.
+    |    -> upload_life: Amount of seconds that gc ignore an uploaded file.
+    |    -> maximum_interactions: Max amount of files deleted on gc run.
     */
     'filepond' => [
         'disk' => env('LT_FILEPOND_DISK', env('FILESYSTEM_DISK', 'local')),
@@ -49,17 +55,23 @@ return [
     |--------------------------------------------------------------------------
     | SEO configurations
     |--------------------------------------------------------------------------
-    |
     | This configurations will help to configure the behavior of SEO facade and
     | also its defaults
     |
+    | -> friendly_url:
+    |    -> dictionary: Replace dictionary for some chars.
+    |    -> language: language used in slug. Null use the app default language.
+    |    -> separator: char used to replace space.
     | -> propagation: If true, will propagate title, description and canonical for open_graph and twitter card when its
     |    change.
     | -> defaults: Defaults values for SEO when no value was configured on requests.
-    |
     */
     'seo' => [
-        // Allow to propagate title, description and others values to OpenGraph and Twitter Card
+        'friendly_url' => [
+            'dictionary' => ['@' => 'em', '&' => 'e'],
+            'language' => null,
+            'separator' => '-',
+        ],
         'propagation' => true,
         'defaults' => [
             'title' => null,
@@ -90,11 +102,11 @@ return [
             ],
         ],
     ],
+
     /*
     |--------------------------------------------------------------------------
     | Sitemap configurations
     |--------------------------------------------------------------------------
-    |
     | This configurations will help to configure the behavior of Sitemap facade
     |
     | -> cache: If an int, will be the cache time in seconds or false to disable.
@@ -103,7 +115,6 @@ return [
     |    it will use the php.ini default. This is helpful for large sitemaps
     | -> max_file_items: Max amount of items on sitemap without trigger log
     | -> max_file_size: Max sitemap size without trigger log
-    |
     */
     'sitemap' => [
         'cache' => 21_600,
@@ -113,6 +124,21 @@ return [
         'max_file_size' => 50 * 1024 * 1024,
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Stored assets configurations
+    |--------------------------------------------------------------------------
+    | This allow you to change some behavior from stored assets
+    |
+    | -> disk: Default disk that the file will be stored.
+    | -> model: File model. Used to allow dev extend model.
+    | -> path: Base path from stored files on disk.
+    | -> filename_store_type: Default stored file filename.
+    | -> subdirectory_chars: How many chars subdirectory 1 and 2 will have.
+    |    More is useful for very huge file database. 2 it's acceptable for 50kk
+    |    or fewer files. A file with uuid: "7c23b...2f1505" with 2 chars will
+    |    be stored on "/assets/7c/05/7c23b...2f1505/..."
+    */
     'stored_assets' => [
         'disk' => env('LT_STORED_ASSETS_DISK', env('FILESYSTEM_DISK', 'local')),
         'model' => \LaravelToolkit\StoredAssets\StoredAssetModel::class,
