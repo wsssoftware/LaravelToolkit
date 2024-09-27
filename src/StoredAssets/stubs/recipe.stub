@@ -2,6 +2,9 @@
 
 namespace {{ namespace }};
 
+use Illuminate\Support\Collection;
+use LaravelToolkit\StoredAssets\AssetIntent;
+use LaravelToolkit\StoredAssets\FilenameStoreType;
 use LaravelToolkit\StoredAssets\Recipe;
 
 class {{ class }} extends Recipe
@@ -12,8 +15,10 @@ class {{ class }} extends Recipe
     protected function prepareForSave(Asset $baseAsset): Asset|Collection
     {
 //        return collect([
-//            $baseAsset->withDisk('local')->withKey('default'),
-//            AssetIntent::create($baseAsset->getPathname())->withDisk('local')->withKey('thumbnail'),
+//            $baseAsset->withDisk('local')->withKey('default')->withFilenameStoreType(FilenameStoreType::KEY),
+//            AssetIntent::create($baseAsset->pathname)->withDisk('local')
+//                ->withFilenameStoreType(FilenameStoreType::KEY)
+//                ->withKey('thumbnail_dsa_dsadsa'),
 //        ]); or
 
         return $baseAsset->withDisk('local')->withKey('default');
