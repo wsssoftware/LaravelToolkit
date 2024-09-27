@@ -74,8 +74,16 @@ it('return a model and helpers', function () {
 
 it('can get the path', function () {
     $uuid = 'fa21cdf7-bb1d-4fc8-a556-67ecd85423d1';
+    $expectation = str('assets')
+        ->append(DIRECTORY_SEPARATOR)
+        ->append('fa')
+        ->append(DIRECTORY_SEPARATOR)
+        ->append('d1')
+        ->append(DIRECTORY_SEPARATOR)
+        ->append($uuid)
+        ->append(DIRECTORY_SEPARATOR);
     expect(StoredAssets::path($uuid))
-        ->toEqual("assets/fa/d1/$uuid/");
+        ->toEqual($expectation);
 });
 
 it('can get trash bin deadline', function () {
