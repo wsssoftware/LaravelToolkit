@@ -2,15 +2,22 @@
 
 namespace LaravelToolkit\Support;
 
+use LaravelToolkit\Facades\Regex;
+
 trait RegexTools
 {
-    public function regexOnlyNumbers(?string $payload): string
+    public function regexIsLikePhpVariableChars(string $payload): bool
     {
-        return preg_replace('/[^0-9]/', '', $payload ?? '');
+        return Regex::isLikePhpVariableChars($payload);
     }
 
     public function regexIsSequenceOfUniqueChar(string $payload): bool
     {
-        return preg_match('/^(.)\1*$/', $payload) === 1;
+        return Regex::isSequenceOfUniqueChar($payload);
+    }
+
+    public function regexOnlyNumbers(?string $payload): string
+    {
+        return Regex::onlyNumbers($payload);
     }
 }

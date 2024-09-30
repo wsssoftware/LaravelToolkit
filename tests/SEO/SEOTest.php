@@ -6,9 +6,9 @@ use LaravelToolkit\SEO\RobotRule;
 
 it('test friendly url string', function () {
     expect(SEO::friendlyUrlString('Testing a string with some diferente 3,000 words'))
-        ->toEqual('testing-a-string-with-some-diferente-3-000-words')
-        ->and(SEO::friendlyUrlString('Now WiTh sOmE cRazY ch@anges!'))
-        ->toEqual('now-with-some-crazy-ch-anges');
+        ->toEqual('testing-a-string-with-some-diferente-3000-words')
+        ->and(SEO::friendlyUrlString('Now WiTh sOmE cRazY example@google!'))
+        ->toEqual('now-with-some-crazy-example-em-google');
 });
 
 it('test crawler', function () {
