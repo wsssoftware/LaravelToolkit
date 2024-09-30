@@ -2,16 +2,11 @@
 
 namespace LaravelToolkit\Enum;
 
-use LaravelToolkit\Actions\Document\FakeDocument;
-use LaravelToolkit\Actions\Document\GetDocumentCheckDigits;
-use LaravelToolkit\Actions\Document\MaskDocument;
-use LaravelToolkit\Actions\Document\ValidateDocument;
-use LaravelToolkit\Actions\Mask\UnmaskNumber;
-use LaravelToolkit\Support\RegexTools;
+use LaravelToolkit\Facades\Document as Facade;
 
 enum Document: string implements ArrayableEnum
 {
-    use HasArrayableEnum, RegexTools;
+    use HasArrayableEnum;
 
     case CNPJ = 'cnpj';
     case CPF = 'cpf';
@@ -19,27 +14,39 @@ enum Document: string implements ArrayableEnum
 
     public function calculateCheckDigits(string $document): string
     {
-        return app(GetDocumentCheckDigits::class)->handle($this, $document);
+        return match ($this) {
+            self::CNPJ => Facade::checkDigitsFromCnpj($document),
+            self::CPF => Facade::checkDigitsFromCpf($document),
+            self::GENERIC => Facade::checkDigitsFromGeneric($document),
+        };
     }
 
     public function fake(): string
     {
-        return app(FakeDocument::class)->handle($this);
+        return match ($this) {
+            self::CNPJ => Facade::fakeCnpj(),
+            self::CPF => Facade::fakeCpf(),
+            self::GENERIC => Facade::fakeGeneric(),
+        };
     }
 
     public function isValid(string $document): bool
     {
-        return app(ValidateDocument::class)->handle($this, $document);
+        return match ($this) {
+            self::CNPJ => Facade::isValidCnpj($document),
+            self::CPF => Facade::isValidCpf($document),
+            self::GENERIC => Facade::isValidGeneric($document),
+        };
     }
 
     public function mask(string $document): string
     {
-        return app(MaskDocument::class)->handle($document);
+        return Facade::mask($document);
     }
 
     public function unmask(string $document): string
     {
-        return app(UnmaskNumber::class)->handle($document);
+        return Facade::unmask($document);
     }
 
     public function label(): string

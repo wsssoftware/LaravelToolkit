@@ -5,11 +5,10 @@ namespace LaravelToolkit\Enum;
 use Exception;
 use LaravelToolkit\Actions\Phone\FakePhone;
 use LaravelToolkit\Actions\Phone\MaskPhone;
-use LaravelToolkit\Support\RegexTools;
 
 enum Phone: string implements ArrayableEnum
 {
-    use HasArrayableEnum, RegexTools;
+    use HasArrayableEnum;
 
     case GENERIC = 'generic';
     case LANDLINE = 'landline';
