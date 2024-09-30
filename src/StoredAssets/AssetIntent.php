@@ -3,6 +3,7 @@
 namespace LaravelToolkit\StoredAssets;
 
 use Exception;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use LaravelToolkit\Facades\Regex;
@@ -45,6 +46,11 @@ class AssetIntent
         return static::create(stream_get_meta_data($resource)['uri']);
     }
 
+    public static function createFromUploadedFile(UploadedFile $uploadedFile): self
+    {
+        return static::create($uploadedFile->getPathname());
+    }
+
     public function asPrivate(): self
     {
         $this->public = false;
@@ -75,15 +81,13 @@ class AssetIntent
     public function store(string $uuid): Asset
     {
         $disk = Storage::disk($this->disk);
-        $options = [];
         if ($this->public) {
-            $options['visibility'] = 'public';
+            $this->options['visibility'] = 'public';
         }
-        $options = $options + $this->options;
         $extension = File::guessExtension($this->pathname) ?? File::extension($this->pathname);;
         $filename = $this->filenameStoreType->getFilename($this, $extension);
         $pathname = StoredAssets::path($uuid, $filename);
-        $disk->put($pathname, $this->getContentStream(), $options);
+        $disk->put($pathname, $this->getContentStream(), $this->options);
         return new Asset(
             $uuid,
             $this->disk,
