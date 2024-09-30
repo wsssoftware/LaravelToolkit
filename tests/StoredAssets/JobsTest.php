@@ -9,7 +9,7 @@ it('can run all jobs', function () {
     \Illuminate\Support\Facades\Log::spy();
     $disk = Storage::fake('local');
 
-    $validFakeTrashBinUuid = StoredAssets::trashBinDeadlineTimestamp(now()).'-'.Str::uuid()->toString();
+    $validFakeTrashBinUuid = StoredAssets::trashBinDeadlineTimestamp().'-'.Str::uuid()->toString();
     $validFakeTrashBinPath = StoredAssets::trashBinPath($validFakeTrashBinUuid);
     $validFakeTrashBinPathname = $validFakeTrashBinPath.'test.txt';
     $disk->put($validFakeTrashBinPathname, '');
@@ -46,21 +46,25 @@ it('can run all jobs', function () {
         ->and($disk->exists($assetSubDir1))->toBeTrue()
         ->and($disk->exists($assetSubDir2))->toBeTrue()
         ->and($disk->exists($validFakeTrashBinPathname))->toBeTrue()
-        ->and($disk->exists($invalidFakeTrashBinPath))->toBeTrue();
+        ->and($disk->exists($invalidFakeTrashBinPathname))->toBeTrue();
     GarbageCollectorManager::dispatch();
+
     expect($disk->exists($assetPath))->toBeFalse()
         ->and($disk->exists($assetSubDir1))->toBeTrue()
         ->and($disk->exists($assetSubDir2))->toBeTrue()
-        ->and($disk->exists($validFakeTrashBinPathname))->toBeTrue()
-        ->and($disk->exists($invalidFakeTrashBinPath))->toBeFalse();
+        ->and($disk->exists($validFakeTrashBinPath))->toBeTrue()
+        ->and($disk->exists($invalidFakeTrashBinPathname))->toBeFalse();
     GarbageCollectorManager::dispatch();
+
     expect($disk->exists($assetPath))->toBeFalse()
         ->and($disk->exists($assetSubDir1))->toBeFalse()
         ->and($disk->exists($assetSubDir2))->toBeTrue();
     GarbageCollectorManager::dispatch();
+
     expect($disk->exists($assetPath))->toBeFalse()
         ->and($disk->exists($assetSubDir1))->toBeFalse()
         ->and($disk->exists($assetSubDir2))->toBeFalse();
 
+    Log::shouldHaveReceived('info')->with('In the trash bin on the "local" disk, 2 items were found, of which 1 item was deleted because its deadline had reached.');
     Log::shouldHaveReceived('info')->with('On stored assets, 1 item(s) was moved to trash bin.');
 });
