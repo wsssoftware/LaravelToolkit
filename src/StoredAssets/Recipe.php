@@ -82,8 +82,8 @@ abstract class Recipe implements Castable
         return $source;
     }
 
-    public static function castUsing(array $arguments): StoredAssetCast
+    public static function castUsing(array $arguments): string
     {
-        return new StoredAssetCast(static::class);
+        return StoredAssetCast::class;
     }
 }

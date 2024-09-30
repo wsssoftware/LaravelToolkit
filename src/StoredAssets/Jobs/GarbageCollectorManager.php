@@ -36,16 +36,10 @@ class GarbageCollectorManager implements ShouldQueue, ShouldBeUnique
                 $chain[] = new GarbageCollector($diskName, $directory);
             }
         }
-        $chain[] = function () {
-            $count = GarbageCollector::getCount();
-            if ($count > 0) {
-                Log::info(sprintf('On stored assets, %s item(s) was moved to trash bin.', $count));
-            }
-        };
+        $chain[] = new GarbageCollectorSummary();
         Bus::chain($chain)
             ->onQueue($this->queue)
             ->onConnection($this->connection)
             ->dispatch();
-
     }
 }
