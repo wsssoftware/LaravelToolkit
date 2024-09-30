@@ -33,7 +33,7 @@ class GarbageCollectorManager implements ShouldQueue, ShouldBeUnique
             $chain[] = new TrashBinCleaner($diskName);
             $disk = $this->disk($diskName);
             foreach (collect($disk->directories(StoredAssets::basePath()))->shuffle() as $directory) {
-                if ($directory === str(StoredAssets::trashBinPath())->trim('/')->toString()) {
+                if (str_contains($directory, config('laraveltoolkit.stored_assets.trash_bin.folder'))) {
                     continue;
                 }
                 $chain[] = new GarbageCollector($diskName, $directory);
