@@ -25,7 +25,7 @@ abstract class Recipe implements Castable
         $pathname = match (true) {
             $source instanceof File => $source->getPathname(),
             $source instanceof UploadedFile => $source->getPathname(),
-            is_file($source) => new $source,
+            is_file($source) => $source,
         };
         $this->baseAsset = AssetIntent::create($pathname);
     }
@@ -36,7 +36,7 @@ abstract class Recipe implements Castable
      */
     abstract protected function prepareForSave(AssetIntent $baseAsset): AssetIntent|Collection;
 
-    public function ensureNotDuplicated(Collection $assets): void
+    private function ensureNotDuplicated(Collection $assets): void
     {
         $assets->unique(fn($o) => spl_object_id($o))
             ->groupBy(fn(AssetIntent $intent) => $intent->getKey())
@@ -60,14 +60,13 @@ abstract class Recipe implements Castable
         );
 
         $data = ['id' => $uuid, 'model' => $this->model::class, 'field' => $this->field, 'assets' => $assets];
-        return StoredAssets::newModel($data)->save()
-            ? $uuid
-            : false;
+        return StoredAssets::newModel($data)->save() ? $uuid : false;
     }
 
     public static function parse(Model $model, string $field, mixed $source): self|string
     {
-        if (is_file($source) || $source instanceof File || $source instanceof UploadedFile) {
+        throw_if(static::class === Recipe::class, Exception::class, 'You cannot call parse directly from Recipe class');
+        if ((is_string($source) && is_file($source)) || $source instanceof File || $source instanceof UploadedFile) {
             return new static($model, $field, $source);
         } elseif ($source instanceof self) {
             return $source;

@@ -34,9 +34,8 @@ class MakeStoreRecipeCommand extends GeneratorCommand
     {
         $relativePath = '/stubs/recipe.stub';
 
-        return file_exists($customPath = $this->laravel->basePath(trim($relativePath, '/')))
-            ? $customPath
-            : __DIR__.$relativePath;
+        $customPath = $this->laravel->basePath(trim($relativePath, '/'));
+        return file_exists($customPath) ? $customPath : __DIR__.$relativePath;
     }
 
     protected function getNameInput(): string
