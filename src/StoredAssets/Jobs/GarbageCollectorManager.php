@@ -33,7 +33,7 @@ class GarbageCollectorManager implements ShouldQueue, ShouldBeUnique
             $chain[] = new TrashBinCleaner($diskName);
             $disk = $this->disk($diskName);
             foreach (collect($disk->directories(StoredAssets::basePath()))->shuffle() as $directory) {
-                if ($directory === str(StoredAssets::trashBinPath())->trim(DIRECTORY_SEPARATOR)->toString()) {
+                if ($directory === str(StoredAssets::trashBinPath())->trim('/')->toString()) {
                     continue;
                 }
                 $chain[] = new GarbageCollector($diskName, $directory);
