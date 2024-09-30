@@ -2,7 +2,9 @@
 
 it('can create recipe', function () {
     $path = base_path('/app/StoreRecipes/FooRecipe.php');
-    unlink($path);
+    if (is_file($path)) {
+        unlink($path);
+    }
 
     expect($path)
         ->not
