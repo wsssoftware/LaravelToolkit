@@ -8,7 +8,7 @@ use LaravelToolkit\Tests\Model\Product;
 use LaravelToolkit\Tests\Model\ProductImageRecipe;
 
 it('can cast a file to recipe', function () {
-    $product = new Product();
+    $product = new Product;
 
     $product->image = UploadedFile::fake()->image('image.jpg');
 
@@ -34,7 +34,8 @@ it('can fail on save', function () {
 
     StoredAssets::partialMock()->shouldReceive('newModel')
         ->once()
-        ->andReturn(new class extends StoredAssetModel {
+        ->andReturn(new class extends StoredAssetModel
+        {
             public function save(array $options = []): bool
             {
                 return false;

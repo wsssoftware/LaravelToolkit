@@ -2,7 +2,6 @@
 
 namespace LaravelToolkit\StoredAssets;
 
-
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;
 
@@ -35,6 +34,7 @@ class MakeStoreRecipeCommand extends GeneratorCommand
         $relativePath = '/stubs/recipe.stub';
 
         $customPath = $this->laravel->basePath(trim($relativePath, '/'));
+
         return file_exists($customPath) ? $customPath : __DIR__.$relativePath;
     }
 
@@ -44,6 +44,7 @@ class MakeStoreRecipeCommand extends GeneratorCommand
         if (Str::endsWith($name, ['Recipe', 'recipe'])) {
             $name = Str::substr($name, 0, -6);
         }
+
         return $name.'Recipe';
     }
 

@@ -10,7 +10,7 @@ it('test model features', function () {
         'id' => $uuid,
         'model' => Product::class,
         'field' => 'image',
-        'assets' => new Assets()
+        'assets' => new Assets,
     ]);
     $product = Product::create([
         'id' => 1,

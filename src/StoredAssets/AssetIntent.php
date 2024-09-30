@@ -12,11 +12,14 @@ use League\Flysystem\UnableToReadFile;
 
 class AssetIntent
 {
-
     protected string $disk;
+
     protected string $key = 'default';
+
     protected FilenameStoreType $filenameStoreType;
+
     protected array $options = [];
+
     protected bool $public = false;
 
     private function __construct(
@@ -36,13 +39,15 @@ class AssetIntent
         $resource = tmpfile();
         fwrite($resource, $content);
         fseek($resource, 0);
-        register_shutdown_function(fn() => fclose($resource));
+        register_shutdown_function(fn () => fclose($resource));
+
         return static::create(stream_get_meta_data($resource)['uri']);
     }
 
     public static function createFromResource(mixed $resource): self
     {
-        throw_if(!is_resource($resource), Exception::class, 'Invalid resource');
+        throw_if(! is_resource($resource), Exception::class, 'Invalid resource');
+
         return static::create(stream_get_meta_data($resource)['uri']);
     }
 
@@ -54,12 +59,14 @@ class AssetIntent
     public function asPrivate(): self
     {
         $this->public = false;
+
         return $this;
     }
 
     public function asPublic(): self
     {
         $this->public = true;
+
         return $this;
     }
 
@@ -70,6 +77,7 @@ class AssetIntent
         if ($contents === false) {
             throw UnableToReadFile::fromLocation($this->pathname, error_get_last()['message'] ?? '');
         }
+
         return $contents;
     }
 
@@ -84,10 +92,11 @@ class AssetIntent
         if ($this->public) {
             $this->options['visibility'] = 'public';
         }
-        $extension = File::guessExtension($this->pathname) ?? File::extension($this->pathname);;
+        $extension = File::guessExtension($this->pathname) ?? File::extension($this->pathname);
         $filename = $this->filenameStoreType->getFilename($this, $extension);
         $pathname = StoredAssets::path($uuid, $filename);
         $disk->put($pathname, $this->getContentStream(), $this->options);
+
         return new Asset(
             $uuid,
             $this->disk,
@@ -102,29 +111,33 @@ class AssetIntent
     public function withDisk(string $disk): self
     {
         $this->disk = $disk;
+
         return $this;
     }
 
     public function withFilenameStoreType(FilenameStoreType $type): self
     {
         $this->filenameStoreType = $type;
+
         return $this;
     }
 
     public function withKey(string $key): self
     {
         throw_if(
-            !Regex::isLikePhpVariableChars($key),
+            ! Regex::isLikePhpVariableChars($key),
             Exception::class,
             "\"$key\" is not a valid asset key."
         );
         $this->key = $key;
+
         return $this;
     }
 
     public function withOptions(array $options): self
     {
         $this->options = $options;
+
         return $this;
     }
 }

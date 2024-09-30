@@ -18,9 +18,9 @@ class SEO
 
     public function friendlyUrlString(
         string $string,
-        string $separator = null,
-        string $language = null,
-        array $dictionary = null,
+        ?string $separator = null,
+        ?string $language = null,
+        ?array $dictionary = null,
     ): string {
         $separator = $separator ?? config('laraveltoolkit.seo.friendly_url.separator') ?? '-';
         $language = $language ?? config('laraveltoolkit.seo.friendly_url.language') ?? config('app.locale');
@@ -232,7 +232,7 @@ class SEO
     {
         $this->payload->robots = collect($items)
             ->map(
-                fn(string|RobotRule $item) => is_string($item)
+                fn (string|RobotRule $item) => is_string($item)
                     ? [RobotRule::from(explode(':', $item)[0]), explode(':', $item)[1] ?? null]
                     : [$item, null]
             );

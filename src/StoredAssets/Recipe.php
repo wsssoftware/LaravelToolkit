@@ -14,8 +14,7 @@ use LaravelToolkit\StoredAssets\Casts\StoredAssetCast;
 
 abstract class Recipe implements Castable
 {
-
-    readonly private AssetIntent $baseAsset;
+    private readonly AssetIntent $baseAsset;
 
     protected function __construct(
         readonly protected Model $model,
@@ -31,16 +30,15 @@ abstract class Recipe implements Castable
     }
 
     /**
-     * @param  \LaravelToolkit\StoredAssets\AssetIntent  $baseAsset
      * @return \LaravelToolkit\StoredAssets\AssetIntent|\Illuminate\Support\Collection<int, \LaravelToolkit\StoredAssets\AssetIntent>
      */
     abstract protected function prepareForSave(AssetIntent $baseAsset): AssetIntent|Collection;
 
     private function ensureNotDuplicated(Collection $assets): void
     {
-        $assets->unique(fn($o) => spl_object_id($o))
-            ->groupBy(fn(AssetIntent $intent) => $intent->getKey())
-            ->each(fn(Collection $group, string $key) => throw_if($group->count() > 1, Exception::class, sprintf(
+        $assets->unique(fn ($o) => spl_object_id($o))
+            ->groupBy(fn (AssetIntent $intent) => $intent->getKey())
+            ->each(fn (Collection $group, string $key) => throw_if($group->count() > 1, Exception::class, sprintf(
                 'You may not has two asset with same name key. %s found on "%s"',
                 $group->count(),
                 $key
@@ -55,11 +53,12 @@ abstract class Recipe implements Castable
         $uuid = Str::uuid()->toString();
 
         $assets = $assets->reduce(
-            fn(Assets $carry, AssetIntent $intent) => $carry->put($intent->getKey(), $intent->store($uuid)),
-            new Assets()
+            fn (Assets $carry, AssetIntent $intent) => $carry->put($intent->getKey(), $intent->store($uuid)),
+            new Assets
         );
 
         $data = ['id' => $uuid, 'model' => $this->model::class, 'field' => $this->field, 'assets' => $assets];
+
         return StoredAssets::newModel($data)->save() ? $uuid : false;
     }
 
@@ -71,7 +70,7 @@ abstract class Recipe implements Castable
         } elseif ($source instanceof self) {
             return $source;
         }
-        throw_if(!StoredAssets::isValidUuidAsset($source), Exception::class, sprintf(
+        throw_if(! StoredAssets::isValidUuidAsset($source), Exception::class, sprintf(
             'On field "%s" from model "%s", the the provided value "%s" does not appears to be a valid uuid or does not exists on "%s" table.',
             $field,
             $model::class,

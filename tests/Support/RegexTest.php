@@ -33,7 +33,7 @@ it('test facade', function () {
 it('test cass', function () {
     $class = new class
     {
-      use RegexTools;
+        use RegexTools;
     };
     expect($class->regexIsLikePhpVariableChars('foo_bar1'))
         ->toBeTrue()

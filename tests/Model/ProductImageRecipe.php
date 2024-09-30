@@ -9,18 +9,17 @@ use LaravelToolkit\StoredAssets\Recipe;
 
 class ProductImageRecipe extends Recipe
 {
-
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function prepareForSave(AssetIntent $baseAsset): AssetIntent|Collection
     {
-//        return collect([
-//            $baseAsset->withDisk('local')->withKey('default')->withFilenameStoreType(FilenameStoreType::KEY),
-//            AssetIntent::create($baseAsset->pathname)->withDisk('local')
-//                ->withFilenameStoreType(FilenameStoreType::KEY)
-//                ->withKey('thumbnail_dsa_dsadsa'),
-//        ]); or
+        //        return collect([
+        //            $baseAsset->withDisk('local')->withKey('default')->withFilenameStoreType(FilenameStoreType::KEY),
+        //            AssetIntent::create($baseAsset->pathname)->withDisk('local')
+        //                ->withFilenameStoreType(FilenameStoreType::KEY)
+        //                ->withKey('thumbnail_dsa_dsadsa'),
+        //        ]); or
 
         return $baseAsset->withDisk('local')->withKey('default');
     }

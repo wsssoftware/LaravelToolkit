@@ -28,7 +28,6 @@ it('can get default disk', function () {
         ->toEqual('foo_bar_disk');
 });
 
-
 it('can get subdirectory chars', function () {
     $chars1 = StoredAssets::subdirectoryChars();
     config()->set('laraveltoolkit.stored_assets.subdirectory_chars', 3);
@@ -172,4 +171,3 @@ it('can move to and restore from trash bin', function () {
         ->and($disk->exists($originalPath))
         ->toBeTrue();
 });
-

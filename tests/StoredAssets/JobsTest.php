@@ -41,7 +41,6 @@ it('can run all jobs', function () {
     $assetSubDir2 = $assetSubDir1.'../';
     $product->delete();
 
-
     expect($disk->exists($assetPath))->toBeTrue()
         ->and($disk->exists($assetSubDir1))->toBeTrue()
         ->and($disk->exists($assetSubDir2))->toBeTrue()

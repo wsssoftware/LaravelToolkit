@@ -153,5 +153,5 @@ return [
             'folder' => env('LT_STORED_ASSETS_TRASH_BIN_FOLDER', '$TRASH_BIN'),
             'deadline' => env('LT_STORED_ASSETS_TRASH_BIN_DEADLINE', 60 * 24 * 15),
         ],
-    ]
+    ],
 ];

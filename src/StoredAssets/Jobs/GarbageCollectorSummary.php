@@ -7,9 +7,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;
 
-class GarbageCollectorSummary implements ShouldQueue, ShouldBeUnique
+class GarbageCollectorSummary implements ShouldBeUnique, ShouldQueue
 {
-    use Queueable, HasDisk;
+    use HasDisk, Queueable;
 
     /**
      * Execute the job.

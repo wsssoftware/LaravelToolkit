@@ -6,12 +6,11 @@ use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Facades\Log;
 use LaravelToolkit\Facades\StoredAssets;
 
-class GarbageCollectorManager implements ShouldQueue, ShouldBeUnique
+class GarbageCollectorManager implements ShouldBeUnique, ShouldQueue
 {
-    use Queueable, HasDisk;
+    use HasDisk, Queueable;
 
     /**
      * Create a new job instance.
@@ -39,7 +38,7 @@ class GarbageCollectorManager implements ShouldQueue, ShouldBeUnique
                 $chain[] = new GarbageCollector($diskName, $directory);
             }
         }
-        $chain[] = new GarbageCollectorSummary();
+        $chain[] = new GarbageCollectorSummary;
         Bus::chain($chain)
             ->onQueue($this->queue)
             ->onConnection($this->connection)

@@ -9,7 +9,6 @@ use LaravelToolkit\StoredAssets\Recipe;
 
 class StoredAssetCast implements CastsAttributes
 {
-
     /**
      * Cast the given value.
      *
@@ -18,7 +17,7 @@ class StoredAssetCast implements CastsAttributes
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
         $implementsTrait = in_array(HasStoredAssets::class, class_uses_recursive($model::class));
-        if (!empty($value) && !$value instanceof Recipe && $model->isRelation($key) && $implementsTrait) {
+        if (! empty($value) && ! $value instanceof Recipe && $model->isRelation($key) && $implementsTrait) {
             return $model->getRelationValue($key)->assets;
         }
 

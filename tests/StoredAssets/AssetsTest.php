@@ -6,15 +6,14 @@ use LaravelToolkit\StoredAssets\Assets;
 
 it('test assets methods', function () {
     $uuid = Str::uuid()->toString();
-    $asset1 =  new Asset($uuid, 'local', 'default', 'foo.zip', 'zip', 'app/zip', 12);
-    $asset2 =  new Asset($uuid, 'local', 'thumb', 'foo.zip', 'zip', 'app/zip', 12);
+    $asset1 = new Asset($uuid, 'local', 'default', 'foo.zip', 'zip', 'app/zip', 12);
+    $asset2 = new Asset($uuid, 'local', 'thumb', 'foo.zip', 'zip', 'app/zip', 12);
     $assets = new Assets([
-        'default' => $asset1
+        'default' => $asset1,
     ]);
     $assets2 = new Assets([
-        'default' => ['assets_uuid' => $uuid]
+        'default' => ['assets_uuid' => $uuid],
     ]);
-
 
     expect($assets->uuid)
         ->toEqual($uuid)
@@ -63,6 +62,5 @@ it('test asset methods', function () {
         ->toBeResource()
         ->and($asset->url())
         ->toBeString();
-
 
 });

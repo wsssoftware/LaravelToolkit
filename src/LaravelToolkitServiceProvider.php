@@ -39,7 +39,7 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
     {
         (new CollectionMacro)();
         (new RequestMacro)();
-        (new BlueprintMacro())();
+        (new BlueprintMacro)();
 
         setlocale(
             LC_ALL,

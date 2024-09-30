@@ -6,10 +6,9 @@ use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Support\Collection;
 use LaravelToolkit\StoredAssets\Casts\AssetsCast;
 
-
 class Assets extends Collection implements Castable
 {
-    readonly public ?string $uuid;
+    public readonly ?string $uuid;
 
     public function __construct(
         array $assets = [],
@@ -25,7 +24,7 @@ class Assets extends Collection implements Castable
 
     private function setUuid($value): void
     {
-        if (!empty($this->uuid)) {
+        if (! empty($this->uuid)) {
             return;
         } elseif ($value instanceof Asset) {
             $this->uuid = $value->assetsUuid;
@@ -37,12 +36,13 @@ class Assets extends Collection implements Castable
     public function put($key, $value): self
     {
         $this->setUuid($value);
+
         return parent::put($key, $value);
     }
 
     public function toDatabase(): array
     {
-        return collect($this->items)->map(fn(Asset $asset) => $asset->toDatabase())->values()->toArray();
+        return collect($this->items)->map(fn (Asset $asset) => $asset->toDatabase())->values()->toArray();
     }
 
     public function __get($key): ?Asset
