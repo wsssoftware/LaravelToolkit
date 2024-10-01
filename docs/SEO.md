@@ -28,6 +28,20 @@ class ExampleController
 }
 ```
 
+On Inertia (If you use) middleware put:
+
+```php
+//...
+public function share(Request $request): array
+    {
+        return [
+            //...
+            'seo' => fn() => SEO::payload(),
+        ];
+    }
+//...
+```
+
 On your views vue `seo` blade component to this works on non JS crawlers
 ```bladehtml
 <head>
