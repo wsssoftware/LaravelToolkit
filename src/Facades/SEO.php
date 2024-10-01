@@ -2,6 +2,7 @@
 
 namespace LaravelToolkit\Facades;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
 use LaravelToolkit\SEO\Image;
 use LaravelToolkit\SEO\RobotRule;
@@ -10,6 +11,7 @@ use LaravelToolkit\SEO\RobotRule;
  * @method static string friendlyUrlString(string $string)
  * @method static bool isCrawler(string $agent = null)
  * @method static array payload()
+ * @method static string robotsTxt()
  * @method static \LaravelToolkit\SEO\SEO withoutCanonical(bool $propagate = null)
  * @method static \LaravelToolkit\SEO\SEO withoutDescription(bool $propagate = null)
  * @method static \LaravelToolkit\SEO\SEO withoutOpenGraphType()
@@ -40,6 +42,8 @@ use LaravelToolkit\SEO\RobotRule;
  * @method static \LaravelToolkit\SEO\SEO withTwitterCardTitle(string $title)
  * @method static \LaravelToolkit\SEO\SEO withTwitterCardDescription(string $description)
  * @method static \LaravelToolkit\SEO\SEO withTwitterCardImage(Image $image)
+ * @method static \LaravelToolkit\SEO\SEO withRobotsTxt(null|false|Collection $userAgent = null, null|false|Collection $allow = null, null|false|Collection $disallow = null)
+ * )
  *
  * @see \LaravelToolkit\SEO\SEO
  */

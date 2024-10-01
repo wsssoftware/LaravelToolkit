@@ -78,6 +78,11 @@ return [
             'description' => null,
             'canonical' => null,
             'robots' => [],
+            'robots_txt' => [
+                'user_agent' => ['*'],
+                'allow' => false, // False to omit option or an array with options
+                'disallow' => [], // False to omit option or an array with options
+            ],
             'open_graph' => [
                 'type' => 'website',
                 'title' => null,

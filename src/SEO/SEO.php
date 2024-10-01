@@ -2,6 +2,7 @@
 
 namespace LaravelToolkit\SEO;
 
+use Illuminate\Support\Collection;
 use Jaybizzle\CrawlerDetect\CrawlerDetect;
 
 class SEO
@@ -36,7 +37,6 @@ class SEO
 
     public function payload(): array
     {
-        //        dd($this->payload);
         return once(function () {
             if (empty($this->payload->canonical) && $this->payload->canonical !== false) {
                 $this->payload->canonical = request()->url();
@@ -47,6 +47,27 @@ class SEO
 
             return SEOResource::make($this->payload)->response()->getData(true);
         });
+    }
+
+    public function robotsTxt(): string
+    {
+        $lines = [];
+        if ($this->payload->robotsTxt->userAgent) {
+            $lines[] = 'User-agent: '.$this->payload->robotsTxt->userAgent->implode(',');
+        }
+        if ($this->payload->robotsTxt->allow) {
+            $lines[] = 'Allow: '.$this->payload->robotsTxt->allow->implode(',');
+        }
+        if ($this->payload->robotsTxt->disallow) {
+            $lines[] = 'Disallow: '.$this->payload->robotsTxt->disallow->implode(',');
+        }
+
+        if (!empty($lines)) {
+            $lines[] = '';
+            $lines[] = '';
+        }
+
+        return implode(PHP_EOL, $lines);
     }
 
     public function withoutCanonical(?bool $propagate = null): self
@@ -232,7 +253,7 @@ class SEO
     {
         $this->payload->robots = collect($items)
             ->map(
-                fn (string|RobotRule $item) => is_string($item)
+                fn(string|RobotRule $item) => is_string($item)
                     ? [RobotRule::from(explode(':', $item)[0]), explode(':', $item)[1] ?? null]
                     : [$item, null]
             );
@@ -282,6 +303,21 @@ class SEO
     public function withTwitterCardImage(Image $image): self
     {
         $this->payload->twitterCard->image = $image;
+
+        return $this;
+    }
+
+    public function withRobotsTxt(
+        null|false|Collection $userAgent = null,
+        null|false|Collection $allow = null,
+        null|false|Collection $disallow = null
+    ): self {
+        $cUserAgent =  config('laraveltoolkit.seo.defaults.robots_txt.user_agent', false);
+        $cAllow =  config('laraveltoolkit.seo.defaults.robots_txt.allow', false);
+        $cDisallow =  config('laraveltoolkit.seo.defaults.robots_txt.disallow', false);
+        $this->payload->robotsTxt->userAgent = $userAgent ?? is_array($cUserAgent) ? collect($cUserAgent) : false;
+        $this->payload->robotsTxt->allow = $allow ?? is_array($cAllow) ? collect($cAllow) : false;
+        $this->payload->robotsTxt->disallow = $disallow ?? is_array($cDisallow) ? collect($cDisallow) : false;
 
         return $this;
     }
