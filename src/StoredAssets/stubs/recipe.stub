@@ -12,7 +12,7 @@ class {{ class }} extends Recipe
     /**
      * @inheritDoc
      */
-    protected function prepareForSave(Asset $baseAsset): Asset|Collection
+    protected function prepareForSave(AssetIntent $baseAsset): AssetIntent|Collection
     {
 //        return collect([
 //            $baseAsset->withDisk('local')->withKey('default')->withFilenameStoreType(FilenameStoreType::KEY),
