@@ -2,6 +2,7 @@
 
 namespace LaravelToolkit\Enum;
 
+use LaravelToolkit\Facades\Regex;
 use LaravelToolkit\Support\Document\CNPJ;
 use LaravelToolkit\Support\Document\CPF;
 use LaravelToolkit\Support\Document\Document as Utils;
@@ -15,7 +16,16 @@ enum Document: string implements ArrayableEnum
     case CPF = 'cpf';
     case GENERIC = 'generic';
 
-    public function calculateCheckDigits(string $document): string
+    public static function guessType(?string $document): ?Document
+    {
+        return match (strlen(Regex::onlyNumbers($document ?? ''))) {
+            14 => self::CNPJ,
+            11 => self::CPF,
+            default => null,
+        };
+    }
+
+    public function checkDigits(string $document): string
     {
         return $this->utils()->checkDigits($document);
     }
@@ -27,11 +37,7 @@ enum Document: string implements ArrayableEnum
 
     public function label(): string
     {
-        return match ($this) {
-            self::CNPJ => 'CNPJ',
-            self::CPF => 'CPF',
-            self::GENERIC => 'Genérico'
-        };
+        return $this->utils()->label();
     }
 
     public function mask(string $document): string

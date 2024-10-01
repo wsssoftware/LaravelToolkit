@@ -43,6 +43,11 @@ class CNPJ implements Document
         return $cnpj.$this->checkDigits($cnpj);
     }
 
+    public function label(): string
+    {
+        return 'CNPJ';
+    }
+
     public function mask(string $document): string
     {
         $document = Regex::onlyNumbers($document);

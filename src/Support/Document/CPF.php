@@ -37,6 +37,11 @@ class CPF implements Document
         return $cpf.$this->checkDigits($cpf);
     }
 
+    public function label(): string
+    {
+        return 'CPF';
+    }
+
     public function mask(string $document): string
     {
         $document = Regex::onlyNumbers($document);

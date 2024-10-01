@@ -28,6 +28,11 @@ class Generic implements Document
             ->choose();
     }
 
+    public function label(): string
+    {
+        return 'Genérico';
+    }
+
     public function mask(string $document): string
     {
         $strlen = strlen(Regex::onlyNumbers($document));
