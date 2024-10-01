@@ -6,9 +6,13 @@ use Illuminate\Support\Facades\Blade;
 use LaravelToolkit\Macros\BlueprintMacro;
 use LaravelToolkit\Macros\CollectionMacro;
 use LaravelToolkit\Macros\RequestMacro;
+use LaravelToolkit\Macros\StrMacro;
 use LaravelToolkit\Routing\Redirector as PackageRedirector;
 use LaravelToolkit\SEO\SEOComponent;
 use LaravelToolkit\StoredAssets\MakeStoreRecipeCommand;
+use LaravelToolkit\Support\Document\CNPJ;
+use LaravelToolkit\Support\Document\CPF;
+use LaravelToolkit\Support\Document\Generic;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -37,9 +41,10 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
 
     public function boot(): self
     {
+        (new BlueprintMacro)();
         (new CollectionMacro)();
         (new RequestMacro)();
-        (new BlueprintMacro)();
+        (new StrMacro())();
 
         setlocale(
             LC_ALL,
@@ -58,6 +63,10 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
         if (config('laraveltoolkit.extended_redirector')) {
             $this->app->extend('redirect', fn () => app(PackageRedirector::class));
         }
+
+        $this->app->singleton(CNPJ::class, fn () => new CNPJ());
+        $this->app->singleton(CPF::class, fn () => new CPF());
+        $this->app->singleton(Generic::class, fn () => new Generic());
 
         return parent::boot();
 

@@ -2,7 +2,10 @@
 
 namespace LaravelToolkit\Enum;
 
-use LaravelToolkit\Facades\Document as Facade;
+use LaravelToolkit\Support\Document\CNPJ;
+use LaravelToolkit\Support\Document\CPF;
+use LaravelToolkit\Support\Document\Document as Utils;
+use LaravelToolkit\Support\Document\Generic;
 
 enum Document: string implements ArrayableEnum
 {
@@ -14,39 +17,12 @@ enum Document: string implements ArrayableEnum
 
     public function calculateCheckDigits(string $document): string
     {
-        return match ($this) {
-            self::CNPJ => Facade::checkDigitsFromCnpj($document),
-            self::CPF => Facade::checkDigitsFromCpf($document),
-            self::GENERIC => Facade::checkDigitsFromGeneric($document),
-        };
+        return $this->utils()->checkDigits($document);
     }
 
     public function fake(): string
     {
-        return match ($this) {
-            self::CNPJ => Facade::fakeCnpj(),
-            self::CPF => Facade::fakeCpf(),
-            self::GENERIC => Facade::fakeGeneric(),
-        };
-    }
-
-    public function isValid(string $document): bool
-    {
-        return match ($this) {
-            self::CNPJ => Facade::isValidCnpj($document),
-            self::CPF => Facade::isValidCpf($document),
-            self::GENERIC => Facade::isValidGeneric($document),
-        };
-    }
-
-    public function mask(string $document): string
-    {
-        return Facade::mask($document);
-    }
-
-    public function unmask(string $document): string
-    {
-        return Facade::unmask($document);
+        return $this->utils()->fake();
     }
 
     public function label(): string
@@ -56,5 +32,29 @@ enum Document: string implements ArrayableEnum
             self::CPF => 'CPF',
             self::GENERIC => 'Genérico'
         };
+    }
+
+    public function mask(string $document): string
+    {
+        return $this->utils()->mask($document);
+    }
+
+    public function unmask(string $document): string
+    {
+        return $this->utils()->unmask($document);
+    }
+
+    public function utils(): Utils
+    {
+        return match ($this) {
+            self::CNPJ => app(CNPJ::class),
+            self::CPF => app(CPF::class),
+            self::GENERIC => app(Generic::class),
+        };
+    }
+
+    public function validate(string $document): bool
+    {
+        return $this->utils()->validate($document);
     }
 }
