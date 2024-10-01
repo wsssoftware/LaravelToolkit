@@ -1,6 +1,11 @@
 ### Sitemap
 Provide a way to inform for Search engines the pages of your site.
 
+Publish sitemap files using:
+```bash
+php artisan vendor:publish --tag=laraveltoolkit-sitemap
+```
+
 in routes/sitemap.php (after publishes it):
 ```php
 use App\Models\User;
