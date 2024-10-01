@@ -12,52 +12,54 @@ it('can guess from number', function () {
         ->and(Phone::guessType('08001235432'))
         ->toBe(Phone::NON_REGIONAL)
         ->and(Phone::guessType('123'))
-        ->toBe(Phone::PUBLIC_SERVICES);
+        ->toBe(Phone::PUBLIC_SERVICES)
+        ->and(fn() => Phone::GENERIC->appearsToBe('213'))
+        ->toThrow('Appears to be method is not allowed to generic type');
 
 });
 
 it('can validate', function () {
-    expect(Phone::LANDLINE->isValid('4132324545'))
+    expect(Phone::LANDLINE->validate('4132324545'))
         ->toBeTrue()
-        ->and(Phone::LANDLINE->isValid('4192324545'))
+        ->and(Phone::LANDLINE->validate('4192324545'))
         ->toBeFalse()
-        ->and(Phone::LOCAL_FARE->isValid('40031234'))
+        ->and(Phone::LOCAL_FARE->validate('40031234'))
         ->toBeTrue()
-        ->and(Phone::LOCAL_FARE->isValid('39991234'))
+        ->and(Phone::LOCAL_FARE->validate('39991234'))
         ->toBeFalse()
-        ->and(Phone::MOBILE->isValid('32988232323'))
+        ->and(Phone::MOBILE->validate('32988232323'))
         ->toBeTrue()
-        ->and(Phone::MOBILE->isValid('32948232323'))
+        ->and(Phone::MOBILE->validate('32948232323'))
         ->toBeFalse()
-        ->and(Phone::NON_REGIONAL->isValid('08001235432'))
+        ->and(Phone::NON_REGIONAL->validate('08001235432'))
         ->toBeTrue()
-        ->and(Phone::NON_REGIONAL->isValid('00001235432'))
+        ->and(Phone::NON_REGIONAL->validate('00001235432'))
         ->toBeFalse()
-        ->and(Phone::PUBLIC_SERVICES->isValid('123'))
+        ->and(Phone::PUBLIC_SERVICES->validate('123'))
         ->toBeTrue()
-        ->and(Phone::PUBLIC_SERVICES->isValid('1223'))
+        ->and(Phone::PUBLIC_SERVICES->validate('1223'))
         ->toBeFalse()
-        ->and(Phone::GENERIC->isValid('4132324545'))
+        ->and(Phone::GENERIC->validate('4132324545'))
         ->toBeTrue()
-        ->and(Phone::GENERIC->isValid('4192324545'))
+        ->and(Phone::GENERIC->validate('4192324545'))
         ->toBeFalse()
-        ->and(Phone::GENERIC->isValid('40031234'))
+        ->and(Phone::GENERIC->validate('40031234'))
         ->toBeTrue()
-        ->and(Phone::GENERIC->isValid('39991234'))
+        ->and(Phone::GENERIC->validate('39991234'))
         ->toBeFalse()
-        ->and(Phone::GENERIC->isValid('32988232323'))
+        ->and(Phone::GENERIC->validate('32988232323'))
         ->toBeTrue()
-        ->and(Phone::GENERIC->isValid('32948232323'))
+        ->and(Phone::GENERIC->validate('32948232323'))
         ->toBeFalse()
-        ->and(Phone::GENERIC->isValid('08001235432'))
+        ->and(Phone::GENERIC->validate('08001235432'))
         ->toBeTrue()
-        ->and(Phone::GENERIC->isValid('00001235432'))
+        ->and(Phone::GENERIC->validate('00001235432'))
         ->toBeFalse()
-        ->and(Phone::GENERIC->isValid('123'))
+        ->and(Phone::GENERIC->validate('123'))
         ->toBeTrue()
-        ->and(Phone::GENERIC->isValid('1223'))
+        ->and(Phone::GENERIC->validate('1223'))
         ->toBeFalse()
-        ->and(Phone::GENERIC->isValid('1'))
+        ->and(Phone::GENERIC->validate('1'))
         ->toBeFalse();
 
 });
@@ -85,18 +87,41 @@ it('can mask', function () {
         ->toEqual('1');
 });
 
+it('can unmask', function () {
+    expect(Phone::LANDLINE->unmask('(41) 3232-4545'))
+        ->toEqual('4132324545')
+        ->and(Phone::LOCAL_FARE->unmask('4001-2132'))
+        ->toEqual('40012132')
+        ->and(Phone::MOBILE->unmask('(43) 9 8876-2432'))
+        ->toEqual('43988762432')
+        ->and(Phone::NON_REGIONAL->unmask('0800-322-1234'))
+        ->toEqual('08003221234')
+        ->and(Phone::PUBLIC_SERVICES->unmask('180'))
+        ->toEqual('180')
+        ->and(Phone::GENERIC->unmask('(41) 3232-4545'))
+        ->toEqual('4132324545')
+        ->and(Phone::GENERIC->unmask('4001-2132'))
+        ->toEqual('40012132')
+        ->and(Phone::GENERIC->unmask('(43) 9 8876-2432'))
+        ->toEqual('43988762432')
+        ->and(Phone::GENERIC->unmask('180'))
+        ->toEqual('180')
+        ->and(Phone::GENERIC->unmask('1'))
+        ->toEqual('1');
+});
+
 it('can get label', function (Phone $phone) {
     expect($phone->label())
         ->toBeString();
 })->with(Phone::cases());
 
 it('can create a fake', function (Phone $phone) {
-    expect($phone->isValid($phone->fake()))
+    expect($phone->validate($phone->fake()))
         ->toBeTrue();
 })->with(Phone::cases())
     ->repeat(4);
 
 it('can create a fake generic', function () {
-    expect(Phone::GENERIC->isValid(Phone::GENERIC->fake()))
+    expect(Phone::GENERIC->validate(Phone::GENERIC->fake()))
         ->toBeTrue();
 })->repeat(20);

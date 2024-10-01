@@ -2,52 +2,65 @@
 
 namespace LaravelToolkit\Enum;
 
-use LaravelToolkit\Actions\Document\FakeDocument;
-use LaravelToolkit\Actions\Document\GetDocumentCheckDigits;
-use LaravelToolkit\Actions\Document\MaskDocument;
-use LaravelToolkit\Actions\Document\ValidateDocument;
-use LaravelToolkit\Actions\Mask\UnmaskNumber;
-use LaravelToolkit\Support\RegexTools;
+use LaravelToolkit\Facades\Regex;
+use LaravelToolkit\Support\Document\CNPJ;
+use LaravelToolkit\Support\Document\CPF;
+use LaravelToolkit\Support\Document\Document as Utils;
+use LaravelToolkit\Support\Document\Generic;
 
 enum Document: string implements ArrayableEnum
 {
-    use HasArrayableEnum, RegexTools;
+    use HasArrayableEnum;
 
     case CNPJ = 'cnpj';
     case CPF = 'cpf';
     case GENERIC = 'generic';
 
-    public function calculateCheckDigits(string $document): string
+    public static function guessType(?string $document): ?Document
     {
-        return app(GetDocumentCheckDigits::class)->handle($this, $document);
+        return match (strlen(Regex::onlyNumbers($document ?? ''))) {
+            14 => self::CNPJ,
+            11 => self::CPF,
+            default => null,
+        };
+    }
+
+    public function checkDigits(string $document): string
+    {
+        return $this->utils()->checkDigits($document);
     }
 
     public function fake(): string
     {
-        return app(FakeDocument::class)->handle($this);
-    }
-
-    public function isValid(string $document): bool
-    {
-        return app(ValidateDocument::class)->handle($this, $document);
-    }
-
-    public function mask(string $document): string
-    {
-        return app(MaskDocument::class)->handle($document);
-    }
-
-    public function unmask(string $document): string
-    {
-        return app(UnmaskNumber::class)->handle($document);
+        return $this->utils()->fake();
     }
 
     public function label(): string
     {
+        return $this->utils()->label();
+    }
+
+    public function mask(string $document): string
+    {
+        return $this->utils()->mask($document);
+    }
+
+    public function unmask(string $document): string
+    {
+        return $this->utils()->unmask($document);
+    }
+
+    public function utils(): Utils
+    {
         return match ($this) {
-            self::CNPJ => 'CNPJ',
-            self::CPF => 'CPF',
-            self::GENERIC => 'Genérico'
+            self::CNPJ => app(CNPJ::class),
+            self::CPF => app(CPF::class),
+            self::GENERIC => app(Generic::class),
         };
+    }
+
+    public function validate(string $document): bool
+    {
+        return $this->utils()->validate($document);
     }
 }

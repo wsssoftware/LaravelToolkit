@@ -6,9 +6,19 @@ use Illuminate\Support\Facades\Blade;
 use LaravelToolkit\Macros\BlueprintMacro;
 use LaravelToolkit\Macros\CollectionMacro;
 use LaravelToolkit\Macros\RequestMacro;
+use LaravelToolkit\Macros\StrMacro;
 use LaravelToolkit\Routing\Redirector as PackageRedirector;
 use LaravelToolkit\SEO\SEOComponent;
 use LaravelToolkit\StoredAssets\MakeStoreRecipeCommand;
+use LaravelToolkit\Support\Document\CNPJ;
+use LaravelToolkit\Support\Document\CPF;
+use LaravelToolkit\Support\Document\Generic as DocumentGeneric;
+use LaravelToolkit\Support\Phone\Generic as PhoneGeneric;
+use LaravelToolkit\Support\Phone\Landline;
+use LaravelToolkit\Support\Phone\LocalFare;
+use LaravelToolkit\Support\Phone\Mobile;
+use LaravelToolkit\Support\Phone\NonRegional;
+use LaravelToolkit\Support\Phone\PublicServices;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -37,9 +47,10 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
 
     public function boot(): self
     {
+        (new BlueprintMacro)();
         (new CollectionMacro)();
         (new RequestMacro)();
-        (new BlueprintMacro)();
+        (new StrMacro())();
 
         setlocale(
             LC_ALL,
@@ -58,6 +69,19 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
         if (config('laraveltoolkit.extended_redirector')) {
             $this->app->extend('redirect', fn () => app(PackageRedirector::class));
         }
+
+        // Documents Singleton
+        $this->app->singleton(CNPJ::class, fn () => new CNPJ());
+        $this->app->singleton(CPF::class, fn () => new CPF());
+        $this->app->singleton(DocumentGeneric::class, fn () => new DocumentGeneric());
+
+        // Phones Singleton
+        $this->app->singleton(Landline::class, fn () => new Landline());
+        $this->app->singleton(LocalFare::class, fn () => new LocalFare());
+        $this->app->singleton(Mobile::class, fn () => new Mobile());
+        $this->app->singleton(NonRegional::class, fn () => new NonRegional());
+        $this->app->singleton(PublicServices::class, fn () => new PublicServices());
+        $this->app->singleton(PhoneGeneric::class, fn () => new PhoneGeneric());
 
         return parent::boot();
 

@@ -3,13 +3,17 @@
 namespace LaravelToolkit\Enum;
 
 use Exception;
-use LaravelToolkit\Actions\Phone\FakePhone;
-use LaravelToolkit\Actions\Phone\MaskPhone;
-use LaravelToolkit\Support\RegexTools;
+use LaravelToolkit\Support\Phone\Generic;
+use LaravelToolkit\Support\Phone\Landline;
+use LaravelToolkit\Support\Phone\LocalFare;
+use LaravelToolkit\Support\Phone\Mobile;
+use LaravelToolkit\Support\Phone\NonRegional;
+use LaravelToolkit\Support\Phone\Phone as Utils;
+use LaravelToolkit\Support\Phone\PublicServices;
 
 enum Phone: string implements ArrayableEnum
 {
-    use HasArrayableEnum, RegexTools;
+    use HasArrayableEnum;
 
     case GENERIC = 'generic';
     case LANDLINE = 'landline';
@@ -32,60 +36,43 @@ enum Phone: string implements ArrayableEnum
 
     public function appearsToBe(?string $number): bool
     {
-        $this->regexOnlyNumbers($number);
-        throw_if($this === self::GENERIC, Exception::class, 'Appears to be method is not allowed to generic type');
-        $pattern = match ($this) {
-            self::LANDLINE => '/^[1-9][0-9][1-5][0-9]$/',
-            self::LOCAL_FARE => '/^400$/',
-            self::MOBILE => '/^[1-9][0-9]9$/',
-            self::NON_REGIONAL => '/^0[3589]00$/',
-            self::PUBLIC_SERVICES => '/^1[0-9]{2}$/',
-        };
-        $string = match ($this) {
-            self::LOCAL_FARE, self::PUBLIC_SERVICES, self::MOBILE => substr($number, 0, 3),
-            self::LANDLINE, self::NON_REGIONAL => substr($number, 0, 4),
-        };
-
-        return preg_match($pattern, $string) === 1;
+       return $this->utils()->appearsToBe($number);
     }
 
     public function fake(): string
     {
-        return app(FakePhone::class)->handle($this);
-    }
-
-    public function isValid(?string $number): bool
-    {
-        $this->regexOnlyNumbers($number);
-        $type = $this === self::GENERIC ? self::guessType($number) : $this;
-        if ($type === null) {
-            return false;
-        }
-        $pattern = match ($type) {
-            self::LANDLINE => '/^[1-9][0-9][1-5][0-9]{7}$/',
-            self::LOCAL_FARE => '/^400[0-9]{5}$/',
-            self::MOBILE => '/^[1-9][0-9]9[5-9][0-9]{7}$/',
-            self::NON_REGIONAL => '/^0[3589]00[0-9]{7}$/',
-            self::PUBLIC_SERVICES => '/^1[0-9]{2}$/',
-        };
-
-        return preg_match($pattern, $number) === 1;
+        return $this->utils()->fake();
     }
 
     public function label(): string
     {
-        return match ($this) {
-            self::LANDLINE => 'Fixo',
-            self::LOCAL_FARE => 'Tarifa local',
-            self::MOBILE => 'Móvel',
-            self::NON_REGIONAL => 'Não regional',
-            self::PUBLIC_SERVICES => 'Serviço publico',
-            self::GENERIC => 'Genérico',
-        };
+        return $this->utils()->label();
     }
 
     public function mask(string $number): string
     {
-        return app(MaskPhone::class)->handle($this === self::GENERIC ? self::guessType($number) : $this, $number);
+        return $this->utils()->mask($number);
+    }
+
+    public function unmask(string $number): string
+    {
+        return $this->utils()->unmask($number);
+    }
+
+    public function utils(): Utils
+    {
+        return match ($this) {
+            self::LANDLINE => app(Landline::class),
+            self::LOCAL_FARE => app(LocalFare::class),
+            self::MOBILE => app(Mobile::class),
+            self::NON_REGIONAL => app(NonRegional::class),
+            self::PUBLIC_SERVICES => app(PublicServices::class),
+            self::GENERIC => app(Generic::class),
+        };
+    }
+
+    public function validate(?string $number): bool
+    {
+        return $this->utils()->validate($number);
     }
 }
