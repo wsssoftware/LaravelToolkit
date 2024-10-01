@@ -4,12 +4,10 @@ namespace LaravelToolkit\Support\Document;
 
 use Exception;
 use Illuminate\Support\Str;
-use LaravelToolkit\Facades\Mask;
 use LaravelToolkit\Facades\Regex;
 
 class CPF implements Document
 {
-
     public function checkDigits(string $document): string
     {
         $document = Regex::onlyNumbers($document);
@@ -46,7 +44,8 @@ class CPF implements Document
     {
         $document = Regex::onlyNumbers($document);
         throw_if(strlen($document) !== 11, Exception::class, 'Invalid CPF');
-        return Str::applyMask($document,  '000.000.000-00');
+
+        return Str::applyMask($document, '000.000.000-00');
     }
 
     public function unmask(string $document): string

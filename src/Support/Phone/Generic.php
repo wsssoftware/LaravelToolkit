@@ -8,7 +8,6 @@ use LaravelToolkit\Facades\Regex;
 
 class Generic implements Phone
 {
-
     public function appearsToBe(string $phone): string
     {
         throw new Exception('Appears to be method is not allowed to generic type');
@@ -37,12 +36,13 @@ class Generic implements Phone
         if ($type === null) {
             return $phone;
         }
+
         return $type->mask($phone);
     }
 
     public function unmask(string $phone): string
     {
-       return Regex::onlyNumbers($phone);
+        return Regex::onlyNumbers($phone);
     }
 
     public function validate(string $phone): bool
@@ -52,6 +52,7 @@ class Generic implements Phone
         if ($type === null) {
             return false;
         }
+
         return $type->validate($phone);
     }
 }

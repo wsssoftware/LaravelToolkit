@@ -7,7 +7,6 @@ use LaravelToolkit\Facades\Regex;
 
 class LocalFare implements Phone
 {
-
     public function appearsToBe(string $phone): string
     {
         return preg_match('/^400$/', substr(Regex::onlyNumbers($phone), 0, 3)) === 1;
@@ -29,6 +28,7 @@ class LocalFare implements Phone
     public function mask(string $phone): string
     {
         $phone = Regex::onlyNumbers($phone);
+
         return Str::applyMask($phone, '0000-0000');
     }
 
@@ -40,6 +40,7 @@ class LocalFare implements Phone
     public function validate(string $phone): bool
     {
         $phone = Regex::onlyNumbers($phone);
+
         return preg_match('/^400[0-9]{5}$/', $phone) === 1;
     }
 }

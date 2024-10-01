@@ -8,7 +8,6 @@ use LaravelToolkit\Facades\Regex;
 
 class CNPJ implements Document
 {
-
     public function checkDigits(string $document): string
     {
         $document = Regex::onlyNumbers($document);
@@ -52,7 +51,8 @@ class CNPJ implements Document
     {
         $document = Regex::onlyNumbers($document);
         throw_if(strlen($document) !== 14, Exception::class, 'Invalid CNPJ');
-        return Str::applyMask($document,  '00.000.000/0000-00');
+
+        return Str::applyMask($document, '00.000.000/0000-00');
     }
 
     public function unmask(string $document): string

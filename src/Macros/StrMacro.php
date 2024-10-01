@@ -20,13 +20,15 @@ class StrMacro
             $escape = false;
 
             foreach (str_split($mask) as $currentMaskChar) {
-                if ($currentMaskChar === '\\' && !$escape) {
+                if ($currentMaskChar === '\\' && ! $escape) {
                     $escape = true;
+
                     continue;
                 }
                 if ($escape) {
                     $result .= $currentMaskChar;
                     $escape = false;
+
                     continue;
                 }
                 if ($inputIndex >= strlen($input)) {
@@ -47,7 +49,7 @@ class StrMacro
                         $result .= $charInput;
                         $inputIndex++;
                         break;
-                    } elseif (!in_array($currentMaskChar, ['0', 'A', 'S'])) {
+                    } elseif (! in_array($currentMaskChar, ['0', 'A', 'S'])) {
                         $result .= $currentMaskChar;
                         break;
                     }

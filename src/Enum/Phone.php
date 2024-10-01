@@ -2,7 +2,6 @@
 
 namespace LaravelToolkit\Enum;
 
-use Exception;
 use LaravelToolkit\Support\Phone\Generic;
 use LaravelToolkit\Support\Phone\Landline;
 use LaravelToolkit\Support\Phone\LocalFare;
@@ -36,7 +35,7 @@ enum Phone: string implements ArrayableEnum
 
     public function appearsToBe(?string $number): bool
     {
-       return $this->utils()->appearsToBe($number);
+        return $this->utils()->appearsToBe($number);
     }
 
     public function fake(): string

@@ -50,7 +50,7 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
         (new BlueprintMacro)();
         (new CollectionMacro)();
         (new RequestMacro)();
-        (new StrMacro())();
+        (new StrMacro)();
 
         setlocale(
             LC_ALL,
@@ -71,17 +71,17 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
         }
 
         // Documents Singleton
-        $this->app->singleton(CNPJ::class, fn () => new CNPJ());
-        $this->app->singleton(CPF::class, fn () => new CPF());
-        $this->app->singleton(DocumentGeneric::class, fn () => new DocumentGeneric());
+        $this->app->singleton(CNPJ::class, fn () => new CNPJ);
+        $this->app->singleton(CPF::class, fn () => new CPF);
+        $this->app->singleton(DocumentGeneric::class, fn () => new DocumentGeneric);
 
         // Phones Singleton
-        $this->app->singleton(Landline::class, fn () => new Landline());
-        $this->app->singleton(LocalFare::class, fn () => new LocalFare());
-        $this->app->singleton(Mobile::class, fn () => new Mobile());
-        $this->app->singleton(NonRegional::class, fn () => new NonRegional());
-        $this->app->singleton(PublicServices::class, fn () => new PublicServices());
-        $this->app->singleton(PhoneGeneric::class, fn () => new PhoneGeneric());
+        $this->app->singleton(Landline::class, fn () => new Landline);
+        $this->app->singleton(LocalFare::class, fn () => new LocalFare);
+        $this->app->singleton(Mobile::class, fn () => new Mobile);
+        $this->app->singleton(NonRegional::class, fn () => new NonRegional);
+        $this->app->singleton(PublicServices::class, fn () => new PublicServices);
+        $this->app->singleton(PhoneGeneric::class, fn () => new PhoneGeneric);
 
         return parent::boot();
 
