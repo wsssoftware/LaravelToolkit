@@ -79,9 +79,14 @@ return [
             'canonical' => null,
             'robots' => [],
             'robots_txt' => [
-                'user_agent' => ['*'],
-                'allow' => false, // False to omit option or an array with options
-                'disallow' => [], // False to omit option or an array with options
+                'rules' => [
+                    [
+                        'user_agent' => '*',
+                        'allow' => [], // One path for each allow
+                        'disallow' => [''], // // One path for each disallow
+                    ],
+                ],
+                'sitemap' => null, // Null or full url to sitemap
             ],
             'open_graph' => [
                 'type' => 'website',

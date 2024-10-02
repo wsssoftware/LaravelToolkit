@@ -6,18 +6,19 @@ use Illuminate\Support\Collection;
 
 class RobotsTxt
 {
-    public false|Collection $userAgent = false;
+    /**
+     * @var \Illuminate\Support\Collection<string, \LaravelToolkit\SEO\RobotsTxtRule>
+     */
+    public Collection $rules;
 
-    public false|Collection $allow = false;
-    public false|Collection $disallow = false;
+    public ?string $sitemap;
 
     public function __construct()
     {
-        $cUserAgent =  config('laraveltoolkit.seo.defaults.robots_txt.user_agent', false);
-        $cAllow =  config('laraveltoolkit.seo.defaults.robots_txt.allow', false);
-        $cDisallow =  config('laraveltoolkit.seo.defaults.robots_txt.disallow', false);
-        $this->userAgent = is_array($cUserAgent) ? collect($cUserAgent) : false;
-        $this->allow = is_array($cAllow) ? collect($cAllow) : false;
-        $this->disallow = is_array($cDisallow) ? collect($cDisallow) : false;
+        $this->rules = collect(config('laraveltoolkit.seo.defaults.robots_txt.rules', []))
+            ->mapWithKeys(fn($rule) => [
+                $rule['user_agent'] => new RobotsTxtRule($rule['user_agent'], $rule['allow'], $rule['disallow'])
+            ]);
+        $this->sitemap = config('laraveltoolkit.seo.defaults.robots_txt.sitemap', null);
     }
 }

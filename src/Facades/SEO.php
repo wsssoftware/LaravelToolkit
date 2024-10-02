@@ -10,6 +10,7 @@ use LaravelToolkit\SEO\RobotRule;
 /**
  * @method static string friendlyUrlString(string $string)
  * @method static bool isCrawler(string $agent = null)
+ * @method static bool isRobotsTxtSitemapSetted()
  * @method static array payload()
  * @method static string robotsTxt()
  * @method static \LaravelToolkit\SEO\SEO withoutCanonical(bool $propagate = null)
@@ -21,6 +22,8 @@ use LaravelToolkit\SEO\RobotRule;
  * @method static \LaravelToolkit\SEO\SEO withoutOpenGraphImage()
  * @method static \LaravelToolkit\SEO\SEO withoutPropagation()
  * @method static \LaravelToolkit\SEO\SEO withoutRobots()
+ * @method static \LaravelToolkit\SEO\SEO withoutRobotsTxtRule(string $userAgent = null)
+ * @method static \LaravelToolkit\SEO\SEO withoutRobotsTxtSitemap()
  * @method static \LaravelToolkit\SEO\SEO withoutTitle(bool $propagate = null)
  * @method static \LaravelToolkit\SEO\SEO withoutTwitterCardCreator()
  * @method static \LaravelToolkit\SEO\SEO withoutTwitterCardSite()
@@ -36,14 +39,14 @@ use LaravelToolkit\SEO\RobotRule;
  * @method static \LaravelToolkit\SEO\SEO withOpenGraphImage(Image $image)
  * @method static \LaravelToolkit\SEO\SEO withPropagation()
  * @method static \LaravelToolkit\SEO\SEO withRobots(RobotRule|string ...$items)
+ * @method static \LaravelToolkit\SEO\SEO withRobotsTxtRule(string $userAgent = null, Collection $allow = null, Collection $disallow = null)
+ * @method static \LaravelToolkit\SEO\SEO withRobotsTxtSitemap(string $url)
  * @method static \LaravelToolkit\SEO\SEO withTitle(string $title, bool $propagate = null)
  * @method static \LaravelToolkit\SEO\SEO withTwitterCardSite(string $site)
  * @method static \LaravelToolkit\SEO\SEO withTwitterCardCreator(string $creator)
  * @method static \LaravelToolkit\SEO\SEO withTwitterCardTitle(string $title)
  * @method static \LaravelToolkit\SEO\SEO withTwitterCardDescription(string $description)
  * @method static \LaravelToolkit\SEO\SEO withTwitterCardImage(Image $image)
- * @method static \LaravelToolkit\SEO\SEO withRobotsTxt(null|false|Collection $userAgent = null, null|false|Collection $allow = null, null|false|Collection $disallow = null)
- * )
  *
  * @see \LaravelToolkit\SEO\SEO
  */
