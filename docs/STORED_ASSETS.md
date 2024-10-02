@@ -2,7 +2,17 @@
 
 After all you must configure the models that will use stored assets feature.
 
-First generate model/field store recipe:
+First publish migration:
+```bash
+php artisan vendor:publish --tag=laraveltoolkit-migrations
+```
+and run it
+
+```bash
+php artisan migrate
+```
+
+Then generate model/field store recipe:
 ```bash
 php artisian make:store-recipe ProductImageRecipe
 ```
