@@ -41,3 +41,5 @@ Sitemap::index('users', function () {
 // then to put this index on main sitemap use:
 Sitemap::addIndex('users');
 ```
+
+> For mor info about sitemap in robots.txt go to [SEO docs](SEO.md)

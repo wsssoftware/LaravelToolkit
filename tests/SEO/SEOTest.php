@@ -231,3 +231,49 @@ it('test without methods', function () {
         ->and(SEO::payload()['twitter_card']['image'] ?? null)
         ->toBeNull();
 });
+
+it('test robots txt', function () {
+    expect(SEO::robotsTxt())
+        ->toContain(route('lt.sitemap'));
+
+    SEO::withRobotsTxtSitemap('https://foobar.com/sitemap.txt');
+    expect(SEO::robotsTxt())
+        ->toContain('https://foobar.com/sitemap.txt')
+        ->not
+        ->toContain(route('lt.sitemap'));
+
+    SEO::withoutRobotsTxtSitemap();
+    expect(SEO::robotsTxt())
+        ->toContain(route('lt.sitemap'))
+        ->not
+        ->toContain('https://foobar.com/sitemap.txt');
+
+    SEO::withRobotsTxtRule('foo_bar_bot', collect(['path', 'other_path']), collect(['not_path', 'other_not_path']));
+    SEO::withRobotsTxtRule('foo_bar_bot2', collect(['path', 'other_path']), collect(['not_path', 'other_not_path']));
+
+    expect(SEO::robotsTxt())
+        ->toContain('User-agent: foo_bar_bot')
+        ->toContain('User-agent: foo_bar_bot2')
+        ->toContain('Allow: path')
+        ->toContain('Allow: other_path')
+        ->toContain('Disallow: not_path')
+        ->toContain('Disallow: other_not_path')
+        ->and(SEO::getRobotsTxtSitemap())
+        ->toBeUrl();
+
+    SEO::withoutRobotsTxtRule('foo_bar_bot2');
+
+    expect(SEO::robotsTxt())
+        ->toContain('User-agent: foo_bar_bot')
+        ->not
+        ->toContain('User-agent: foo_bar_bot2');
+
+    SEO::withoutRobotsTxtRule();
+
+
+
+    expect(SEO::robotsTxt())
+        ->not
+        ->toContain('User-agent');
+
+});

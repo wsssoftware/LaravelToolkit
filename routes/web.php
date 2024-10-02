@@ -8,6 +8,7 @@ use LaravelToolkit\Actions\Filepond\Restore;
 use LaravelToolkit\Actions\Filepond\Revert;
 use LaravelToolkit\Actions\Flash\GetMessages;
 use LaravelToolkit\Actions\Sitemap\RenderSitemap;
+use LaravelToolkit\Facades\SEO;
 
 Route::middleware('web')->get('/lt/flash-get-messages', GetMessages::class)
     ->name('lt.flash.get_messages');
@@ -30,9 +31,15 @@ if (config('laraveltoolkit.sitemap.default_routes')) {
 
         Route::any('robots.txt', function () {
             $path = base_path('public/robots.stub');
-            $content = file_exists($path) ? file_get_contents($path) : "User-agent:\nDisallow: *";
+            if (file_exists($path)) {
+                $content = file_exists($path) ? file_get_contents($path) : "User-agent:\nDisallow: *";
 
-            $content .= "\n\nSitemap: ".route('lt.sitemap')."\n\n";
+                $sitemap = SEO::getRobotsTxtSitemap();
+                $content .= !empty($sitemap) ? "\n\nSitemap: ".$sitemap."\n\n" : '';
+            } else {
+                $content = SEO::robotsTxt();
+            }
+
 
             return response($content)
                 ->header('Content-Type', 'text/plain');

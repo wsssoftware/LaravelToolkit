@@ -2,6 +2,8 @@
 
 namespace LaravelToolkit\SEO;
 
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Route;
 use Jaybizzle\CrawlerDetect\CrawlerDetect;
 
 class SEO
@@ -29,6 +31,11 @@ class SEO
         return str($string)->slug($separator, $language, $dictionary);
     }
 
+    public function getRobotsTxtSitemap(): ?string
+    {
+        return $this->payload->robotsTxt->sitemap;
+    }
+
     public function isCrawler(?string $agent = null): bool
     {
         return (new CrawlerDetect)->isCrawler($agent);
@@ -36,7 +43,6 @@ class SEO
 
     public function payload(): array
     {
-        //        dd($this->payload);
         return once(function () {
             if (empty($this->payload->canonical) && $this->payload->canonical !== false) {
                 $this->payload->canonical = request()->url();
@@ -47,6 +53,33 @@ class SEO
 
             return SEOResource::make($this->payload)->response()->getData(true);
         });
+    }
+
+    public function robotsTxt(): string
+    {
+        $lines = collect();
+        foreach ($this->payload->robotsTxt->rules as $rule) {
+            $lines->push("User-agent: $rule->userAgent");
+            $lines->push(
+                $rule->allow->isNotEmpty()
+                    ? $rule->allow->map(fn(string $path) => "Allow: $path".PHP_EOL)->implode('')
+                    : false
+            );
+            $lines->push(
+                $rule->disallow->isNotEmpty()
+                    ? $rule->disallow->map(fn(string $path) => "Disallow: $path".PHP_EOL)->implode('')
+                    : false
+            );
+            $lines->push('');
+        }
+        $sitemap = $this->payload->robotsTxt->sitemap;
+        if (!empty($sitemap)) {
+            $lines->push("Sitemap: $sitemap");
+        }
+
+        return $lines
+            ->filter(fn($line) => $line !== false)
+            ->implode(PHP_EOL);
     }
 
     public function withoutCanonical(?bool $propagate = null): self
@@ -116,6 +149,23 @@ class SEO
     {
         $this->payload->robots = collect();
 
+        return $this;
+    }
+
+    public function withoutRobotsTxtRule(string $userAgent = null): self
+    {
+        $userAgent = str($userAgent)->trim()->toString();
+        if (empty($userAgent)) {
+            $this->payload->robotsTxt->rules = collect();
+        } else {
+            $this->payload->robotsTxt->rules->offsetUnset($userAgent);
+        }
+        return $this;
+    }
+
+    public function withoutRobotsTxtSitemap(): self
+    {
+        $this->payload->robotsTxt->sitemap = Route::has('lt.sitemap') ? route('lt.sitemap') : null;
         return $this;
     }
 
@@ -232,11 +282,31 @@ class SEO
     {
         $this->payload->robots = collect($items)
             ->map(
-                fn (string|RobotRule $item) => is_string($item)
+                fn(string|RobotRule $item) => is_string($item)
                     ? [RobotRule::from(explode(':', $item)[0]), explode(':', $item)[1] ?? null]
                     : [$item, null]
             );
 
+        return $this;
+    }
+
+    public function withRobotsTxtRule(
+        string $userAgent = null,
+        Collection $allow = null,
+        Collection $disallow = null
+    ): self {
+        $userAgent = str($userAgent)->trim()->toString();
+        $this->payload->robotsTxt->rules->put($userAgent, new RobotsTxtRule(
+            $userAgent,
+            $allow ?? collect(),
+            $disallow ?? collect()
+        ));
+        return $this;
+    }
+
+    public function withRobotsTxtSitemap(string $url): self
+    {
+        $this->payload->robotsTxt->sitemap = $url;
         return $this;
     }
 

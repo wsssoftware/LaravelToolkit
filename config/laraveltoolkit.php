@@ -78,6 +78,16 @@ return [
             'description' => null,
             'canonical' => null,
             'robots' => [],
+            'robots_txt' => [
+                'rules' => [
+                    [
+                        'user_agent' => '*',
+                        'allow' => [], // One path for each allow
+                        'disallow' => [''], // // One path for each disallow
+                    ],
+                ],
+                'sitemap' => null, // Null or full url to sitemap
+            ],
             'open_graph' => [
                 'type' => 'website',
                 'title' => null,
