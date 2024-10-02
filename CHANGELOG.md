@@ -2,6 +2,14 @@
 
 All notable changes to `LaravelToolkit` will be documented in this file.
 
+## 0.7.0 - 2024-10-02
+
+### What's Changed
+
+* [Feat] Add to SEO module the ability to manage and create robots.txt file by @allanmcarvalho in https://github.com/wsssoftware/LaravelToolkit/pull/9
+
+**Full Changelog**: https://github.com/wsssoftware/LaravelToolkit/compare/0.6.0...0.7.0
+
 ## 0.6.0 - 2024-10-01
 
 ### What's Changed
