@@ -1,5 +1,5 @@
 import axios, {AxiosResponse} from "axios";
-import debounce from 'lodash.debounce';
+import {debounce} from 'lodash-es';
 
 
 export const getFlashMessages =  debounce((each: (message: Message) => void) => {
