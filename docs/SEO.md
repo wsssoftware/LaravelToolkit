@@ -86,3 +86,36 @@ SEO::isCrawler('user agent');
 SEO::friendlyUrlString('A example of string!')
 // returns 'a-example-of-string'
 ```
+
+In conjunction with the [Sitemap](SITEMAP.md) helpers, you can use the SEO facade to generate your Robots.txt.
+
+There are 3 possibilities:
+
+1. Keep your `robots.txt` in the public folder, nothing will happen.
+2. Change its name to `robots.stub`, so, the Sitemap helper will take the stub content and add the sitemap url every time the user accesses https://foobar.com/robots.txt.
+3. Or finally, you can simply remove it and then and SEO facade will generate all then.
+
+You can configura using the follow facade methods:
+
+```php
+use LaravelToolkit\Facades\SEO;
+// Disallow some path
+SEO::withRobotsTxtRule('user_agent_name', null, collect(['disallow_this_path', 'this_other_too']));
+
+// Allow some path
+SEO::withRobotsTxtRule('*', collect(['allow_this_path', 'this_other_too']));
+
+// Remove one user agent
+SEO::withoutRobotsTxtRule('google_bot');
+
+// Remove all users agent
+SEO::withoutRobotsTxtRule();
+
+// Passing sitemap url
+SEO::withRobotsTxtSitemap('https://fooobar.com/custom-sitemap.txt');
+
+// Removing sitemap url
+SEO::withoutRobotsTxtSitemap();
+```
+
+> If you not pass sitemap url, will be used de default sitemap route (`lt.sitemap`)

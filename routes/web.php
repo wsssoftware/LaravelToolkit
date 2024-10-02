@@ -34,7 +34,8 @@ if (config('laraveltoolkit.sitemap.default_routes')) {
             if (file_exists($path)) {
                 $content = file_exists($path) ? file_get_contents($path) : "User-agent:\nDisallow: *";
 
-                $content .= "\n\nSitemap: ".route('lt.sitemap')."\n\n";
+                $sitemap = SEO::getRobotsTxtSitemap();
+                $content .= !empty($sitemap) ? "\n\nSitemap: ".$sitemap."\n\n" : '';
             } else {
                 $content = SEO::robotsTxt();
             }

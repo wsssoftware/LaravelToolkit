@@ -9,8 +9,8 @@ use LaravelToolkit\SEO\RobotRule;
 
 /**
  * @method static string friendlyUrlString(string $string)
+ * @method static string getRobotsTxtSitemap()
  * @method static bool isCrawler(string $agent = null)
- * @method static bool isRobotsTxtSitemapSetted()
  * @method static array payload()
  * @method static string robotsTxt()
  * @method static \LaravelToolkit\SEO\SEO withoutCanonical(bool $propagate = null)

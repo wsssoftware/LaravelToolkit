@@ -3,6 +3,7 @@
 namespace LaravelToolkit\SEO;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Route;
 
 class RobotsTxt
 {
@@ -19,6 +20,7 @@ class RobotsTxt
             ->mapWithKeys(fn($rule) => [
                 $rule['user_agent'] => new RobotsTxtRule($rule['user_agent'], $rule['allow'], $rule['disallow'])
             ]);
-        $this->sitemap = config('laraveltoolkit.seo.defaults.robots_txt.sitemap', null);
+        $configSitemap = config('laraveltoolkit.seo.defaults.robots_txt.sitemap');
+        $this->sitemap = !empty($configSitemap) ? $configSitemap : (Route::has('lt.sitemap') ? route('lt.sitemap') : null);
     }
 }

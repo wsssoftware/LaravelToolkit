@@ -2,7 +2,6 @@
 
 namespace LaravelToolkit\SEO;
 
-use Illuminate\Routing\Router;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
 use Jaybizzle\CrawlerDetect\CrawlerDetect;
@@ -32,14 +31,14 @@ class SEO
         return str($string)->slug($separator, $language, $dictionary);
     }
 
+    public function getRobotsTxtSitemap(): ?string
+    {
+        return $this->payload->robotsTxt->sitemap;
+    }
+
     public function isCrawler(?string $agent = null): bool
     {
         return (new CrawlerDetect)->isCrawler($agent);
-    }
-
-    public function isRobotsTxtSitemapSetted(): bool
-    {
-        return !empty($this->payload->robotsTxt->sitemap);
     }
 
     public function payload(): array
@@ -73,9 +72,7 @@ class SEO
             );
             $lines->push('');
         }
-        $sitemap = !empty($this->payload->robotsTxt->sitemap)
-            ? $this->payload->robotsTxt->sitemap
-            : (Route::has('lt.sitemap') ? route('lt.sitemap') : null);
+        $sitemap = $this->payload->robotsTxt->sitemap;
         if (!empty($sitemap)) {
             $lines->push("Sitemap: $sitemap");
         }
@@ -168,7 +165,7 @@ class SEO
 
     public function withoutRobotsTxtSitemap(): self
     {
-        $this->payload->robotsTxt->sitemap = null;
+        $this->payload->robotsTxt->sitemap = Route::has('lt.sitemap') ? route('lt.sitemap') : null;
         return $this;
     }
 
