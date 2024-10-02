@@ -270,8 +270,6 @@ it('test robots txt', function () {
 
     SEO::withoutRobotsTxtRule();
 
-
-
     expect(SEO::robotsTxt())
         ->not
         ->toContain('User-agent');

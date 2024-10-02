@@ -62,23 +62,23 @@ class SEO
             $lines->push("User-agent: $rule->userAgent");
             $lines->push(
                 $rule->allow->isNotEmpty()
-                    ? $rule->allow->map(fn(string $path) => "Allow: $path".PHP_EOL)->implode('')
+                    ? $rule->allow->map(fn (string $path) => "Allow: $path".PHP_EOL)->implode('')
                     : false
             );
             $lines->push(
                 $rule->disallow->isNotEmpty()
-                    ? $rule->disallow->map(fn(string $path) => "Disallow: $path".PHP_EOL)->implode('')
+                    ? $rule->disallow->map(fn (string $path) => "Disallow: $path".PHP_EOL)->implode('')
                     : false
             );
             $lines->push('');
         }
         $sitemap = $this->payload->robotsTxt->sitemap;
-        if (!empty($sitemap)) {
+        if (! empty($sitemap)) {
             $lines->push("Sitemap: $sitemap");
         }
 
         return $lines
-            ->filter(fn($line) => $line !== false)
+            ->filter(fn ($line) => $line !== false)
             ->implode(PHP_EOL);
     }
 
@@ -152,7 +152,7 @@ class SEO
         return $this;
     }
 
-    public function withoutRobotsTxtRule(string $userAgent = null): self
+    public function withoutRobotsTxtRule(?string $userAgent = null): self
     {
         $userAgent = str($userAgent)->trim()->toString();
         if (empty($userAgent)) {
@@ -160,12 +160,14 @@ class SEO
         } else {
             $this->payload->robotsTxt->rules->offsetUnset($userAgent);
         }
+
         return $this;
     }
 
     public function withoutRobotsTxtSitemap(): self
     {
         $this->payload->robotsTxt->sitemap = Route::has('lt.sitemap') ? route('lt.sitemap') : null;
+
         return $this;
     }
 
@@ -282,7 +284,7 @@ class SEO
     {
         $this->payload->robots = collect($items)
             ->map(
-                fn(string|RobotRule $item) => is_string($item)
+                fn (string|RobotRule $item) => is_string($item)
                     ? [RobotRule::from(explode(':', $item)[0]), explode(':', $item)[1] ?? null]
                     : [$item, null]
             );
@@ -291,9 +293,9 @@ class SEO
     }
 
     public function withRobotsTxtRule(
-        string $userAgent = null,
-        Collection $allow = null,
-        Collection $disallow = null
+        ?string $userAgent = null,
+        ?Collection $allow = null,
+        ?Collection $disallow = null
     ): self {
         $userAgent = str($userAgent)->trim()->toString();
         $this->payload->robotsTxt->rules->put($userAgent, new RobotsTxtRule(
@@ -301,12 +303,14 @@ class SEO
             $allow ?? collect(),
             $disallow ?? collect()
         ));
+
         return $this;
     }
 
     public function withRobotsTxtSitemap(string $url): self
     {
         $this->payload->robotsTxt->sitemap = $url;
+
         return $this;
     }
 

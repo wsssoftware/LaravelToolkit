@@ -15,6 +15,7 @@ class Payload
     public null|string|false $canonical;
 
     public Collection $robots;
+
     public RobotsTxt $robotsTxt;
 
     public ?OpenGraph $openGraph;
@@ -28,7 +29,7 @@ class Payload
         $this->description = config('laraveltoolkit.seo.defaults.description');
         $this->canonical = config('laraveltoolkit.seo.defaults.canonical');
         $propagated = $this->propagation ? [$this->title, $this->description, $this->canonical] : [null, null, null];
-        $this->robotsTxt = new RobotsTxt();
+        $this->robotsTxt = new RobotsTxt;
         $this->openGraph = new OpenGraph(...$propagated);
         $this->twitterCard = new TwitterCard(...$propagated);
     }

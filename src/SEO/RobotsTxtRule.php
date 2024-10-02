@@ -2,13 +2,13 @@
 
 namespace LaravelToolkit\SEO;
 
-
 use Illuminate\Support\Collection;
 
 readonly class RobotsTxtRule
 {
-    public null|Collection $allow;
-    public null|Collection $disallow;
+    public ?Collection $allow;
+
+    public ?Collection $disallow;
 
     public function __construct(
         public string $userAgent,
