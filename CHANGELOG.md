@@ -2,6 +2,10 @@
 
 All notable changes to `LaravelToolkit` will be documented in this file.
 
+## 0.7.1 - 2024-10-02
+
+**Full Changelog**: https://github.com/wsssoftware/LaravelToolkit/compare/0.7.0...0.7.1
+
 ## 0.7.0 - 2024-10-02
 
 ### What's Changed
