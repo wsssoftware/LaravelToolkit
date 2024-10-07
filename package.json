@@ -19,7 +19,7 @@
         "url": "https://github.com/wsssoftware/laraveltoolkit/issues"
     },
     "homepage": "https://github.com/wsssoftware/laraveltoolkit#readme",
-    "devDependencies": {
+    "dependencies": {
         "@inertiajs/vue3": "^1.2.0",
         "@types/lodash-es": "^4.17.12",
         "axios": "^1.7.7",
