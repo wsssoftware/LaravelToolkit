@@ -35,6 +35,17 @@ it('can save a file', function () {
         ->toBeInstanceOf(Assets::class);
 });
 
+it('can save on a null', function () {
+    $product = new Product(['id' => 1]);
+    $product->image = null;
+    expect($product->save())
+        ->toBeTrue()
+        ->and($product->image_uuid)
+        ->toBeNull()
+        ->and($product->image)
+        ->toBeNull();
+});
+
 it('can fail on save', function () {
     Storage::fake('local');
     $product = new Product(['id' => 1]);
