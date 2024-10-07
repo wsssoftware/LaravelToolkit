@@ -62,13 +62,15 @@ abstract class Recipe implements Castable
         return StoredAssets::newModel($data)->save() ? $uuid : false;
     }
 
-    public static function parse(Model $model, string $field, mixed $source): self|string
+    public static function parse(Model $model, string $field, mixed $source): null|self|string
     {
         throw_if(static::class === Recipe::class, Exception::class, 'You cannot call parse directly from Recipe class');
         if ((is_string($source) && is_file($source)) || $source instanceof File || $source instanceof UploadedFile) {
             return new static($model, $field, $source);
         } elseif ($source instanceof self) {
             return $source;
+        } elseif (is_null($source)) {
+            return null;
         }
         throw_if(! StoredAssets::isValidUuidAsset($source), Exception::class, sprintf(
             'On field "%s" from model "%s", the the provided value "%s" does not appears to be a valid uuid or does not exists on "%s" table.',

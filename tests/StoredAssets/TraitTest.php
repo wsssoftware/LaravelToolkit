@@ -15,6 +15,14 @@ it('can cast a file to recipe', function () {
     expect($product->image)->toBeInstanceOf(ProductImageRecipe::class);
 });
 
+it('do nothing on null value', function () {
+    $product = new Product;
+
+    $product->image = null;
+
+    expect($product->image)->toBeNull();
+});
+
 it('can save a file', function () {
     Storage::fake('local');
     $product = new Product(['id' => 1]);
