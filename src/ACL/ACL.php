@@ -14,6 +14,9 @@ class ACL
         self::$model = $model;
     }
 
+    /**
+     * @return class-string<\LaravelToolkit\ACL\UserPermission>
+     */
     public static function model(): ?string
     {
         return self::$model;

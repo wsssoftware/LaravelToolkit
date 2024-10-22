@@ -2,7 +2,9 @@
 
 namespace LaravelToolkit\ACL;
 
- class Rule
+use Exception;
+
+class Rule
 {
 
     public ?bool $value = null;
@@ -12,7 +14,12 @@ namespace LaravelToolkit\ACL;
         public readonly string $name,
         public readonly string $description,
         public readonly ?int $denyStatus,
-    ){
+    ) {
+        throw_if(
+            in_array($this->key, ['items', 'column', 'name', 'description']),
+            Exception::class,
+            "$this->key is a reserved name and cannot used on key."
+        );
     }
 
     public function setValue(bool $value): void

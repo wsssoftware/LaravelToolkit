@@ -3,6 +3,7 @@
 namespace LaravelToolkit;
 
 use Illuminate\Support\Facades\Blade;
+use LaravelToolkit\ACL\MakeACLModelCommand;
 use LaravelToolkit\Macros\BlueprintMacro;
 use LaravelToolkit\Macros\CollectionMacro;
 use LaravelToolkit\Macros\RequestMacro;
@@ -37,7 +38,10 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
             ->hasRoute('web')
             ->hasTranslations()
             ->hasViews()
-            ->hasCommands(MakeStoreRecipeCommand::class)
+            ->hasCommands([
+                MakeACLModelCommand::class,
+                MakeStoreRecipeCommand::class,
+            ])
             ->hasMigration('create_stored_assets_table')
             ->hasMigration('create_user_permissions_table');
 
