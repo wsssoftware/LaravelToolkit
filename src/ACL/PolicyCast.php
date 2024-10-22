@@ -9,12 +9,6 @@ use Illuminate\Support\Arr;
 class PolicyCast implements CastsAttributes
 {
 
-    public function __construct(
-        public readonly Policy $policy,
-    ) {
-        //
-    }
-
     /**
      * Cast the given value.
      *

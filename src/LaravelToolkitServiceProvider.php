@@ -38,7 +38,8 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
             ->hasTranslations()
             ->hasViews()
             ->hasCommands(MakeStoreRecipeCommand::class)
-            ->hasMigration('create_stored_assets_table');
+            ->hasMigration('create_stored_assets_table')
+            ->hasMigration('create_user_permissions_table');
 
         $this->addPublishGroup('laraveltoolkit-sitemap', [
             dirname(__DIR__).'/routes/sitemap.php' => base_path('routes/sitemap.php'),
