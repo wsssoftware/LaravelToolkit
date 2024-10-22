@@ -2,7 +2,12 @@
 
 namespace LaravelToolkit;
 
+use Closure;
+use Illuminate\Auth\Access\Response;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Gate;
+use LaravelToolkit\ACL\ACL;
 use LaravelToolkit\ACL\MakeACLModelCommand;
 use LaravelToolkit\Macros\BlueprintMacro;
 use LaravelToolkit\Macros\CollectionMacro;
@@ -52,11 +57,19 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
 
     public function boot(): self
     {
-        (new BlueprintMacro)();
-        (new CollectionMacro)();
-        (new RequestMacro)();
-        (new StrMacro)();
+        $this->bootMacros();
+        $this->setLocale();;
+        $this->bootContainers();
+        $this->bootGates();
 
+        Blade::component('seo', SEOComponent::class);
+
+        return parent::boot();
+
+    }
+
+    protected function setLocale(): void
+    {
         setlocale(
             LC_ALL,
             config('app.locale').'.UTF-8',
@@ -68,27 +81,53 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
             'en_US.UTF-8',
             'en_US',
         );
+    }
 
-        Blade::component('seo', SEOComponent::class);
+    protected function bootMacros(): void
+    {
+        (new BlueprintMacro)();
+        (new CollectionMacro)();
+        (new RequestMacro)();
+        (new StrMacro)();
+    }
 
+    protected function bootContainers(): void
+    {
         if (config('laraveltoolkit.extended_redirector')) {
-            $this->app->extend('redirect', fn () => app(PackageRedirector::class));
+            $this->app->extend('redirect', fn() => app(PackageRedirector::class));
         }
 
         // Documents Singleton
-        $this->app->singleton(CNPJ::class, fn () => new CNPJ);
-        $this->app->singleton(CPF::class, fn () => new CPF);
-        $this->app->singleton(DocumentGeneric::class, fn () => new DocumentGeneric);
+        $this->app->singleton(CNPJ::class, fn() => new CNPJ);
+        $this->app->singleton(CPF::class, fn() => new CPF);
+        $this->app->singleton(DocumentGeneric::class, fn() => new DocumentGeneric);
 
         // Phones Singleton
-        $this->app->singleton(Landline::class, fn () => new Landline);
-        $this->app->singleton(LocalFare::class, fn () => new LocalFare);
-        $this->app->singleton(Mobile::class, fn () => new Mobile);
-        $this->app->singleton(NonRegional::class, fn () => new NonRegional);
-        $this->app->singleton(PublicServices::class, fn () => new PublicServices);
-        $this->app->singleton(PhoneGeneric::class, fn () => new PhoneGeneric);
+        $this->app->singleton(Landline::class, fn() => new Landline);
+        $this->app->singleton(LocalFare::class, fn() => new LocalFare);
+        $this->app->singleton(Mobile::class, fn() => new Mobile);
+        $this->app->singleton(NonRegional::class, fn() => new NonRegional);
+        $this->app->singleton(PublicServices::class, fn() => new PublicServices);
+        $this->app->singleton(PhoneGeneric::class, fn() => new PhoneGeneric);
+    }
 
-        return parent::boot();
-
+    protected function bootGates(): void
+    {
+       $this->app->booted(function () {
+           if (ACL::model() === null) {
+               return;
+           }
+           foreach (ACL::model()::getPolicies() as $policy) {
+               foreach ($policy->rules as $rule) {
+                   Gate::define("$policy->column::$rule->key", function (Model $user) use ($policy, $rule) {
+                       $userPermission = ACL::model()::query()->where('user_id', $user->id)->firstOrFail();
+                       $can = $userPermission->{$policy->column}->{$rule->key}->value;
+                       return $can
+                           ? Response::allow()
+                           : (is_int($rule->denyStatus) ? Response::denyWithStatus($rule->denyStatus) : Response::deny());
+                   });
+               }
+           }
+       });
     }
 }

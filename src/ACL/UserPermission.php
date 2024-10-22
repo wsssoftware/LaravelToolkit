@@ -92,4 +92,20 @@ abstract class UserPermission extends Model
         $cast['updated_at'] = 'datetime';
         return $cast;
     }
+
+    public function toArray(): array
+    {
+        return self::getPolicies()->map(fn(Policy $policy) => [
+            'column' => $policy->column,
+            'name' => $policy->name,
+            'description' => $policy->description,
+            'rules' => $policy->rules->map(fn(Rule $rule) => [
+                'key' => $rule->key,
+                'name' => $rule->name,
+                'description' => $rule->description,
+                'deny_status' => $rule->denyStatus,
+                'value' => $this->{$policy->column}->{$rule->key}->value,
+            ])->values()->toArray(),
+        ])->values()->toArray();
+    }
 }

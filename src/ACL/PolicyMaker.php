@@ -23,14 +23,35 @@ class PolicyMaker
 
     public function crud(?int $denyStatus = null): self
     {
-        $this->rules->put('create', new Rule('create', 'laraveltoolkit::acl.create.name', 'laraveltoolkit::acl.create.description', $denyStatus));
-        $this->rules->put('read', new Rule('read', 'laraveltoolkit::acl.read.name', 'laraveltoolkit::acl.read.description', $denyStatus));
-        $this->rules->put('update', new Rule('update', 'laraveltoolkit::acl.update.name', 'laraveltoolkit::acl.update.description', $denyStatus));
-        $this->rules->put('delete', new Rule('delete', 'laraveltoolkit::acl.delete.name', 'laraveltoolkit::acl.delete.description', $denyStatus));
+        $this->rules->put('create', new Rule(
+            'create',
+            __('laraveltoolkit::acl.create.name'),
+            __('laraveltoolkit::acl.create.description', ['name' => $this->name]),
+            $denyStatus
+        ));
+        $this->rules->put('read', new Rule(
+            'read',
+            __('laraveltoolkit::acl.read.name'),
+            __('laraveltoolkit::acl.read.description', ['name' => $this->name]),
+            $denyStatus
+        ));
+        $this->rules->put('update', new Rule(
+            'update',
+            __('laraveltoolkit::acl.update.name'),
+            __('laraveltoolkit::acl.update.description', ['name' => $this->name]),
+            $denyStatus
+        ));
+        $this->rules->put('delete', new Rule(
+            'delete',
+            __('laraveltoolkit::acl.delete.name'),
+            __('laraveltoolkit::acl.delete.description', ['name' => $this->name]),
+            $denyStatus
+        ));
         return $this;
     }
 
-    public function toPolicy(): Policy {
+    public function toPolicy(): Policy
+    {
         return new Policy($this->rules, $this->column, $this->name, $this->description);
     }
 }

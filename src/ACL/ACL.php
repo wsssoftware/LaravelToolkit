@@ -21,4 +21,23 @@ class ACL
     {
         return self::$model;
     }
+
+    public static function permissions(): null|array
+    {
+        $model = self::model();
+        $userId = auth()->id();
+        if ($model === null || $userId === null) {
+            return null;
+        }
+        $userPermission = self::model()::query()->where('user_id', $userId)->firstOrFail();
+
+        return $userPermission::getPolicies()
+            ->reduce(fn(array $carryPolicy, Policy $policy) => $carryPolicy + $policy->rules->reduce(fn(
+                    array $carryRules,
+                    Rule $rule
+                ) => $carryRules + [
+                        "$policy->column::$rule->key" => $userPermission->{$policy->column}->{$rule->key}->value,
+                    ], []), []);
+
+    }
 }

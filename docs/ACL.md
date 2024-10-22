@@ -69,6 +69,20 @@ class User extends Authenticatable
     use HasUserPermission;
 ```
 
+To use gate on frontend registry it on `HandleInertiaRequests`
+```php
+
+use LaravelToolkit\ACL\ACL;
+
+public function share(Request $request): array
+{
+    return [
+        ...parent::share($request),
+        'acl' => fn() => ACL::permissions(),
+    ];
+}
+```
+
 That is it! After this, it will generate all gates for you and you can access it typing:
 ```php
 // policyColumn + :: + ruleName
