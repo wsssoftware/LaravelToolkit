@@ -15,7 +15,7 @@ readonly class Policy
         public Collection $rules,
         public string $column,
         public string $name,
-        public ?string $description = null,
+        public string $description,
     ) {
        //
     }

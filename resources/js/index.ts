@@ -45,19 +45,15 @@ export type SEOEntity = {
 export type OnlyValuesUserPermissions = {
     [key: string]: boolean
 }|null
-export type UserPermissions = Policy[]
+export type UserPermissions = {
+    id: string,
+    policy_column: string,
+    policy_name: string,
+    policy_description: null|string,
+    rule_key: string,
+    rule_name: string,
+    rule_description: null|string,
+    rule_deny_status: null|number,
+    rule_value: boolean,
+}[]
 
-export type Policy = {
-    column: string,
-    name: string,
-    description: string,
-    rules: Rule[]
-}
-
-export type Rule = {
-    key: string,
-    name: string,
-    description: string|null,
-    deny_status: number|null,
-    value: boolean,
-}

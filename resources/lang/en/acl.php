@@ -10,20 +10,20 @@ return [
     */
 
     'create' => [
-        'name' => 'criar',
-        'description' => 'permite ao usuário criar :name',
+        'name' => 'Create',
+        'description' => 'Allows to user create :name',
     ],
     'read' => [
-        'name' => 'ler',
-        'description' => 'permite ao usuário ler :name',
+        'name' => 'Read',
+        'description' => 'Allows to user read :name',
     ],
     'update' => [
-        'name' => 'atualizar',
-        'description' => 'permite ao usuário atualizar :name',
+        'name' => 'Update',
+        'description' => 'Allows to user update :name',
     ],
     'delete' => [
-        'name' => 'deletar',
-        'description' => 'permite ao usuário deletar :name',
+        'name' => 'Delete',
+        'description' => 'Allows to user delete :name',
     ],
 
 ];

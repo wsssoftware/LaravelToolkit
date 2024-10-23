@@ -2,6 +2,7 @@
 
 namespace LaravelToolkit\ACL;
 
+use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -53,7 +54,7 @@ abstract class UserPermission extends Model
         return !empty($column) ? $policies->get($column) : $policies;
     }
 
-    protected function registryPolicy(string $column, string $name, ?string $description = null): PolicyMaker
+    protected function registryPolicy(string $column, string $name, string $description): PolicyMaker
     {
         $this->policies->put($column, new PolicyMaker(collect(), $column, $name, $description));
         return $this->policies->get($column);
