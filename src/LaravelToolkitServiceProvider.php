@@ -3,7 +3,7 @@
 namespace LaravelToolkit;
 
 use Illuminate\Auth\Access\Response;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use LaravelToolkit\ACL\MakeACLModelCommand;
@@ -112,23 +112,22 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
 
     protected function bootGates(): void
     {
-       $this->app->booted(function () {
-           if (ACL::model() === null) {
-               return;
-           }
-           /** @var \App\Models\UserPermission $userPermission */
-           $userPermission = new (ACL::model());
-           foreach ($userPermission->getPolicies() as $policy) {
-               foreach ($policy->rules as $rule) {
-                   Gate::define("$policy->column::$rule->key", function (Model $user) use ($policy, $rule) {
-                       $userPermission = ACL::model()::query()->where('user_id', $user->id)->firstOrFail();
-                       $can = $userPermission->{$policy->column}->{$rule->key}->value;
-                       return $can
-                           ? Response::allow()
-                           : (is_int($rule->denyStatus) ? Response::denyWithStatus($rule->denyStatus) : Response::deny());
-                   });
-               }
-           }
-       });
+        $this->app->booted(callback: function () {
+            if (ACL::model() === null) {
+                return;
+            }
+            /** @var \App\Models\UserPermission $userPermission */
+            $userPermission = new (ACL::model());
+            foreach ($userPermission->getPolicies() as $policy) {
+                foreach ($policy->rules as $rule) {
+                    Gate::define(
+                        "$policy->column::$rule->key",
+                        fn(User $user) => ACL::userPermission($user)->{$policy->column}->{$rule->key}->value
+                            ? Response::allow()
+                            : (is_int($rule->denyStatus) ? Response::denyWithStatus($rule->denyStatus) : Response::deny())
+                    );
+                }
+            }
+        });
     }
 }
