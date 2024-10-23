@@ -34,7 +34,7 @@ php artisan make:acl-model
 Register it on you `AppServiceProvider`
 ```php
 use App\Models\UserPermission;
-use LaravelToolkit\ACL\ACL;
+use LaravelToolkit\Facades\ACL;
 
 //...
 public function boot(): void
@@ -72,7 +72,7 @@ class User extends Authenticatable
 To use gate on frontend registry it on `HandleInertiaRequests`
 ```php
 
-use LaravelToolkit\ACL\ACL;
+use LaravelToolkit\Facades\ACL;
 
 public function share(Request $request): array
 {

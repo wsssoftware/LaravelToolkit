@@ -2,13 +2,12 @@
 
 namespace LaravelToolkit;
 
-use Closure;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
-use LaravelToolkit\ACL\ACL;
 use LaravelToolkit\ACL\MakeACLModelCommand;
+use LaravelToolkit\Facades\ACL;
 use LaravelToolkit\Macros\BlueprintMacro;
 use LaravelToolkit\Macros\CollectionMacro;
 use LaravelToolkit\Macros\RequestMacro;
@@ -117,7 +116,9 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
            if (ACL::model() === null) {
                return;
            }
-           foreach (ACL::model()::getPolicies() as $policy) {
+           /** @var \App\Models\UserPermission $userPermission */
+           $userPermission = new (ACL::model());
+           foreach ($userPermission->getPolicies() as $policy) {
                foreach ($policy->rules as $rule) {
                    Gate::define("$policy->column::$rule->key", function (Model $user) use ($policy, $rule) {
                        $userPermission = ACL::model()::query()->where('user_id', $user->id)->firstOrFail();

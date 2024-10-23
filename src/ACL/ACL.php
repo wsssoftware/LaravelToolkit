@@ -3,35 +3,41 @@
 namespace LaravelToolkit\ACL;
 
 use Exception;
+use Illuminate\Foundation\Auth\User;
 
 class ACL
 {
-    protected static null|string $model = null;
-
-    public static function withModel(string $model): void
-    {
-        throw_if(!is_subclass_of($model, UserPermission::class), Exception::class, 'Model must extends UserPermission');
-        self::$model = $model;
-    }
+    protected readonly string $model;
 
     /**
      * @return class-string<\LaravelToolkit\ACL\UserPermission>
      */
-    public static function model(): ?string
+    public function model(): ?string
     {
-        return self::$model;
+        return $this->model ?? null;
     }
 
-    public static function permissions(): null|array
+    public function withModel(string $model): void
     {
-        $model = self::model();
+        throw_if(!is_subclass_of($model, UserPermission::class), Exception::class, 'Model must extends UserPermission');
+        $this->model = $model;
+    }
+
+    public function userPermission(User $user = null): UserPermission
+    {
+        return ($user ?? auth()->user())->userPermission;
+    }
+
+    public function permissions(): null|array
+    {
+        $model = $this->model();
         $userId = auth()->id();
         if ($model === null || $userId === null) {
             return null;
         }
-        $userPermission = self::model()::query()->where('user_id', $userId)->firstOrFail();
+        $userPermission = self::model()::query()->where('id', $userId)->firstOrFail();
 
-        return $userPermission::getPolicies()
+        return $userPermission->getPolicies()
             ->reduce(fn(array $carryPolicy, Policy $policy) => $carryPolicy + $policy->rules->reduce(fn(
                     array $carryRules,
                     Rule $rule

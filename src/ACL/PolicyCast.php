@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use LaravelToolkit\Facades\ACL;
 
 class PolicyCast implements CastsAttributes
 {
@@ -13,6 +14,7 @@ class PolicyCast implements CastsAttributes
     /**
      * Cast the given value.
      *
+     * @param  \LaravelToolkit\ACL\UserPermission  $model
      * @param  array<string, mixed>  $attributes
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
@@ -21,7 +23,7 @@ class PolicyCast implements CastsAttributes
             $value = json_decode($value, true);
         }
         $values = $value ?? [];
-        $policy = ACL::model()::getPolicies($key);
+        $policy = $model->getPolicies($key);
         $policy->rules->each(fn(Rule $rule) => $rule->setValue(Arr::get($values, $rule->key, false)));
         return $policy;
     }
@@ -29,11 +31,12 @@ class PolicyCast implements CastsAttributes
     /**
      * Prepare the given value for storage.
      *
+     * @param  \LaravelToolkit\ACL\UserPermission  $model
      * @param  array<string, mixed>  $attributes
      */
     public function set(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        $policy = ACL::model()::getPolicies($key);
+        $policy = $model->getPolicies();
         if ($value instanceof Policy) {
             foreach ($value->rules as $rule) {
                 $policy->{$rule->key}->value = $rule->value;

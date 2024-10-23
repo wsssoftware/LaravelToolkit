@@ -18,7 +18,7 @@ abstract class UserPermission extends Model
     /**
      * @var \Illuminate\Support\Collection<string, \LaravelToolkit\ACL\Policy>
      */
-    private static Collection $policies;
+    private Collection $policies;
 
     protected $fillable = [];
 
@@ -34,26 +34,34 @@ abstract class UserPermission extends Model
         $this->fillable[] = 'updated_at';
     }
 
-    abstract protected static function declarePolicies(): void;
+    /**
+     * This method declare policies for your ACL system
+     */
+    abstract protected function declarePolicies(): void;
 
     /**
      * @return \Illuminate\Support\Collection<string, \LaravelToolkit\ACL\Policy>|\LaravelToolkit\ACL\Policy
      */
-    public static function getPolicies(string $column = null): Collection|Policy
+    public function getPolicies(string $column = null): Collection|Policy
     {
-        if (empty(static::$policies)) {
-            static::$policies = collect();
-            static::declarePolicies();
-            static::$policies = static::$policies
+        if (empty($this->policies)) {
+            $this->policies = collect();
+            $this->declarePolicies();
+            $this->policies = $this->policies
                 ->map(fn(Policy|PolicyMaker $p) => $p instanceof PolicyMaker ? $p->toPolicy() : $p);
         }
-        return !empty($column) ? static::$policies->get($column) :static::$policies;
+        foreach ($this->policies as $policy) {
+            foreach ($policy->rules as $rule) {
+                $policy->{$rule->key}->value = $this->{$policy->column}?->{$rule->key}->value ?? false;
+            }
+        }
+        return !empty($column) ? $this->policies->get($column) : $this->policies;
     }
 
-    protected static function registryPolicy(string $column, string $name, ?string $description = null): PolicyMaker
+    protected function registryPolicy(string $column, string $name, ?string $description = null): PolicyMaker
     {
-        static::$policies->put($column, new PolicyMaker(collect(), $column, $name, $description));
-        return static::$policies->get($column);
+        $this->policies->put($column, new PolicyMaker(collect(), $column, $name, $description));
+        return $this->policies->get($column);
     }
 
     public function fillPolicies(array $policies): void
