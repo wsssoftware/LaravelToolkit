@@ -1,10 +1,12 @@
 export {default as Collapse} from './Components/Collapse.vue'
 export {default as FilepondInput} from './Components/Form/FilepondInput.vue'
 export {default as InputGroup} from './Components/Form/InputGroup.vue'
+export {default as Gate} from './Components/Gate.vue'
 export {default as Head} from './Components/Head.vue'
 export {default as Link} from './Components/Link.vue'
 export {default as ToastReceiver} from './Components/ToastReceiver.vue'
-export {default as UserPermissions} from './Components/UserPermissions.vue'
+export {default as UserPermissionsEditor} from './Components/UserPermissionsEditor.vue'
+export {default as GateDirective} from './Directives/GateDirective'
 export {getFlashMessages} from './Flash'
 export {filepondServer} from './Filepond'
 export {default as LaravelToolkitPlugin} from './LaravelToolkitPlugin'
@@ -40,7 +42,7 @@ export type SEOEntity = {
     }
 }
 
-export type UserPermissionsRaw = {
+export type OnlyValuesUserPermissions = {
     [key: string]: boolean
 }|null
 export type UserPermissions = Policy[]

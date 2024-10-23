@@ -1,5 +1,5 @@
 import {App} from "vue";
-import {UserPermissionsRaw} from "./index";
+import {OnlyValuesUserPermissions} from "./index";
 
 export default class Gate {
     app: App
@@ -10,7 +10,7 @@ export default class Gate {
     }
 
     permissions(ability: string): boolean {
-        let permissions : UserPermissionsRaw|undefined|null = this.app.config.globalProperties.$page.props.acl as UserPermissionsRaw;
+        let permissions : OnlyValuesUserPermissions|undefined|null = this.app.config.globalProperties.$page.props.acl as OnlyValuesUserPermissions;
         if (permissions === undefined) {
             console.warn('Before use Gate on frontend you must set acl property on HandleInertiaRequests')
         }
@@ -33,7 +33,10 @@ export default class Gate {
         return true;
     }
 
-    any(abilities: string[]): boolean {
+    any(abilities: string|string[]): boolean {
+        if (!Array.isArray(abilities)) {
+            abilities = [abilities];
+        }
         for (let index in abilities) {
             let ability = abilities[index];
             if (this.permissions(ability)) {
@@ -47,7 +50,7 @@ export default class Gate {
         return !this.allows(abilities);
     }
 
-    none(abilities: string[]): boolean {
+    none(abilities: string|string[]): boolean {
         return !this.any(abilities);
     }
 
