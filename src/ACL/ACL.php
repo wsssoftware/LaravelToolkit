@@ -2,6 +2,7 @@
 
 namespace LaravelToolkit\ACL;
 
+use Closure;
 use Exception;
 use Illuminate\Foundation\Auth\User;
 
@@ -22,14 +23,14 @@ class ACL
         return $this->model ?? null;
     }
 
-    public function permissions(Format $format = Format::COMPLETE, User $user = null): null|array
+    public function permissions(Format $format = Format::COMPLETE, ?Closure $filter = null, User $user = null): null|array
     {
         $userPermission = $this->userPermission($user);
         if ($userPermission === null) {
             return null;
         }
 
-        return $userPermission->permissions($format);
+        return $userPermission->permissions($format, $filter);
 
     }
 

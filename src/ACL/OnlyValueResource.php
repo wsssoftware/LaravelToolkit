@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @property \LaravelToolkit\ACL\UserPermission $resource
+ * @property Collection<string, \LaravelToolkit\ACL\Policy> $resource
  */
 class OnlyValueResource extends JsonResource
 {
@@ -17,7 +17,7 @@ class OnlyValueResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return $this->resource->getPolicies()->reduce(fn(array $c, Policy $p) => $c + $this->reducePolicy($p), []);
+        return $this->resource->reduce(fn(array $c, Policy $p) => $c + $this->reducePolicy($p), []);
     }
 
     protected function reducePolicy(Policy $policy): array

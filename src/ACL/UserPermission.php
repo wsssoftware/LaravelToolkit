@@ -45,11 +45,14 @@ abstract class UserPermission extends Model
     /**
      * @return \Illuminate\Support\Collection<string, \LaravelToolkit\ACL\Policy>
      */
-    public function getPolicies(): Collection
+    public function getPolicies(?Closure $filter = null): Collection
     {
         $policies = collect();
         foreach ($this->policies as $policy) {
            $policies->put($policy->column, $this->{$policy->column});
+        }
+        if ($filter) {
+            $policies = $policies->filter($filter);
         }
         return !empty($column) ? $policies->get($column) : $policies;
     }
@@ -99,11 +102,11 @@ abstract class UserPermission extends Model
         return $cast;
     }
 
-    public function permissions(Format $format = Format::COMPLETE): array
+    public function permissions(Format $format = Format::COMPLETE, ?Closure $filter = null): array
     {
         return match ($format) {
-            Format::COMPLETE => CompleteResource::make($this)->resolve(),
-            Format::ONLY_VALUES => OnlyValueResource::make($this)->resolve(),
+            Format::COMPLETE => CompleteResource::make($this->getPolicies($filter))->resolve(),
+            Format::ONLY_VALUES => OnlyValueResource::make($this->getPolicies($filter))->resolve(),
         };
     }
 }

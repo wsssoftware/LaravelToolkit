@@ -7,7 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 
 /**
- * @property \LaravelToolkit\ACL\UserPermission $resource
+ * @property Collection<string, \LaravelToolkit\ACL\Policy> $resource
  */
 class CompleteResource extends JsonResource
 {
@@ -18,7 +18,7 @@ class CompleteResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return $this->resource->getPolicies()
+        return $this->resource
             ->sortBy('name')
             ->reduce(fn(Collection $c, Policy $p) => $c->merge($this->reducePolicy($p)), collect())
             ->values()
@@ -41,7 +41,7 @@ class CompleteResource extends JsonResource
             'rule_name' => $rule->name,
             'rule_description' => $rule->description,
             'rule_deny_status' => $rule->denyStatus,
-            'rule_value' => $this->{$policy->column}->{$rule->key}->value,
+            'rule_value' => $rule->value,
         ]];
     }
 }

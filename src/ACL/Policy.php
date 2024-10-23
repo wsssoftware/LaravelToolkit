@@ -2,7 +2,7 @@
 
 namespace LaravelToolkit\ACL;
 
-use _PHPStan_ab84e5579\Nette\Neon\Exception;
+use Exception;
 use Illuminate\Support\Collection;
 
 /**
