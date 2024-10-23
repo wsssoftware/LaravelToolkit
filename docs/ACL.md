@@ -118,6 +118,8 @@ $userPermission->grantAll('users');
 $userPermission->denyAll();
 // OR
 $userPermission->denyAll('users');
+//then
+$userPermission->save();
 ```
 
 If you want edit on frontend:

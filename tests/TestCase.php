@@ -4,7 +4,9 @@ namespace LaravelToolkit\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Inertia\ServiceProvider;
+use LaravelToolkit\Facades\ACL;
 use LaravelToolkit\LaravelToolkitServiceProvider;
+use LaravelToolkit\Tests\Model\UserPermission;
 use Orchestra\Testbench\Attributes\WithMigration;
 use Orchestra\Testbench\TestCase as Orchestra;
 
@@ -23,6 +25,7 @@ class TestCase extends Orchestra
         if (! file_exists($sitemapRoutesPath)) {
             copy($copyPath, $sitemapRoutesPath);
         }
+        ACL::withModel(UserPermission::class);
     }
 
     protected function getPackageProviders($app)
@@ -48,5 +51,7 @@ class TestCase extends Orchestra
         $migrationStoredAsset->up();
         $migrationProduct = include __DIR__.'/Model/2024_09_24_163917_create_products_table.php';
         $migrationProduct->up();
+        $migrationUserPermission = include __DIR__.'/Model/create_user_permissions_table.php';
+        $migrationUserPermission->up();
     }
 }
