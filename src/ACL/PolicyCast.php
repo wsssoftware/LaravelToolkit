@@ -7,6 +7,7 @@ use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use LaravelToolkit\Facades\ACL;
+use ReflectionObject;
 
 class PolicyCast implements CastsAttributes
 {
@@ -23,9 +24,10 @@ class PolicyCast implements CastsAttributes
             $value = json_decode($value, true);
         }
         $values = $value ?? [];
-        $policy = $model->getPolicies($key);
+        $policy = $this->getPolicy($key, $model);
         $policy->rules->each(fn(Rule $rule) => $rule->setValue(Arr::get($values, $rule->key, false)));
         return $policy;
+
     }
 
     /**
@@ -36,7 +38,7 @@ class PolicyCast implements CastsAttributes
      */
     public function set(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        $policy = $model->getPolicies();
+        $policy = $this->getPolicy($key, $model);
         if ($value instanceof Policy) {
             foreach ($value->rules as $rule) {
                 $policy->{$rule->key}->value = $rule->value;
@@ -49,8 +51,16 @@ class PolicyCast implements CastsAttributes
             }
         }
 
-        return $policy->rules->filter(fn(Rule $rule) => $rule->value !== null)
-            ->mapWithKeys(fn(Rule $rule) => [$rule->key => $rule->value])
+        return $policy->rules
+            ->mapWithKeys(fn(Rule $rule) => [$rule->key => $rule->value ?? false])
             ->toJson();
+    }
+
+    protected function getPolicy(string $column, Model $model): Policy
+    {
+        $r = new ReflectionObject($model);
+        $policies = $r->getProperty('policies')->getValue($model);
+        return $policies->get($column);
+
     }
 }

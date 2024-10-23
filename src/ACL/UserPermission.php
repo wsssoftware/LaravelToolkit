@@ -7,7 +7,6 @@ use Illuminate\Support\Collection;
 
 /**
  * @property int $id
- * @property int $user_id
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  * @method Policy __get(string $name)
@@ -18,20 +17,23 @@ abstract class UserPermission extends Model
     /**
      * @var \Illuminate\Support\Collection<string, \LaravelToolkit\ACL\Policy>
      */
-    private Collection $policies;
+    protected Collection $policies;
 
     protected $fillable = [];
 
     public function __construct(array $attributes = [])
     {
-
-        parent::__construct($attributes);
+        $this->policies = collect();
+        $this->declarePolicies();
+        $this->policies = $this->policies
+            ->map(fn(Policy|PolicyMaker $p) => $p instanceof PolicyMaker ? $p->toPolicy() : $p);
         $this->fillable[] = 'id';
-        foreach (self::getPolicies() as $policy) {
+        foreach ($this->policies as $policy) {
             $this->fillable[] = $policy->column;
         }
         $this->fillable[] = 'created_at';
         $this->fillable[] = 'updated_at';
+        parent::__construct($attributes);
     }
 
     /**
@@ -40,22 +42,15 @@ abstract class UserPermission extends Model
     abstract protected function declarePolicies(): void;
 
     /**
-     * @return \Illuminate\Support\Collection<string, \LaravelToolkit\ACL\Policy>|\LaravelToolkit\ACL\Policy
+     * @return \Illuminate\Support\Collection<string, \LaravelToolkit\ACL\Policy>
      */
-    public function getPolicies(string $column = null): Collection|Policy
+    public function getPolicies(): Collection
     {
-        if (empty($this->policies)) {
-            $this->policies = collect();
-            $this->declarePolicies();
-            $this->policies = $this->policies
-                ->map(fn(Policy|PolicyMaker $p) => $p instanceof PolicyMaker ? $p->toPolicy() : $p);
-        }
+        $policies = collect();
         foreach ($this->policies as $policy) {
-            foreach ($policy->rules as $rule) {
-                $policy->{$rule->key}->value = $this->{$policy->column}?->{$rule->key}->value ?? false;
-            }
+           $policies->put($policy->column, $this->{$policy->column});
         }
-        return !empty($column) ? $this->policies->get($column) : $this->policies;
+        return !empty($column) ? $policies->get($column) : $policies;
     }
 
     protected function registryPolicy(string $column, string $name, ?string $description = null): PolicyMaker
@@ -72,18 +67,20 @@ abstract class UserPermission extends Model
         }
     }
 
-    public function denyAll(): void
+    public function denyAll(string $policy = null): void
     {
-        foreach (self::getPolicies() as $policy) {
+        $policies = $policy !== null ? [$this->policies->get($policy)] : $this->policies;
+        foreach ($policies as $policy) {
             foreach ($policy->rules as $rule) {
                $this->{$policy->column} = $policy->{$rule->key}->value = false;
             }
         }
     }
 
-    public function grantAll(): void
+    public function grantAll(string $policy = null): void
     {
-        foreach (self::getPolicies() as $policy) {
+        $policies = $policy !== null ? [$this->policies->get($policy)] : $this->policies;
+        foreach ($policies as $policy) {
             foreach ($policy->rules as $rule) {
                 $this->{$policy->column} = $policy->{$rule->key}->value = true;
             }
@@ -93,7 +90,7 @@ abstract class UserPermission extends Model
     final public function casts(): array
     {
         $cast = ['id' => 'int'];
-        foreach (self::getPolicies() as $policy) {
+        foreach ($this->policies as $policy) {
             $cast[$policy->column] = PolicyCast::class;
         }
         $cast['created_at'] = 'datetime';
@@ -101,19 +98,11 @@ abstract class UserPermission extends Model
         return $cast;
     }
 
-    public function toArray(): array
+    public function permissions(Format $format = Format::COMPLETE): array
     {
-        return self::getPolicies()->map(fn(Policy $policy) => [
-            'column' => $policy->column,
-            'name' => $policy->name,
-            'description' => $policy->description,
-            'rules' => $policy->rules->map(fn(Rule $rule) => [
-                'key' => $rule->key,
-                'name' => $rule->name,
-                'description' => $rule->description,
-                'deny_status' => $rule->denyStatus,
-                'value' => $this->{$policy->column}->{$rule->key}->value,
-            ])->values()->toArray(),
-        ])->values()->toArray();
+        return match ($format) {
+            Format::COMPLETE => CompleteResource::make($this)->resolve(),
+            Format::ONLY_VALUES => OnlyValueResource::make($this)->resolve(),
+        };
     }
 }
