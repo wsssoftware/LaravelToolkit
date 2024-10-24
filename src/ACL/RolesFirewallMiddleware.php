@@ -23,9 +23,6 @@ class RolesFirewallMiddleware
     {
         /** @var \BackedEnum&\LaravelToolkit\ACL\HasDenyResponse|null $enum */
         $enum = ACL::rolesEnum();
-        if ($enum === null) {
-            return $next($request);
-        }
         $roleGroups = collect($roles)
             ->map(fn(string $role) => str($role))
             ->groupBy(fn(Stringable $role) => $role->startsWith('!') ? 'denies' : 'allows')

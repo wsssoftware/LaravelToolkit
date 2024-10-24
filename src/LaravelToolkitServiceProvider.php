@@ -132,6 +132,9 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
                     );
                 }
             }
+
+        });
+        $this->app->booted(callback: function () {
             /** @var \BackedEnum&\LaravelToolkit\ACL\HasDenyResponse|null $rolesEnum */
             $rolesEnum = ACL::rolesEnum();
             if ($rolesEnum === null) {
