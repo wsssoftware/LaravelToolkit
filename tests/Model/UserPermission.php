@@ -7,7 +7,7 @@ class UserPermission extends \LaravelToolkit\ACL\UserPermission
     /**
      * @inheritDoc
      */
-    protected function declarePolicies(): void
+    protected function declarePoliciesAndRoles(): void
         {
             self::registryPolicy('users', 'Usuários', 'Gerencia os usuários do sistema')
                 ->crud()->rule('abc', 'foo', 'dsa');

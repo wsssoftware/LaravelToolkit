@@ -18,12 +18,12 @@ return new class extends Migration
                 ->constrained('users')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
+            // User roles is an internal feature, don't use as a policy
+            $table->json('roles')->nullable();
 //            $table->json('users')->nullable();
 //            $table->json('products')->nullable();
 //            $table->json('categories')->nullable();
-            $table->timestamps();
-
-            $table->index(["id", "model", "field"]);
+            $table->timestamp('updated_at')->nullable();
         });
     }
 

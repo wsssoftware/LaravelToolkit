@@ -24,7 +24,9 @@
     </Column>
     <Column field="rule_value" header="Status">
       <template #body="slotProps">
-        <ToggleButton v-model="form[slotProps.data.id]" :onLabel="onLabel" :offLabel="offLabel"/>
+        <div class="flex">
+            <ToggleButton v-model="form[slotProps.data.id]" :onLabel="onLabel" :offLabel="offLabel" class="flex-1"/>
+        </div>
       </template>
     </Column>
   </DataTable>

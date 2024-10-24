@@ -4,10 +4,15 @@ namespace LaravelToolkit\ACL;
 
 use Exception;
 
+/**
+ * @property bool $value
+ */
 class Rule
 {
 
-    public ?bool $value = null;
+    private ?bool $value = null;
+
+    private bool $dirty = false;
 
     public function __construct(
         public readonly string $key,
@@ -22,8 +27,29 @@ class Rule
         );
     }
 
+    public function __get(string $name): bool
+    {
+        if ($name === 'value') {
+            return $this->value;
+
+        }
+        throw new Exception("Property $name does not exist.");
+    }
+    public function __set(string $name, $value): void
+    {
+        if ($name === 'value' && $this->value !== $value) {
+            $this->value = $value;
+            $this->dirty = true;
+        }
+    }
+
     public function setValue(bool $value): void
     {
         $this->value = $value;
+    }
+
+    public function isDirty(): bool
+    {
+        return $this->dirty;
     }
 }

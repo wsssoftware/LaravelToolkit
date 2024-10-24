@@ -2,15 +2,27 @@
 
 namespace LaravelToolkit\ACL;
 
+use BackedEnum;
 use Closure;
 use Exception;
 use Illuminate\Foundation\Auth\User;
+use ReflectionEnum;
+use StringBackedEnum;
 
+/**
+ * @see \LaravelToolkit\Facades\ACL
+ */
 class ACL
 {
     protected readonly string $model;
+    protected readonly string $rolesEnum;
 
-    public function gatePermissions(): null|array
+    public function rolesEnum(): ?string
+    {
+        return $this->rolesEnum ?? null;
+    }
+
+    public function gatePermissions(): ?array
     {
         return $this->permissions(Format::ONLY_VALUES);
     }
@@ -39,9 +51,24 @@ class ACL
         return ($user ?? auth()->user())?->userPermission;
     }
 
-    public function withModel(string $model): void
+    public function withModel(string $model): self
     {
         throw_if(!is_subclass_of($model, UserPermission::class), Exception::class, 'Model must extends UserPermission');
         $this->model = $model;
+        return $this;
+    }
+
+    /**
+     * @param class-string<StringBackedEnum> $enum
+     * @return $this
+     */
+    public function withRolesEnum(string $enum): self
+    {
+        throw_if(!is_subclass_of($enum, BackedEnum::class), Exception::class, 'RoleEnum must be an enum');
+        $r = new ReflectionEnum($enum);
+        throw_if($r->getBackingType()?->getName() !== 'string', Exception::class, 'RoleEnum must have a backing type string');
+        throw_if(!in_array(DenyStatusCode::class, $r->getInterfaceNames()), Exception::class, 'RoleEnum must to implement "LaravelToolkit\ACL\DenyStatusCode"');
+        $this->rolesEnum = $enum;
+        return $this;
     }
 }

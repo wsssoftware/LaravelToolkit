@@ -40,13 +40,16 @@ use LaravelToolkit\Facades\ACL;
 public function boot(): void
 {
     ACL::withModel(UserPermission::class);
+    //OR if you want to use role system, create an string enum and declare its FQN here
+     ACL::withModel(UserPermission::class)
+            ->withRolesEnum(UserRole::class);
 }
- 
 ```
+> Role string Enum must implement `LaravelToolkit\ACL\DenyStatusCode` interface to be used. 
 
 Than on created model declare your rules:
 ```php
-protected static function declarePolicies(): void
+protected static function declarePoliciesAndRoles(): void
 {
   self::registryPolicy('users', 'Users', 'Manage system users')
       ->crud()

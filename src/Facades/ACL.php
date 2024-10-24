@@ -7,13 +7,16 @@ use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Facade;
 use LaravelToolkit\ACL\Format;
 use LaravelToolkit\ACL\UserPermission;
+use StringBackedEnum;
 
 /**
+ * @method static null|string rolesEnum()
  * @method static null|array gatePermissions()
- * @method static null|class-string<\LaravelToolkit\ACL\UserPermission> model()
+ * @method static null|string model()
  * @method static null|array permissions(Format $format = Format::COMPLETE, ?Closure $filter = null, User $user = null):
  * @method static null|UserPermission userPermission(?User $user = null)
- * @method static void withModel(string $model)
+ * @method static \LaravelToolkit\ACL\ACL withModel(string $model)
+ * @method static \LaravelToolkit\ACL\ACL withRolesEnum(string $enum)
  *
  * @see \LaravelToolkit\ACL\ACL
  */

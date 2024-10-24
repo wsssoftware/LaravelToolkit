@@ -3,44 +3,55 @@
 namespace LaravelToolkit\ACL;
 
 use Closure;
+use Illuminate\Database\Eloquent\Casts\AsEnumCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use LaravelToolkit\Facades\ACL;
+use StringBackedEnum;
 
 /**
  * @property int $id
- * @property \Illuminate\Support\Carbon $created_at
+ * @property null|Collection<string, \UnitEnum> $roles
  * @property \Illuminate\Support\Carbon $updated_at
  * @method Policy __get(string $name)
  */
 abstract class UserPermission extends Model
 {
+    use ManagementTrait;
+
+    public const CREATED_AT = null;
 
     /**
      * @var \Illuminate\Support\Collection<string, \LaravelToolkit\ACL\Policy>
      */
     protected Collection $policies;
 
-    protected $fillable = [];
+    protected StringBackedEnum $enum;
 
     public function __construct(array $attributes = [])
     {
-        $this->policies = collect();
-        $this->declarePolicies();
-        $this->policies = $this->policies
-            ->map(fn(Policy|PolicyMaker $p) => $p instanceof PolicyMaker ? $p->toPolicy() : $p);
-        $this->fillable[] = 'id';
-        foreach ($this->policies as $policy) {
-            $this->fillable[] = $policy->column;
-        }
-        $this->fillable[] = 'created_at';
-        $this->fillable[] = 'updated_at';
+        $this->startup();
         parent::__construct($attributes);
+    }
+
+    public static function boot(): void
+    {
+        self::saving(function (UserPermission $model) {
+            foreach ($model->policies as $policy) {
+                foreach ($policy->rules as $rule) {
+                    if ($rule->isDirty() && !$model->isDirty($policy->column)) {
+                        $model->setAttribute($policy->column, $model->{$policy->column});
+                    }
+                }
+            }
+        });
+        parent::boot();
     }
 
     /**
      * This method declare policies for your ACL system
      */
-    abstract protected function declarePolicies(): void;
+    abstract protected function declarePoliciesAndRoles(): void;
 
     /**
      * @return \Illuminate\Support\Collection<string, \LaravelToolkit\ACL\Policy>
@@ -49,7 +60,7 @@ abstract class UserPermission extends Model
     {
         $policies = collect();
         foreach ($this->policies as $policy) {
-           $policies->put($policy->column, $this->{$policy->column});
+            $policies->put($policy->column, $this->{$policy->column});
         }
         if ($filter) {
             $policies = $policies->filter($filter);
@@ -57,47 +68,16 @@ abstract class UserPermission extends Model
         return !empty($column) ? $policies->get($column) : $policies;
     }
 
-    protected function registryPolicy(string $column, string $name, string $description): PolicyMaker
-    {
-        $this->policies->put($column, new PolicyMaker(collect(), $column, $name, $description));
-        return $this->policies->get($column);
-    }
-
-    public function fillPolicies(array $policies): void
-    {
-        foreach ($policies as $policy => $value) {
-            [$policy, $rule] = explode('::', $policy);
-            $this->{$policy}->{$rule}->value = $value;
-        }
-    }
-
-    public function denyAll(string $policy = null): void
-    {
-        $policies = $policy !== null ? [$this->policies->get($policy)] : $this->policies;
-        foreach ($policies as $policy) {
-            foreach ($policy->rules as $rule) {
-               $this->{$policy->column} = $policy->{$rule->key}->value = false;
-            }
-        }
-    }
-
-    public function grantAll(string $policy = null): void
-    {
-        $policies = $policy !== null ? [$this->policies->get($policy)] : $this->policies;
-        foreach ($policies as $policy) {
-            foreach ($policy->rules as $rule) {
-                $this->{$policy->column} = $policy->{$rule->key}->value = true;
-            }
-        }
-    }
-
     final public function casts(): array
     {
-        $cast = ['id' => 'int'];
+        $enum = ACL::rolesEnum();
+        $cast = [
+            'id' => 'int',
+            'roles' => $enum ? AsEnumCollection::of($enum) : 'collection',
+        ];
         foreach ($this->policies as $policy) {
             $cast[$policy->column] = PolicyCast::class;
         }
-        $cast['created_at'] = 'datetime';
         $cast['updated_at'] = 'datetime';
         return $cast;
     }

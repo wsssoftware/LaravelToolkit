@@ -2,6 +2,7 @@
 
 namespace LaravelToolkit\ACL;
 
+use Exception;
 use Illuminate\Support\Collection;
 
 class PolicyMaker
@@ -12,7 +13,11 @@ class PolicyMaker
         public string $name,
         public string $description,
     ) {
-        //
+        throw_if(
+            in_array($this->column, ['id', 'roles', 'created_at']),
+            Exception::class,
+            "$this->column is a reserved name and cannot used on key."
+        );
     }
 
     public function rule(string $key, string $name, string $description, ?int $denyStatus = null): self
