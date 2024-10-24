@@ -37,6 +37,9 @@ abstract class UserPermission extends Model
     public static function boot(): void
     {
         self::saving(function (UserPermission $model) {
+            if ($model->isDirty('roles')) {
+                $model->roles = ($model->roles ?? collect())->unique()->values();
+            }
             foreach ($model->policies as $policy) {
                 foreach ($policy->rules as $rule) {
                     if ($rule->isDirty() && !$model->isDirty($policy->column)) {

@@ -45,7 +45,7 @@ public function boot(): void
             ->withRolesEnum(UserRole::class);
 }
 ```
-> Role string Enum must implement `LaravelToolkit\ACL\DenyStatusCode` interface to be used. 
+> Role string Enum must implement `LaravelToolkit\ACL\HasDenyResponse` interface to be used. 
 
 Than on created model declare your rules:
 ```php

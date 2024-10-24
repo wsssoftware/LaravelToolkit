@@ -93,7 +93,8 @@ trait ManagementTrait
 
     public function denyRole(BackedEnum $role): void
     {
-        $this->roles = ($this->roles ?? collect())->filter(fn(BackedEnum $r) => $r->value !== $role->value);
+        $this->roles = ($this->roles ?? collect())
+            ->filter(fn(BackedEnum $r) => $r->value !== $role->value);
     }
 
     public function denyAllRoles(): void

@@ -2,6 +2,7 @@
 
 namespace LaravelToolkit;
 
+use App\Enum\UserRole;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Blade;
@@ -113,11 +114,13 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
     protected function bootGates(): void
     {
         $this->app->booted(callback: function () {
-            if (ACL::model() === null) {
+            /** @var \LaravelToolkit\ACL\UserPermission|null $model */
+            $model = ACL::model();
+            if ($model === null) {
                 return;
             }
             /** @var \App\Models\UserPermission $userPermission */
-            $userPermission = new (ACL::model());
+            $userPermission = new ($model);
             foreach ($userPermission->getPolicies() as $policy) {
                 foreach ($policy->rules as $rule) {
                     Gate::define(
@@ -127,6 +130,19 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
                             : (is_int($rule->denyStatus) ? Response::denyWithStatus($rule->denyStatus) : Response::deny())
                     );
                 }
+            }
+            /** @var \BackedEnum&\LaravelToolkit\ACL\HasDenyResponse|null $rolesEnum */
+            $rolesEnum = ACL::rolesEnum();
+            if ($rolesEnum === null) {
+                return;
+            }
+            foreach ($rolesEnum::cases() as $enum) {
+                Gate::define(
+                    "roles::$enum->value",
+                    fn(User $user) => (ACL::userPermission($user)->roles ?? collect())->filter(fn($r) => $r === $enum)->isNotEmpty()
+                        ? Response::allow()
+                        : $enum->denyResponse()
+                );
             }
         });
     }

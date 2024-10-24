@@ -67,7 +67,7 @@ class ACL
         throw_if(!is_subclass_of($enum, BackedEnum::class), Exception::class, 'RoleEnum must be an enum');
         $r = new ReflectionEnum($enum);
         throw_if($r->getBackingType()?->getName() !== 'string', Exception::class, 'RoleEnum must have a backing type string');
-        throw_if(!in_array(DenyStatusCode::class, $r->getInterfaceNames()), Exception::class, 'RoleEnum must to implement "LaravelToolkit\ACL\DenyStatusCode"');
+        throw_if(!in_array(HasDenyResponse::class, $r->getInterfaceNames()), Exception::class, 'RoleEnum must to implement "LaravelToolkit\ACL\HasDenyResponse"');
         $this->rolesEnum = $enum;
         return $this;
     }
