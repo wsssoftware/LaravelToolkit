@@ -15,15 +15,15 @@ it('can get permission', function () {
         ->toHaveCount(13)
         ->each
         ->toHaveKeys([
-            "id",
-            "policy_column",
-            "policy_name",
-            "policy_description",
-            "rule_key",
-            "rule_name",
-            "rule_description",
-            "rule_deny_status",
-            "rule_value",
+            'id',
+            'policy_column',
+            'policy_name',
+            'policy_description',
+            'rule_key',
+            'rule_name',
+            'rule_description',
+            'rule_deny_status',
+            'rule_value',
         ]);
 
     $result = ACL::permissions(Format::ONLY_VALUES);

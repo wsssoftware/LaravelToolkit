@@ -59,7 +59,7 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
     public function boot(): self
     {
         $this->bootMacros();
-        $this->setLocale();;
+        $this->setLocale();
         $this->bootContainers();
         $this->bootGates();
 
@@ -95,21 +95,21 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
     protected function bootContainers(): void
     {
         if (config('laraveltoolkit.extended_redirector')) {
-            $this->app->extend('redirect', fn() => app(PackageRedirector::class));
+            $this->app->extend('redirect', fn () => app(PackageRedirector::class));
         }
 
         // Documents Singleton
-        $this->app->singleton(CNPJ::class, fn() => new CNPJ);
-        $this->app->singleton(CPF::class, fn() => new CPF);
-        $this->app->singleton(DocumentGeneric::class, fn() => new DocumentGeneric);
+        $this->app->singleton(CNPJ::class, fn () => new CNPJ);
+        $this->app->singleton(CPF::class, fn () => new CPF);
+        $this->app->singleton(DocumentGeneric::class, fn () => new DocumentGeneric);
 
         // Phones Singleton
-        $this->app->singleton(Landline::class, fn() => new Landline);
-        $this->app->singleton(LocalFare::class, fn() => new LocalFare);
-        $this->app->singleton(Mobile::class, fn() => new Mobile);
-        $this->app->singleton(NonRegional::class, fn() => new NonRegional);
-        $this->app->singleton(PublicServices::class, fn() => new PublicServices);
-        $this->app->singleton(PhoneGeneric::class, fn() => new PhoneGeneric);
+        $this->app->singleton(Landline::class, fn () => new Landline);
+        $this->app->singleton(LocalFare::class, fn () => new LocalFare);
+        $this->app->singleton(Mobile::class, fn () => new Mobile);
+        $this->app->singleton(NonRegional::class, fn () => new NonRegional);
+        $this->app->singleton(PublicServices::class, fn () => new PublicServices);
+        $this->app->singleton(PhoneGeneric::class, fn () => new PhoneGeneric);
     }
 
     protected function bootGates(): void
@@ -126,7 +126,7 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
                 foreach ($policy->rules as $rule) {
                     Gate::define(
                         "$policy->column::$rule->key",
-                        fn(User $user) => ACL::userPermission($user)->{$policy->column}->{$rule->key}->value
+                        fn (User $user) => ACL::userPermission($user)->{$policy->column}->{$rule->key}->value
                             ? Response::allow()
                             : (is_int($rule->denyStatus) ? Response::denyWithStatus($rule->denyStatus) : Response::deny())
                     );
@@ -144,7 +144,7 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
             foreach ($rolesEnum::cases() as $enum) {
                 Gate::define(
                     "roles::$enum->value",
-                    fn(User $user) => ACL::userPermission($user)->roles->filter(fn($r) => $r === $enum)->isNotEmpty()
+                    fn (User $user) => ACL::userPermission($user)->roles->filter(fn ($r) => $r === $enum)->isNotEmpty()
                         ? Response::allow()
                         : $enum->denyResponse()
                 );

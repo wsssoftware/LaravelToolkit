@@ -9,7 +9,7 @@ use LaravelToolkit\ACL\HasUserPermission;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasUserPermission;
+    use HasFactory, HasUserPermission, Notifiable;
 
     /**
      * The attributes that are mass assignable.

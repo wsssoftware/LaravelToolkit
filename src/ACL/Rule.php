@@ -9,7 +9,6 @@ use Exception;
  */
 class Rule
 {
-
     private ?bool $value = null;
 
     private bool $dirty = false;
@@ -35,6 +34,7 @@ class Rule
         }
         throw new Exception("Property $name does not exist.");
     }
+
     public function __set(string $name, $value): void
     {
         if ($name === 'value' && $this->value !== $value) {

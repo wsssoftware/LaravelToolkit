@@ -6,12 +6,10 @@ use Exception;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
-use LaravelToolkit\Facades\ACL;
 use ReflectionObject;
 
 class PolicyCast implements CastsAttributes
 {
-
     /**
      * Cast the given value.
      *
@@ -25,7 +23,8 @@ class PolicyCast implements CastsAttributes
         }
         $values = $value ?? [];
         $policy = $this->getPolicy($key, $model);
-        $policy->rules->each(fn(Rule $rule) => $rule->setValue(Arr::get($values, $rule->key, false)));
+        $policy->rules->each(fn (Rule $rule) => $rule->setValue(Arr::get($values, $rule->key, false)));
+
         return $policy;
 
     }
@@ -45,14 +44,14 @@ class PolicyCast implements CastsAttributes
             }
         } elseif (is_array($value)) {
             foreach ($value as $ruleKey => $permission) {
-                throw_if(!is_string($ruleKey), Exception::class, 'Key must be a string.');
-                throw_if(!is_bool($permission), Exception::class, 'Value must be a boolean.');
+                throw_if(! is_string($ruleKey), Exception::class, 'Key must be a string.');
+                throw_if(! is_bool($permission), Exception::class, 'Value must be a boolean.');
                 $policy->{$ruleKey}->value = $permission;
             }
         }
 
         return $policy->rules
-            ->mapWithKeys(fn(Rule $rule) => [$rule->key => $rule->value ?? false])
+            ->mapWithKeys(fn (Rule $rule) => [$rule->key => $rule->value ?? false])
             ->toJson();
     }
 
@@ -60,6 +59,7 @@ class PolicyCast implements CastsAttributes
     {
         $r = new ReflectionObject($model);
         $policies = $r->getProperty('policies')->getValue($model);
+
         return $policies->get($column);
 
     }

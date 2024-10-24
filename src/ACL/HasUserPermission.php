@@ -11,7 +11,6 @@ use LaravelToolkit\Facades\ACL;
  */
 trait HasUserPermission
 {
-
     public static function bootHasUserPermission()
     {
         self::retrieved(function (Model $model) {

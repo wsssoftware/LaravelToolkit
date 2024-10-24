@@ -2,14 +2,12 @@
 
 namespace LaravelToolkit\ACL;
 
-
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Stringable;
 use LaravelToolkit\Facades\ACL;
-use Psy\Util\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 class RolesFirewallMiddleware
@@ -24,16 +22,16 @@ class RolesFirewallMiddleware
         /** @var \BackedEnum&\LaravelToolkit\ACL\HasDenyResponse|null $enum */
         $enum = ACL::rolesEnum();
         $roleGroups = collect($roles)
-            ->map(fn(string $role) => str($role))
-            ->groupBy(fn(Stringable $role) => $role->startsWith('!') ? 'denies' : 'allows')
-            ->mapWithKeys(fn(Collection $group, string $index) => [
-                $index => $group->map(fn(Stringable $role) => $enum::from($role->after('!')->toString()))
+            ->map(fn (string $role) => str($role))
+            ->groupBy(fn (Stringable $role) => $role->startsWith('!') ? 'denies' : 'allows')
+            ->mapWithKeys(fn (Collection $group, string $index) => [
+                $index => $group->map(fn (Stringable $role) => $enum::from($role->after('!')->toString())),
             ]);
         foreach ($roleGroups as $method => $roles) {
             /** @var \BackedEnum&\LaravelToolkit\ACL\HasDenyResponse $role */
             foreach ($roles as $role) {
                 $ability = "roles::$role->value";
-                if (!Gate::{$method}($ability)) {
+                if (! Gate::{$method}($ability)) {
                     $role->denyResponse()->authorize();
                 }
             }

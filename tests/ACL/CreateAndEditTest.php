@@ -156,4 +156,3 @@ it('has the correct behaviour on grant and denies', function () {
         ->toBeInstanceOf(UserRole::class)
         ->toEqual(UserRole::ADMIN);
 });
-

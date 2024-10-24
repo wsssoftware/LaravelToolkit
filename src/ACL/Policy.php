@@ -10,14 +10,13 @@ use Illuminate\Support\Collection;
  */
 readonly class Policy
 {
-
     public function __construct(
         public Collection $rules,
         public string $column,
         public string $name,
         public string $description,
     ) {
-       //
+        //
     }
 
     public function __get(string $name): Rule

@@ -13,6 +13,7 @@ use StringBackedEnum;
  * @property int $id
  * @property Collection<string, \UnitEnum> $roles
  * @property \Illuminate\Support\Carbon $updated_at
+ *
  * @method Policy __get(string $name)
  */
 abstract class UserPermission extends Model
@@ -61,7 +62,8 @@ abstract class UserPermission extends Model
         if ($filter) {
             $policies = $policies->filter($filter);
         }
-        return !empty($column) ? $policies->get($column) : $policies;
+
+        return ! empty($column) ? $policies->get($column) : $policies;
     }
 
     final public function casts(): array
@@ -75,6 +77,7 @@ abstract class UserPermission extends Model
             $cast[$policy->column] = PolicyCast::class;
         }
         $cast['updated_at'] = 'datetime';
+
         return $cast;
     }
 

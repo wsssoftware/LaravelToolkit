@@ -23,6 +23,7 @@ class PolicyMaker
     public function rule(string $key, string $name, string $description, ?int $denyStatus = null): self
     {
         $this->rules->put($key, new Rule($key, $name, $description, $denyStatus));
+
         return $this;
     }
 
@@ -52,6 +53,7 @@ class PolicyMaker
             __('laraveltoolkit::acl.delete.description', ['name' => mb_strtolower($this->name)]),
             $denyStatus
         ));
+
         return $this;
     }
 
