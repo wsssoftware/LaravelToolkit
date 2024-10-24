@@ -10,21 +10,22 @@ after you must create table columns for each policy that you want.
 ```php
 /// on database/migrations/2024_10_22_104112_create_user_permissions_table
  Schema::create('user_permissions', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')
-                ->unique()
-                ->constrained('users')
-                ->cascadeOnUpdate()
-                ->cascadeOnDelete();
-            $table->json('users')->nullable(); // <-- HERE
-            $table->json('products')->nullable(); // <-- HERE
-            $table->json('categories')->nullable(); // <-- HERE
-            $table->timestamps();
-
-            $table->index(["id", "model", "field"]);
+    $table->id();
+    $table->foreignId('user_id')
+        ->unique()
+        ->constrained('users')
+        ->cascadeOnUpdate()
+        ->cascadeOnDelete();
+    // User roles is an internal feature, don't use as a policy
+    $table->json('roles')->default('[]');
+    $table->json('users')->nullable(); // <-- HERE
+    $table->json('products')->nullable(); // <-- HERE
+    $table->json('categories')->nullable(); // <-- HERE
+    $table->timestamp('updated_at')->nullable();
+}
 //...
 ```
-> You can create alter tables after as you need to create more columns.
+> You can create alter table after as you need to create more policy columns.
 
 after make UserPermission model running command:
 ```bash
@@ -40,14 +41,15 @@ use LaravelToolkit\Facades\ACL;
 public function boot(): void
 {
     ACL::withModel(UserPermission::class);
-    //OR if you want to use role system, create an string enum and declare its FQN here
+    // if you want to use role system, create a string enum and declare its FQN here
      ACL::withModel(UserPermission::class)
             ->withRolesEnum(UserRole::class);
 }
 ```
-> Role string Enum must implement `LaravelToolkit\ACL\HasDenyResponse` interface to be used. 
+> Role Enum is a more generic way to allow or deny user to access some part of your application.
+> It must be a string Enum and implement `LaravelToolkit\ACL\HasDenyResponse` interface to be used. 
 
-Than on created model declare your rules:
+On your `UserPermission` created model declare your firsts policies and rules:
 ```php
 protected static function declarePoliciesAndRoles(): void
 {
@@ -64,7 +66,7 @@ protected static function declarePoliciesAndRoles(): void
 }
 ```
 
-On your user Model add `HasUserPermission` to configure relations and other things:
+On your `User` Model add `HasUserPermission` trait to configure relations and other things:
 ```php
 
 use LaravelToolkit\ACL\HasUserPermission;
@@ -96,9 +98,7 @@ $user = \Illuminate\Support\Facades\Auth::user();
 
 $userPermission = $user->userPermission
 
-$users = $userPermission->users;
-$users->create->value = true;
-$userPermission->users = $users;
+$users = $userPermission->users->create->value = true;
 // OR
 $userPermission->users = [
     'create' => true,
@@ -118,9 +118,21 @@ $userPermission->grantAll();
 // OR
 $userPermission->grantAll('users');
 // OR
+$userPermission->grant('users::create');
+// OR
+$userPermission->grantAllRoles();
+// OR
+$userPermission->grantRole(UserRole::ADMIN);
+// OR
 $userPermission->denyAll();
 // OR
 $userPermission->denyAll('users');
+// OR
+$userPermission->deny('users::create');
+// OR
+$userPermission->denyAllRoles();
+// OR
+$userPermission->denyRole(UserRole::ADMIN);
 //then
 $userPermission->save();
 ```
@@ -136,7 +148,7 @@ public function create(=): Response
 {
     return Inertia::render('Tests/LaravelToolkit/ACL', [
         'permissions' => ACL::permissions(),
-        // or if you want to filter edit permissions available por users
+        // if you want to filter edit permissions available por users
         'permissions' => ACL::permissions(filter: function (Policy $policy) {
             return !str_starts_with($policy->column, 'admin_');
         }),
@@ -194,8 +206,10 @@ export default defineComponent({
 
 On backend, you will use like a normal gate, but pay attention on ability name:
 ```php
-// policyColumn + :: + ruleName
+// Policy rule: policyColumn + :: + ruleName
 \Illuminate\Support\Facades\Gate::allows('users::create')
+// Role: roles :: + roleName
+\Illuminate\Support\Facades\Gate::allows('roles::admin')
 ```
 
 On frontend, when you have been installed the VueJS plugin, you can use `$gate class`, `Gate component` or `Gate directive`.
@@ -209,6 +223,7 @@ On frontend, when you have been installed the VueJS plugin, you can use `$gate c
         </template>
     </Gate>
     <button v-gate:allows="'users::read'">You see if you has</button>
+    <button v-gate:allows="'roles::admin'">You see if you has</button>
     <button v-if="has">You see if you has</button>
 </template>
 
@@ -230,7 +245,17 @@ export default defineComponent({
     },
 });
 </script>
+```
 
+You can also use the `Middleware` to use a role to some route or route group:
+```php
+Route::prefix('admin-l1')->group(function() {
+// Your routes here
+})->middleware('user_roles:admin,admin_lvl2')
+
+Route::prefix('admin-l2')->group(function() {
+// Your routes here
+})->middleware('user_roles:admin_lvl2,!admin')
 ```
 
 
