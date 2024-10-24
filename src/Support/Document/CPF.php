@@ -10,7 +10,7 @@ class CPF implements Document
 {
     public function checkDigits(string $document): string
     {
-        $document = Regex::onlyNumbers($document);
+        $document = Regex::onlyNumeric($document);
         if (strlen($document) > 9) {
             $document = substr($document, 0, 9);
         } elseif (strlen($document) < 9) {
@@ -42,7 +42,7 @@ class CPF implements Document
 
     public function mask(string $document): string
     {
-        $document = Regex::onlyNumbers($document);
+        $document = Regex::onlyNumeric($document);
         throw_if(strlen($document) !== 11, Exception::class, 'Invalid CPF');
 
         return Str::applyMask($document, '000.000.000-00');
@@ -50,12 +50,12 @@ class CPF implements Document
 
     public function unmask(string $document): string
     {
-        return Regex::onlyNumbers($document);
+        return Regex::onlyNumeric($document);
     }
 
     public function validate(string $document): bool
     {
-        $document = Regex::onlyNumbers($document);
+        $document = Regex::onlyNumeric($document);
         if (strlen($document) != 11 || Regex::isSequenceOfUniqueChar($document)) {
             return false;
         }

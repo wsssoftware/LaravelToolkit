@@ -10,7 +10,7 @@ class CNPJ implements Document
 {
     public function checkDigits(string $document): string
     {
-        $document = Regex::onlyNumbers($document);
+        $document = Regex::onlyNumeric($document);
         if (strlen($document) > 12) {
             $document = substr($document, 0, 12);
         } elseif (strlen($document) < 12) {
@@ -49,7 +49,7 @@ class CNPJ implements Document
 
     public function mask(string $document): string
     {
-        $document = Regex::onlyNumbers($document);
+        $document = Regex::onlyNumeric($document);
         throw_if(strlen($document) !== 14, Exception::class, 'Invalid CNPJ');
 
         return Str::applyMask($document, '00.000.000/0000-00');
@@ -57,12 +57,12 @@ class CNPJ implements Document
 
     public function unmask(string $document): string
     {
-        return Regex::onlyNumbers($document);
+        return Regex::onlyNumeric($document);
     }
 
     public function validate(string $document): bool
     {
-        $document = Regex::onlyNumbers($document);
+        $document = Regex::onlyNumeric($document);
         if (strlen($document) != 14 || Regex::isSequenceOfUniqueChar($document)) {
             return false;
         }
