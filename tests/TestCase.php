@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Inertia\ServiceProvider;
 use LaravelToolkit\Facades\ACL;
 use LaravelToolkit\LaravelToolkitServiceProvider;
+use LaravelToolkit\Tests\Model\User;
 use LaravelToolkit\Tests\Model\UserPermission;
 use Orchestra\Testbench\Attributes\WithMigration;
 use Orchestra\Testbench\TestCase as Orchestra;
@@ -25,7 +26,8 @@ class TestCase extends Orchestra
         if (! file_exists($sitemapRoutesPath)) {
             copy($copyPath, $sitemapRoutesPath);
         }
-        ACL::withModel(UserPermission::class);
+        (new User(['id' => 1, 'name' => 'Foo Bar', 'email' => 'foo@bar.com', 'password' => 'abc']))->saveOrFail();
+        ACL::withModel(UserPermission::class)->withRolesEnum(UserRole::class);
     }
 
     protected function getPackageProviders($app)

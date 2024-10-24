@@ -7,7 +7,6 @@ use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Facade;
 use LaravelToolkit\ACL\Format;
 use LaravelToolkit\ACL\UserPermission;
-use StringBackedEnum;
 
 /**
  * @method static null|string rolesEnum()

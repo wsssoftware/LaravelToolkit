@@ -141,7 +141,7 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
             foreach ($rolesEnum::cases() as $enum) {
                 Gate::define(
                     "roles::$enum->value",
-                    fn(User $user) => (ACL::userPermission($user)->roles ?? collect())->filter(fn($r) => $r === $enum)->isNotEmpty()
+                    fn(User $user) => ACL::userPermission($user)->roles->filter(fn($r) => $r === $enum)->isNotEmpty()
                         ? Response::allow()
                         : $enum->denyResponse()
                 );
