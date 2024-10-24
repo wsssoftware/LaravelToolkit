@@ -2,12 +2,13 @@
 
 namespace LaravelToolkit;
 
-use App\Enum\UserRole;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Route;
 use LaravelToolkit\ACL\MakeACLModelCommand;
+use LaravelToolkit\ACL\RolesFirewallMiddleware;
 use LaravelToolkit\Facades\ACL;
 use LaravelToolkit\Macros\BlueprintMacro;
 use LaravelToolkit\Macros\CollectionMacro;
@@ -136,6 +137,7 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
             if ($rolesEnum === null) {
                 return;
             }
+            Route::aliasMiddleware('user_roles', RolesFirewallMiddleware::class);
             foreach ($rolesEnum::cases() as $enum) {
                 Gate::define(
                     "roles::$enum->value",
