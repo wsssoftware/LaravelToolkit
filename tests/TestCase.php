@@ -5,6 +5,7 @@ namespace LaravelToolkit\Tests;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Inertia\ServiceProvider;
 use LaravelToolkit\LaravelToolkitServiceProvider;
+use LaravelToolkit\Tests\Model\User;
 use Orchestra\Testbench\Attributes\WithMigration;
 use Orchestra\Testbench\TestCase as Orchestra;
 
@@ -16,21 +17,26 @@ class TestCase extends Orchestra
         parent::setUp();
 
         Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'LaravelToolkit\\Database\\Factories\\'.class_basename($modelName).'Factory'
+            fn(string $modelName) => 'LaravelToolkit\\Database\\Factories\\'.class_basename($modelName).'Factory'
         );
         $copyPath = dirname(__DIR__).'/routes/sitemap.php';
         $sitemapRoutesPath = base_path('routes/sitemap.php');
-        if (! file_exists($sitemapRoutesPath)) {
+        if (!file_exists($sitemapRoutesPath)) {
             copy($copyPath, $sitemapRoutesPath);
         }
+        (new User(['id' => 1, 'name' => 'Foo Bar', 'email' => 'foo@bar.com', 'password' => 'abc']))->saveOrFail();
     }
 
     protected function getPackageProviders($app)
     {
-        return [
+        $providers = [];
+        if ($this->name() !== '__pest_evaluable_it_test_null_on_not_setted_model_and_enum') {
+            $providers[] = TestServiceProvider::class;
+        }
+        return array_merge($providers, [
             LaravelToolkitServiceProvider::class,
             ServiceProvider::class,
-        ];
+        ]);
     }
 
     protected function defineDatabaseMigrations()
@@ -48,5 +54,7 @@ class TestCase extends Orchestra
         $migrationStoredAsset->up();
         $migrationProduct = include __DIR__.'/Model/2024_09_24_163917_create_products_table.php';
         $migrationProduct->up();
+        $migrationUserPermission = include __DIR__.'/Model/create_user_permissions_table.php';
+        $migrationUserPermission->up();
     }
 }
