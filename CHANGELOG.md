@@ -2,6 +2,15 @@
 
 All notable changes to `LaravelToolkit` will be documented in this file.
 
+## 0.8.0 - 2024-10-25
+
+### What's Changed
+
+* Add ACL feature to package by @allanmcarvalho in https://github.com/wsssoftware/LaravelToolkit/pull/11
+* Regex features by @allanmcarvalho in https://github.com/wsssoftware/LaravelToolkit/pull/12
+
+**Full Changelog**: https://github.com/wsssoftware/LaravelToolkit/compare/0.7.4...0.8.0
+
 ## 0.7.4 - 2024-10-21
 
 **Full Changelog**: https://github.com/wsssoftware/LaravelToolkit/compare/0.7.3...0.7.4
