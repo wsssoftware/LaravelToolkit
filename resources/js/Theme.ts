@@ -28,7 +28,6 @@ class Theme {
     }
 
     dark() {
-        console.log(this.domainPostFix)
         document.cookie = `chosen-theme=dark; expires=Fri, 31 Dec 9999 23:59:59 GMT; SameSite=Lax; path=/${this.domainPostFix}`;
         this.handle();
     }
