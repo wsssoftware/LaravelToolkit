@@ -19,7 +19,7 @@ return new class extends Migration
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
             // User roles is an internal feature, don't use as a policy
-            $table->json('roles')->default('[]');
+            $table->json('roles');
             $table->json('users')->nullable();
             $table->json('products')->nullable();
             $table->json('categories')->nullable();
