@@ -2,8 +2,6 @@
 
 namespace LaravelToolkit\Support;
 
-use LaravelToolkit\Enum\IPVersion;
-
 /**
  * @see \LaravelToolkit\Facades\Regex
  */
@@ -14,38 +12,38 @@ class Regex
     {
         $matches = [];
         preg_match_all('/#\w+/', $payload, $matches);
-        return $matches;
+        return $matches[0];
     }
 
     public function isEmail(string $payload, bool $uncommon = false): bool
     {
-        return match (true) {
-                $uncommon => preg_match('/^([a-z0-9_\.\+-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/', $payload),
-                default => preg_match('/^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})*$/', $payload),
-            } === 1;
+        return preg_match('/^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/', $payload) === 1;
     }
 
-    public function isHexValue(string $payload): bool
+    public function isHexColor(string $payload): bool
     {
-        return preg_match('/^#?([a-f0-9]{6}|[a-f0-9]{3})$/', $payload) === 1;
+        return preg_match('/^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/', $payload) === 1;
     }
 
-    public function isIpAddress(string $payload, IPVersion $version = IPVersion::ALL): bool
+    public function isIPv4Address(string $payload): bool
     {
-        return match ($version) {
-                IPVersion::IPV4 => preg_match(
-                    '/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/',
-                    $payload
-                ),
-                IPVersion::IPV6 => preg_match(
-                    '/(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))/',
-                    $payload
-                ),
-                IPVersion::ALL => preg_match(
-                    '/((^\s*((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]))\s*$)|(^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$))/',
-                    $payload
-                ),
-            } === 1;
+        return preg_match(
+                '/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/',
+                $payload
+            ) === 1;
+    }
+
+    public function isIPv6Address(string $payload): bool
+    {
+        return preg_match(
+                '/^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))\s*$/',
+                $payload
+            ) === 1;
+    }
+
+    public function isIPAddress(string $payload): bool
+    {
+        return $this->isIPv4Address($payload) || $this->isIPv6Address($payload);
     }
 
     public function isLikePhpVariableChars(string $payload): bool
@@ -58,34 +56,37 @@ class Regex
         return preg_match('/^(.)\1*$/', $payload) === 1;
     }
 
-    public function isURL(string $payload, bool $protocolOptional = false): bool
+    public function isURL(string $payload): bool
     {
-        return match (true) {
-                $protocolOptional => preg_match(
-                    '/(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/',
-                    $payload
-                ),
-                default => preg_match(
-                    '/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#()?&//=]*)/',
-                    $payload
-                ),
-            } === 1;
+        return preg_match(
+                '/^(https?:\/\/|ftp:\/\/)(www\.)?([a-zA-Z0-9-]+(\.[a-zA-Z]{2,})*)(:[0-9]{1,5})?(\/[^\s]*)?$/',
+                $payload
+            ) === 1;
     }
 
-    public function onlyAlpha(?string $payload, bool $allowSpace = false): string
+    public function onlyAlpha(?string $payload, bool $allowSpace = false, bool $allowAccents = true): string
     {
-        return match (true) {
-            $allowSpace => preg_replace('/^[a-zA-Z ]*$/', '', $payload ?? ''),
-            default => preg_replace('/^[a-zA-Z]*$/', '', $payload ?? ''),
-        };
+        $regex = 'a-zA-Z';
+        if ($allowAccents) {
+            $regex .= 'À-ÿ';
+        }
+        if ($allowSpace) {
+            $regex .= ' ';
+        }
+        return preg_replace("/[^$regex]/", '', $payload ?? '');
     }
 
-    public function onlyAlphaNumeric(?string $payload, bool $allowSpace = false): string
+    public function onlyAlphaNumeric(?string $payload, bool $allowSpace = false, bool $allowAccents = true): string
     {
-        return match (true) {
-            $allowSpace => preg_replace('/^[a-zA-Z0-9 ]*$/', '', $payload ?? ''),
-            default => preg_replace('/^[a-zA-Z0-9]*$/', '', $payload ?? ''),
-        };
+        $regex = 'a-zA-Z';
+        if ($allowAccents) {
+            $regex .= 'À-ÿ';
+        }
+        $regex .= '0-9';
+        if ($allowSpace) {
+            $regex .= ' ';
+        }
+        return preg_replace("/[^$regex]/", '', $payload ?? '');
     }
 
     public function onlyNumeric(?string $payload, bool $allowSpace = false): string
