@@ -6,8 +6,8 @@ it('can get hashtags', function () {
     $payload = 'Explore the beauty of nature and embark on adventures that inspire. Live your best life! #travel #nature #explore #adventure #inspiration #wanderlust #life #journey #outdoors #discover';
     expect(Regex::getHashtags($payload))
         ->toContain(...[
-            "#travel", "#nature", "#explore", "#adventure", "#inspiration", "#wanderlust", "#life", "#journey",
-            "#outdoors", "#discover"
+            '#travel', '#nature', '#explore', '#adventure', '#inspiration', '#wanderlust', '#life', '#journey',
+            '#outdoors', '#discover',
         ])
         ->not->toContain(...['#foo', '#bar']);
 });
@@ -45,7 +45,7 @@ it('test a valid isEmail', function ($email) {
     'logan.mitchell@development.io',
     'zoe.perez@engineering.co',
     'ryan.morris@data.com',
-    'harper.rogers@analytics.biz'
+    'harper.rogers@analytics.biz',
 ]);
 
 it('test an invalid isEmail', function ($email) {
@@ -61,7 +61,7 @@ it('test an invalid isEmail', function ($email) {
     'james.taylor@corporate.biz.', // Ponto no final do domínio
     'olivia.moore@customdomain', // Falta a extensão do domínio
     'daniel@anderson@provider.io', // Dois arrobas
-    'sophia.thompson@techhub.dev/extra' // Barra na extensão do domínio
+    'sophia.thompson@techhub.dev/extra', // Barra na extensão do domínio
 ]);
 
 it('test a valid isHexColor', function ($color) {
@@ -82,7 +82,7 @@ it('test a valid isHexColor', function ($color) {
     '#33CFFF', // Sky Blue
     '#D433FF', // Violet
     '#FFCC33', // Amber
-    '#33FFCC'  // Teal
+    '#33FFCC',  // Teal
 ]);
 
 it('test an invalid isHexColor', function ($color) {
@@ -114,7 +114,7 @@ it('test a valid isIPv4Address', function ($ip) {
     '198.51.100.23',
     '127.0.0.1',
     '255.255.255.0',
-    '216.58.211.142'
+    '216.58.211.142',
 ]);
 
 it('test an invalid isIPv4Address', function ($ip) {
@@ -130,7 +130,7 @@ it('test an invalid isIPv4Address', function ($ip) {
     '198.51.100.23.0',  // Tem um octeto extra
     '127.0.0.1.1.1',    // Muitos octetos
     '255.255.255.256',  // Um octeto é maior que 255
-    '216.58.211.142.0'  // Tem um octeto extra
+    '216.58.211.142.0',  // Tem um octeto extra
 ]);
 
 it('test a valid isIPv6Address', function ($ip) {
@@ -208,7 +208,7 @@ it('test an invalid isIPAddress', function ($ip) {
     '198.51.100.23.0',  // Tem um octeto extra
     '127.0.0.1.1.1',    // Muitos octetos
     '255.255.255.256',  // Um octeto é maior que 255
-    '216.58.211.142.0'  // Tem um octeto extra
+    '216.58.211.142.0',  // Tem um octeto extra
 ]);
 
 it('test a valid isLikePhpVariableChars', function ($var) {
@@ -235,31 +235,31 @@ it('test a valid isURL', function ($url) {
     expect(Regex::isURL($url))
         ->toBeTrue();
 })->with([
-    "https://www.example.com",
-    "http://example.org",
-    "https://subdomain.example.com/path/to/resource",
-    "ftp://ftp.example.com/file.txt",
-    "http://localhost:8080",
-    "https://example.co.uk",
-    "http://www.example.com:3000/path?query=string",
-    "https://example.com/#fragment",
-    "http://example.com/some-page",
-    "https://www.example.com/path/to/page?param=value&param2=value2"
+    'https://www.example.com',
+    'http://example.org',
+    'https://subdomain.example.com/path/to/resource',
+    'ftp://ftp.example.com/file.txt',
+    'http://localhost:8080',
+    'https://example.co.uk',
+    'http://www.example.com:3000/path?query=string',
+    'https://example.com/#fragment',
+    'http://example.com/some-page',
+    'https://www.example.com/path/to/page?param=value&param2=value2',
 ]);
 
 it('test an invalid isURL', function ($url) {
     expect(Regex::isURL($url))
         ->toBeFalse();
 })->with([
-    "htp://www.example.com",               // Protocolo inválido
-    "http:/example.com",                   // Protocolo incompleto
-    "://example.com",                      // Protocolo ausente
-    "http://www.example..com",             // Domínio com pontos consecutivos
-    "http://example.c",                    // TLD inválido (muito curto)
-    "http://.com",                         // Domínio ausente
-    "www.example.com",                     // Sem protocolo
-    "http://example.com:abcd",             // Porta inválida (não numérica)
-    "http://example.com/path with spaces"  // Caminho com espaços
+    'htp://www.example.com',               // Protocolo inválido
+    'http:/example.com',                   // Protocolo incompleto
+    '://example.com',                      // Protocolo ausente
+    'http://www.example..com',             // Domínio com pontos consecutivos
+    'http://example.c',                    // TLD inválido (muito curto)
+    'http://.com',                         // Domínio ausente
+    'www.example.com',                     // Sem protocolo
+    'http://example.com:abcd',             // Porta inválida (não numérica)
+    'http://example.com/path with spaces',  // Caminho com espaços
 ]);
 
 it('return only alpha', function () {
@@ -294,5 +294,3 @@ it('return only numeric', function () {
         ->and(Regex::onlyNumeric('A $@%^&@*62137321a a 7766687b b', true))
         ->toBe(' 62137321  7766687 ');
 });
-
-
