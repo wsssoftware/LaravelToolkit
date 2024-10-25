@@ -69,6 +69,9 @@ A toolkit to automatically generate sitemaps for application
 ### [STORED ASSETS](docs/STORED_ASSETS.md)
 Tools to help handle with storing assets. 
 
+### [THEME SWITCHER](docs/THEME.md)
+A JS class that handles theme changes
+
 ## Testing
 
 ```bash
