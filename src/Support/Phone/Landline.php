@@ -9,7 +9,7 @@ class Landline implements Phone
 {
     public function appearsToBe(string $phone): string
     {
-        $phone = Regex::onlyNumbers($phone);
+        $phone = Regex::onlyNumeric($phone);
 
         return preg_match('/^[1-9][0-9][1-5][0-9]$/', substr($phone, 0, 4)) === 1;
     }
@@ -31,19 +31,19 @@ class Landline implements Phone
 
     public function mask(string $phone): string
     {
-        $phone = Regex::onlyNumbers($phone);
+        $phone = Regex::onlyNumeric($phone);
 
         return Str::applyMask($phone, '(00) 0000-0000');
     }
 
     public function unmask(string $phone): string
     {
-        return Regex::onlyNumbers($phone);
+        return Regex::onlyNumeric($phone);
     }
 
     public function validate(string $phone): bool
     {
-        $phone = Regex::onlyNumbers($phone);
+        $phone = Regex::onlyNumeric($phone);
 
         return preg_match('/^[1-9][0-9][1-5][0-9]{7}$/', $phone) === 1;
     }

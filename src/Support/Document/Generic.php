@@ -10,7 +10,7 @@ class Generic implements Document
 {
     public function checkDigits(string $document): string
     {
-        $strlen = strlen(Regex::onlyNumbers($document));
+        $strlen = strlen(Regex::onlyNumeric($document));
         throw_if(! in_array($strlen, [9, 11, 12, 14]), Exception::class, 'Invalid document');
 
         return match ($strlen) {
@@ -34,7 +34,7 @@ class Generic implements Document
 
     public function mask(string $document): string
     {
-        $strlen = strlen(Regex::onlyNumbers($document));
+        $strlen = strlen(Regex::onlyNumeric($document));
         throw_if(! in_array($strlen, [11, 14]), Exception::class, 'Invalid document');
 
         return match ($strlen) {
@@ -45,12 +45,12 @@ class Generic implements Document
 
     public function unmask(string $document): string
     {
-        return Regex::onlyNumbers($document);
+        return Regex::onlyNumeric($document);
     }
 
     public function validate(string $document): bool
     {
-        $strlen = strlen(Regex::onlyNumbers($document));
+        $strlen = strlen(Regex::onlyNumeric($document));
 
         return match ($strlen) {
             11 => app(CPF::class)->validate($document),

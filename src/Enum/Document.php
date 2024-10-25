@@ -18,7 +18,7 @@ enum Document: string implements ArrayableEnum
 
     public static function guessType(?string $document): ?Document
     {
-        return match (strlen(Regex::onlyNumbers($document ?? ''))) {
+        return match (strlen(Regex::onlyNumeric($document ?? ''))) {
             14 => self::CNPJ,
             11 => self::CPF,
             default => null,

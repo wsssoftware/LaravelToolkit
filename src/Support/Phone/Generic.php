@@ -31,7 +31,7 @@ class Generic implements Phone
 
     public function mask(string $phone): string
     {
-        $phone = Regex::onlyNumbers($phone);
+        $phone = Regex::onlyNumeric($phone);
         $type = PhoneEnum::guessType($phone);
         if ($type === null) {
             return $phone;
@@ -42,12 +42,12 @@ class Generic implements Phone
 
     public function unmask(string $phone): string
     {
-        return Regex::onlyNumbers($phone);
+        return Regex::onlyNumeric($phone);
     }
 
     public function validate(string $phone): bool
     {
-        $phone = Regex::onlyNumbers($phone);
+        $phone = Regex::onlyNumeric($phone);
         $type = PhoneEnum::guessType($phone);
         if ($type === null) {
             return false;
