@@ -8,7 +8,7 @@ class {{ class }} extends \LaravelToolkit\ACL\UserPermission
     /**
      * @inheritDoc
      */
-    protected static function declarePolicies(): void
+    protected function declarePoliciesAndRoles(): void
         {
     //        self::registryPolicy('users', 'Usuários', 'Gerencia os usuários do sistema')
     //            ->crud();
