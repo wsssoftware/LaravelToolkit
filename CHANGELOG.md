@@ -2,6 +2,14 @@
 
 All notable changes to `LaravelToolkit` will be documented in this file.
 
+## 0.9.0 - 2024-10-25
+
+### What's Changed
+
+* Created theme feature by @allanmcarvalho in https://github.com/wsssoftware/LaravelToolkit/pull/13
+
+**Full Changelog**: https://github.com/wsssoftware/LaravelToolkit/compare/0.8.2...0.9.0
+
 ## 0.8.2 - 2024-10-25
 
 **Full Changelog**: https://github.com/wsssoftware/LaravelToolkit/compare/0.8.1...0.8.2
