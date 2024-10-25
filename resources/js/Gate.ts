@@ -1,16 +1,10 @@
-import {App} from "vue";
 import {OnlyValuesUserPermissions} from "./index";
+import {usePage} from "@inertiajs/vue3";
 
 export default class Gate {
-    app: App
-
-    // O construtor define as propriedades da classe
-    constructor(app: App) {
-        this.app = app;
-    }
 
     permissions(ability: string): boolean {
-        let permissions : OnlyValuesUserPermissions|undefined|null = this.app.config.globalProperties.$page.props.acl as OnlyValuesUserPermissions;
+        let permissions : OnlyValuesUserPermissions|undefined|null = usePage().props.auth.acl as OnlyValuesUserPermissions;
         if (permissions === undefined) {
             console.warn('Before use Gate on frontend you must set acl property on HandleInertiaRequests')
         }

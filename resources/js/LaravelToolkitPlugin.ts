@@ -9,7 +9,7 @@ export type Options = {
 export default {
     install: (app: App, options: Options = {}) => {
         app.config.globalProperties.$laravelToolkit = toValue(options);
-        app.config.globalProperties.$gate = new Gate(app);
+        app.config.globalProperties.$gate = new Gate();
     }
 }
 

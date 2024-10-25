@@ -85,7 +85,10 @@ public function share(Request $request): array
 {
     return [
         ...parent::share($request),
-        'acl' => fn() => ACL::gatePermissions(),
+        'auth' [
+            //...
+            'acl' => fn() => ACL::gatePermissions(),
+        ],
     ];
 }
 ```
