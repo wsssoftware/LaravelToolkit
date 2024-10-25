@@ -16,7 +16,7 @@ export const getInstance = (): Theme => {
 class Theme {
 
     domainPostFix: string;
-    current: Ref<string>;
+    current: Ref<'dark'|'light'|'system_dark'|'system_light'>;
 
     constructor() {
         if (import.meta.env.VITE_DOMAIN) {
