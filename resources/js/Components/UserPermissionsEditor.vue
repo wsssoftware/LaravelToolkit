@@ -1,6 +1,6 @@
 <template>
-  <DataTable :value="permissions" rowGroupMode="rowspan" group-rows-by="policy_name" show-gridlines>
-    <Column field="policy_name" header="Grupo">
+  <DataTable :value="permissions" removable-sort rowGroupMode="rowspan" group-rows-by="policy_name" tableStyle="min-width: 40rem" show-gridlines>
+    <Column :sortable="true" sort-field="policy_name" field="policy_name" header="Grupo">
       <template #body="slotProps">
         <div class="flex flex-col items-center justify-center">
           <span class="text-lg font-bold text-gray-700 text-center w-full max-w-xs">
@@ -14,12 +14,14 @@
     </Column>
     <Column field="rule_name" header="Regra">
       <template #body="slotProps">
-        <span class="capitalize text-gray-700 text-sm font-bold">{{ slotProps.data.rule_name }}</span>
+          <span class="capitalize text-gray-700 text-sm font-bold">{{ slotProps.data.rule_name }}</span>
       </template>
     </Column>
     <Column field="rule_description" header="Regra">
       <template #body="slotProps">
-        <span class="capitalize text-gray-500 text-xs ">{{ slotProps.data.rule_description }}</span>
+          <div class="text-center">
+              <span class="capitalize text-gray-500 text-xs">{{ slotProps.data.rule_description }}</span>
+          </div>
       </template>
     </Column>
     <Column field="rule_value" header="Status">
