@@ -15,7 +15,7 @@ trait HasUserPermission
     {
         self::retrieved(function (Model $model) {
             /** @var \LaravelToolkit\ACL\HasUserPermission $model */
-            if (ACL::model() !== null && empty($model->userPermission)) {
+            if (ACL::model() !== null && $model->userPermission()->doesntExist()) {
                 $model->userPermission()->create(['roles' => collect()]);
                 $model->refresh();
             }
