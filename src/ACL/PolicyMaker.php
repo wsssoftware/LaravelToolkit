@@ -35,6 +35,7 @@ class PolicyMaker
             __('laraveltoolkit::acl.create.description', ['name' => mb_strtolower($this->name)]),
             $denyStatus
         ));
+
         return $this;
     }
 
@@ -56,6 +57,7 @@ class PolicyMaker
             __('laraveltoolkit::acl.delete.description', ['name' => mb_strtolower($this->name)]),
             $denyStatus
         ));
+
         return $this;
     }
 
@@ -67,6 +69,7 @@ class PolicyMaker
             __('laraveltoolkit::acl.read.description', ['name' => mb_strtolower($this->name)]),
             $denyStatus
         ));
+
         return $this;
     }
 
@@ -83,6 +86,7 @@ class PolicyMaker
             __('laraveltoolkit::acl.update.description', ['name' => mb_strtolower($this->name)]),
             $denyStatus
         ));
+
         return $this;
     }
 }
