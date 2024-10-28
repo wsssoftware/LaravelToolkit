@@ -27,7 +27,7 @@ class PolicyMaker
         return $this;
     }
 
-    public function crud(?int $denyStatus = null): self
+    public function create(?int $denyStatus = null): self
     {
         $this->rules->put('create', new Rule(
             'create',
@@ -35,30 +35,54 @@ class PolicyMaker
             __('laraveltoolkit::acl.create.description', ['name' => mb_strtolower($this->name)]),
             $denyStatus
         ));
-        $this->rules->put('read', new Rule(
-            'read',
-            __('laraveltoolkit::acl.read.name'),
-            __('laraveltoolkit::acl.read.description', ['name' => mb_strtolower($this->name)]),
-            $denyStatus
-        ));
-        $this->rules->put('update', new Rule(
-            'update',
-            __('laraveltoolkit::acl.update.name'),
-            __('laraveltoolkit::acl.update.description', ['name' => mb_strtolower($this->name)]),
-            $denyStatus
-        ));
+        return $this;
+    }
+
+    public function crud(?int $denyStatus = null): self
+    {
+        $this->create($denyStatus);
+        $this->read($denyStatus);
+        $this->update($denyStatus);
+        $this->delete($denyStatus);
+
+        return $this;
+    }
+
+    public function delete(?int $denyStatus = null): self
+    {
         $this->rules->put('delete', new Rule(
             'delete',
             __('laraveltoolkit::acl.delete.name'),
             __('laraveltoolkit::acl.delete.description', ['name' => mb_strtolower($this->name)]),
             $denyStatus
         ));
+        return $this;
+    }
 
+    public function read(?int $denyStatus = null): self
+    {
+        $this->rules->put('read', new Rule(
+            'read',
+            __('laraveltoolkit::acl.read.name'),
+            __('laraveltoolkit::acl.read.description', ['name' => mb_strtolower($this->name)]),
+            $denyStatus
+        ));
         return $this;
     }
 
     public function toPolicy(): Policy
     {
         return new Policy($this->rules, $this->column, $this->name, $this->description);
+    }
+
+    public function update(?int $denyStatus = null): self
+    {
+        $this->rules->put('update', new Rule(
+            'update',
+            __('laraveltoolkit::acl.update.name'),
+            __('laraveltoolkit::acl.update.description', ['name' => mb_strtolower($this->name)]),
+            $denyStatus
+        ));
+        return $this;
     }
 }
