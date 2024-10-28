@@ -45,6 +45,7 @@ trait ManagementTrait
                 $this->{$policy->column}->{$rule->key}->value = false;
             }
         }
+
         return $this;
     }
 
@@ -52,6 +53,7 @@ trait ManagementTrait
     {
         [$policy, $rule] = explode('::', $ability);
         $this->{$policy}->{$rule}->value = false;
+
         return $this;
     }
 
@@ -63,6 +65,7 @@ trait ManagementTrait
                 $this->{$policy->column}->{$rule->key}->value = true;
             }
         }
+
         return $this;
     }
 
@@ -70,6 +73,7 @@ trait ManagementTrait
     {
         [$policy, $rule] = explode('::', $ability);
         $this->{$policy}->{$rule}->value = true;
+
         return $this;
     }
 
@@ -81,6 +85,7 @@ trait ManagementTrait
         $collection = $this->roles;
         $collection->put($role->value, $role);
         $this->roles = $collection;
+
         return $this;
     }
 
@@ -94,18 +99,21 @@ trait ManagementTrait
             }
             $this->roles = $collection;
         }
+
         return $this;
     }
 
     public function denyRole(BackedEnum $role): self
     {
         $this->roles = $this->roles->filter(fn (BackedEnum $r) => $r->value !== $role->value);
+
         return $this;
     }
 
     public function denyAllRoles(): self
     {
         $this->roles = collect();
+
         return $this;
     }
 }
