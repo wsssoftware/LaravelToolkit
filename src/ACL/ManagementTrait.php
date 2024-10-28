@@ -37,39 +37,43 @@ trait ManagementTrait
         }
     }
 
-    public function denyAll(?string $policy = null): void
+    public function denyAll(?string $policy = null): self
     {
         $policies = $policy !== null ? [$this->policies->get($policy)] : $this->policies;
         foreach ($policies as $policy) {
             foreach ($policy->rules as $rule) {
-                $this->{$policy->column} = $policy->{$rule->key}->value = false;
+                $this->{$policy->column}->{$rule->key}->value = false;
             }
         }
+        return $this;
     }
 
-    public function deny(string $ability): void
+    public function deny(string $ability): self
     {
         [$policy, $rule] = explode('::', $ability);
         $this->{$policy}->{$rule}->value = false;
+        return $this;
     }
 
-    public function grantAll(?string $policy = null): void
+    public function grantAll(?string $policy = null): self
     {
         $policies = $policy !== null ? [$this->policies->get($policy)] : $this->policies;
         foreach ($policies as $policy) {
             foreach ($policy->rules as $rule) {
-                $this->{$policy->column} = $policy->{$rule->key}->value = true;
+                $this->{$policy->column}->{$rule->key}->value = true;
             }
         }
+        return $this;
     }
 
-    public function grant(string $ability): void
+    public function grant(string $ability): self
     {
         [$policy, $rule] = explode('::', $ability);
         $this->{$policy}->{$rule}->value = true;
+        return $this;
     }
 
-    public function grantRole(BackedEnum $role): void
+    public function grantRole(BackedEnum $role): self
     {
         $enumType = ACL::rolesEnum();
         throw_if($enumType === null, Exception::class, 'You must configure RoleEnum before use it');
@@ -77,9 +81,10 @@ trait ManagementTrait
         $collection = $this->roles;
         $collection->put($role->value, $role);
         $this->roles = $collection;
+        return $this;
     }
 
-    public function grantAllRoles(): void
+    public function grantAllRoles(): self
     {
         /** @var BackedEnum|null $enum */
         if ($enum = ACL::rolesEnum()) {
@@ -89,15 +94,18 @@ trait ManagementTrait
             }
             $this->roles = $collection;
         }
+        return $this;
     }
 
-    public function denyRole(BackedEnum $role): void
+    public function denyRole(BackedEnum $role): self
     {
         $this->roles = $this->roles->filter(fn (BackedEnum $r) => $r->value !== $role->value);
+        return $this;
     }
 
-    public function denyAllRoles(): void
+    public function denyAllRoles(): self
     {
         $this->roles = collect();
+        return $this;
     }
 }
