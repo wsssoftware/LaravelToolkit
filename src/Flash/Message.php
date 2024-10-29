@@ -2,9 +2,12 @@
 
 namespace LaravelToolkit\Flash;
 
+use Illuminate\Support\Str;
+
 class Message
 {
     private function __construct(
+        readonly public string $id,
         readonly public Severity $severity,
         readonly public ?string $summary,
         readonly public string $detail,
@@ -20,6 +23,7 @@ class Message
         ?string $summary = null,
     ): Message {
         return new Message(
+            Str::uuid()->toString(),
             $severity,
             $summary,
             $detail,
