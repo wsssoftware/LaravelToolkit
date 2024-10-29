@@ -24,6 +24,7 @@ class FlashResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->resource->id,
             'severity' => $this->resource->severity->value,
             'summary' => $this->when($this->resource->summary !== null, $this->resource->summary),
             'detail' => $this->resource->detail,
