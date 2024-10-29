@@ -11,6 +11,7 @@ use LaravelToolkit\ACL\MakeACLModelCommand;
 use LaravelToolkit\ACL\RolesFirewallMiddleware;
 use LaravelToolkit\Facades\ACL;
 use LaravelToolkit\Macros\BlueprintMacro;
+use LaravelToolkit\Macros\BuilderMacro;
 use LaravelToolkit\Macros\CollectionMacro;
 use LaravelToolkit\Macros\RequestMacro;
 use LaravelToolkit\Macros\StrMacro;
@@ -87,6 +88,7 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
     protected function bootMacros(): void
     {
         (new BlueprintMacro)();
+        (new BuilderMacro)();
         (new CollectionMacro)();
         (new RequestMacro)();
         (new StrMacro)();
