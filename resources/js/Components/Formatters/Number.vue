@@ -17,6 +17,7 @@ export default defineComponent({
             type: Number,
             default: 1
         },
+        locale: String,
         options: Object as PropType<Intl.NumberFormatOptions>,
         startValue: {
             type: Number,
@@ -33,7 +34,7 @@ export default defineComponent({
             return this.value ?? fallback
         },
         fFinalValue(): string {
-            return Intl.NumberFormat(this.$laravelToolkit.lang, this.options ?? {}).format(this.finalValue)
+            return Intl.NumberFormat(this.locale ?? this.$laravelToolkit.locale, this.options ?? {}).format(this.finalValue)
         }
     },
     data() {
