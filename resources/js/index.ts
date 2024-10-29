@@ -1,6 +1,7 @@
 export {default as Collapse} from './Components/Collapse.vue'
 export {default as FilepondInput} from './Components/Form/FilepondInput.vue'
 export {default as InputGroup} from './Components/Form/InputGroup.vue'
+export {default as Number} from './Components/Formatters/Number.vue'
 export {default as Gate} from './Components/Gate.vue'
 export {default as Head} from './Components/Head.vue'
 export {default as LazyLoad} from './Components/LazyLoad.vue'
