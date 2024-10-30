@@ -51,25 +51,28 @@ To Laravel Toolkit be able to compile its tailwind you must add this line on tai
 ### [ACL](docs/ACL.md)
 A minimalist implementation of an access control level
 
-### [FLASH](docs/FLASH.md)
+### [Flash](docs/FLASH.md)
 Simple flash messages from backend to front end.
 
-### [FILEPOND](docs/FILEPOND.md)
+### [FilePond](docs/FILEPOND.md)
 A bridge between FilePond and Laravel
 
-### [LINK](docs/LINK.md)
+### [Link](docs/LINK.md)
 Based on Inertia link but with some new feats.
+
+### [PrimeVue Data](docs/PRIMEVUE_DATA.md)
+A minimalist implementation of DataTables and DataView on Laravel
 
 ### [SEO](docs/SEO.md)
 Tools to help dev to handle with SEO features.
 
-### [SITEMAP](docs/SITEMAP.md)
+### [SiteMap](docs/SITEMAP.md)
 A toolkit to automatically generate sitemaps for application 
 
-### [STORED ASSETS](docs/STORED_ASSETS.md)
+### [Stored Assets](docs/STORED_ASSETS.md)
 Tools to help handle with storing assets. 
 
-### [THEME SWITCHER](docs/THEME.md)
+### [Theme Switcher](docs/THEME.md)
 A JS class that handles theme changes
 
 ## Testing

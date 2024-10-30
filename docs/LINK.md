@@ -1,4 +1,4 @@
-### LINK
+### Link
 Provide an extension to be able to route between subdomains.
 
 In Vue component, when href is appointed to another domain, its use a html default link instead Inertia Link
