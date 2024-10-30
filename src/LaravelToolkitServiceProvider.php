@@ -14,6 +14,7 @@ use LaravelToolkit\Macros\BlueprintMacro;
 use LaravelToolkit\Macros\BuilderMacro;
 use LaravelToolkit\Macros\CollectionMacro;
 use LaravelToolkit\Macros\RequestMacro;
+use LaravelToolkit\Macros\RouterMacro;
 use LaravelToolkit\Macros\StrMacro;
 use LaravelToolkit\Routing\Redirector as PackageRedirector;
 use LaravelToolkit\SEO\SEOComponent;
@@ -91,6 +92,7 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
         (new BuilderMacro)();
         (new CollectionMacro)();
         (new RequestMacro)();
+        (new RouterMacro)();
         (new StrMacro)();
     }
 
