@@ -28,8 +28,8 @@ readonly class Filter
         return collect($filters)
             ->mapWithKeys(function (array $filter, string $key) use ($globalFilterName) {
                 if (
-                    ($mode = MatchMode::tryFrom(Arr::get($filter, 'matchMode', ''))) &&
-                    ($value = Arr::get($filter, 'value'))
+                    ($mode = MatchMode::tryFrom(Arr::get($filter, 'matchMode', ''))) !== null &&
+                    !empty(($value = Arr::get($filter, 'value')))
                 ) {
                     return [$key => new static($key, $mode, $value, $key === $globalFilterName)];
                 }

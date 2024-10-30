@@ -28,7 +28,7 @@ readonly class QueryHelper
 
     public function rows(): int
     {
-        return intval($this->get('rows', 15));
+        return intval($this->get('rows'));
     }
 
     public function filters(EloquentBuilder $builder): void

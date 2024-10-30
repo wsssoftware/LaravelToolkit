@@ -11,6 +11,8 @@ class User extends Authenticatable
 {
     use HasFactory, HasUserPermission, Notifiable;
 
+    protected static $factory = UserFactory::class;
+
     /**
      * The attributes that are mass assignable.
      *
