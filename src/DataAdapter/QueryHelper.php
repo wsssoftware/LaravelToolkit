@@ -15,7 +15,7 @@ readonly class QueryHelper
     public function __construct(
         protected Request $request,
         protected string $pageName,
-        protected null|array $globalFilterColumns,
+        protected null|array $globalFilterColumn,
     ) {
         $this->options = $this->request->post("$this->pageName-options", []);
         //
@@ -37,7 +37,7 @@ readonly class QueryHelper
             return;
         }
         if (($filter = $filters->where('global', true)->first()) !== null) {
-            $filter->matchMode->applyGlobal($builder, $this->globalFilterColumns, $filter->value);
+            $filter->matchMode->applyGlobal($builder, $this->globalFilterColumn, $filter->value);
             $filters = $filters->where('global', false);
         }
         $builder->whereNested(function (QueryBuilder $query) use ($filters) {
