@@ -17,7 +17,7 @@ class BuilderMacro
     public function dataTable(): void
     {
         Builder::macro(
-            'primevueDataTable',
+            'primevueData',
             function (string $pageName = 'page', array $globalFilterColumns = null): LengthAwarePaginator {
                 app()->bind(LaravelLengthAwarePaginator::class, LengthAwarePaginator::class);
                 $helper = app()->make(
@@ -26,7 +26,6 @@ class BuilderMacro
                 );
                 $helper->filters($this);
                 $helper->sort($this);
-                ray()->showQueries();
                 return $this->paginate($helper->rows(), pageName: $pageName);
             }
         );

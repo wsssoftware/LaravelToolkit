@@ -1,10 +1,8 @@
 <template>
     <slot
         :clear-filters="clearFilters"
-        :loading="loading"
         :page="onPage"
         :rows="paginator?.per_page"
-        :sort="onSort"
         :total="paginator?.total"
         :value="paginator?.data ?? []"/>
 </template>
@@ -12,17 +10,13 @@
 <script lang="ts">
 import {defineComponent, PropType} from "vue";
 import {Paginator} from "../index";
-import {
-    DataTableFilterMeta, DataTableFilterMetaData,
-    DataTablePageEvent,
-    DataTableSortEvent,
-    DataTableSortMeta
-} from "primevue/datatable";
+import {DataViewPageEvent} from "primevue/dataview";
+import {DataTableFilterMeta, DataTableFilterMetaData} from "primevue/datatable";
 import {router} from "@inertiajs/vue3";
 import {debounce} from 'lodash-es';
 
 export default defineComponent({
-    name: "DataTableAdapter",
+    name: "DataViewAdapter",
     props: {
         filters: {
             type: Object as PropType<DataTableFilterMeta>,
@@ -43,7 +37,9 @@ export default defineComponent({
         rows: {
             type: Number,
             default: 15
-        }
+        },
+        sortField: String,
+        sortOrder: String as PropType<'asc'|'desc'>
     },
     emits: ['update:filters'],
     computed: {
@@ -61,7 +57,6 @@ export default defineComponent({
             }, this.filterDebounceWait),
             loading: false,
             page: 1,
-            sort: [] as DataTableSortMeta[]|undefined,
         }
     },
     beforeMount() {
@@ -79,23 +74,16 @@ export default defineComponent({
         onFilter() {
             this.load();
         },
-        onPage(event: DataTablePageEvent) {
+        onPage(event: DataViewPageEvent) {
             this.page = event.page + 1
-        },
-        onSort(event: DataTableSortEvent) {
-            if (event.sortField !== null) {
-                this.sort = [{field: event.sortField, order: event.sortOrder}]
-            } else {
-                this.sort = event.multiSortMeta
-            }
         },
         load(): void {
             this.loading = true
             let data: {[key: string]: any} = {}
             let sort = undefined
             let filters :DataTableFilterMeta = {}
-            if (this.sort && this.sort.length > 0) {
-                sort = this.sort?.map((i: DataTableSortMeta) => `${i.field}:${i.order === 1 ? 'asc' : 'desc'}`).join(',')
+            if (this.sortField && this.sortOrder) {
+                sort = `${this.sortField}:${this.sortOrder}`
             }
             if (this.filters) {
                 Object.keys(this.filters).forEach(key => {
@@ -134,11 +122,11 @@ export default defineComponent({
             this.page = 1
             this.load()
         },
-        sort: {
-            deep: true,
-            handler() {
-                this.load()
-            }
+        sortField() {
+            this.load()
+        },
+        sortOrder() {
+            this.load()
         },
         filters: {
             deep: true,

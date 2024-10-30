@@ -1,5 +1,6 @@
 export {default as Collapse} from './Components/Collapse.vue'
 export {default as DataTableAdapter} from './Components/DataTableAdapter.vue'
+export {default as DataViewAdapter} from './Components/DataViewAdapter.vue'
 export {default as FilepondInput} from './Components/Form/FilepondInput.vue'
 export {default as InputGroup} from './Components/Form/InputGroup.vue'
 export {default as Date} from './Components/Formatters/Date.vue'
