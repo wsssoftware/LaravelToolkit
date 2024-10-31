@@ -1,4 +1,4 @@
-## Theme
+## Theme Switcher
 A JS class that handles theme changes
 
 On your bootstrap file put to create an instance and handle the current theme

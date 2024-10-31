@@ -1,4 +1,6 @@
 export {default as Collapse} from './Components/Collapse.vue'
+export {default as DataTableAdapter} from './Components/DataTableAdapter.vue'
+export {default as DataViewAdapter} from './Components/DataViewAdapter.vue'
 export {default as FilepondInput} from './Components/Form/FilepondInput.vue'
 export {default as InputGroup} from './Components/Form/InputGroup.vue'
 export {default as Date} from './Components/Formatters/Date.vue'
@@ -62,4 +64,25 @@ export type UserPermissions = {
     rule_deny_status: null|number,
     rule_value: boolean,
 }[]
+
+export type Paginator<T> = {
+    page_name: string,
+    current_page: number,
+    data: T[],
+    first_page_url: string|null,
+    from: number,
+    last_page: number,
+    last_page_url: string|null,
+    links: {
+        url: string|null,
+        label: string,
+        active: boolean,
+    }[],
+    next_page_url: string|null,
+    path: string,
+    per_page: number,
+    prev_page_url: string|null,
+    to: number,
+    total: number,
+}
 

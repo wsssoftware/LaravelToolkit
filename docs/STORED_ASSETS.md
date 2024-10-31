@@ -1,4 +1,4 @@
-### STORED ASSETS
+### Stored Assets
 
 After all you must configure the models that will use stored assets feature.
 

@@ -2,7 +2,6 @@
 
 namespace LaravelToolkit\ACL;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use LaravelToolkit\Facades\ACL;
 
@@ -11,19 +10,14 @@ use LaravelToolkit\Facades\ACL;
  */
 trait HasUserPermission
 {
-    public static function bootHasUserPermission()
-    {
-        self::retrieved(function (Model $model) {
-            /** @var \LaravelToolkit\ACL\HasUserPermission $model */
-            if (ACL::model() !== null && $model->userPermission()->doesntExist()) {
-                $model->userPermission()->create(['roles' => collect()]);
-                $model->refresh();
-            }
-        });
-    }
 
     public function userPermission(): HasOne
     {
-        return $this->hasOne(ACL::model() ?? UserPermission::class, 'id', 'id');
+        $relation = $this->hasOne(ACL::model() ?? UserPermission::class, 'id', 'id');
+        if ($relation->doesntExist()) {
+            $relation->create(['roles' => collect()]);
+            $this->refresh();
+        }
+        return $relation;
     }
 }

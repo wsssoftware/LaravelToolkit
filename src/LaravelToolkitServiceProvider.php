@@ -11,8 +11,10 @@ use LaravelToolkit\ACL\MakeACLModelCommand;
 use LaravelToolkit\ACL\RolesFirewallMiddleware;
 use LaravelToolkit\Facades\ACL;
 use LaravelToolkit\Macros\BlueprintMacro;
+use LaravelToolkit\Macros\BuilderMacro;
 use LaravelToolkit\Macros\CollectionMacro;
 use LaravelToolkit\Macros\RequestMacro;
+use LaravelToolkit\Macros\RouterMacro;
 use LaravelToolkit\Macros\StrMacro;
 use LaravelToolkit\Routing\Redirector as PackageRedirector;
 use LaravelToolkit\SEO\SEOComponent;
@@ -87,8 +89,10 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
     protected function bootMacros(): void
     {
         (new BlueprintMacro)();
+        (new BuilderMacro)();
         (new CollectionMacro)();
         (new RequestMacro)();
+        (new RouterMacro)();
         (new StrMacro)();
     }
 
