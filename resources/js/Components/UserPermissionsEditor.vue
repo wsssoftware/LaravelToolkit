@@ -3,10 +3,10 @@
     <Column :sortable="true" sort-field="policy_name" field="policy_name" header="Grupo">
       <template #body="slotProps">
         <div class="flex flex-col items-center justify-center">
-          <span class="text-lg font-bold text-gray-700 text-center w-full max-w-xs">
+          <span class="text-lg font-bold text-gray-700 dark:text-gray-200 text-center w-full max-w-xs">
             {{ slotProps.data.policy_name }}
           </span>
-          <span v-if="slotProps.data.policy_description" class="text-xs text-gray-500 text-center w-full max-w-xs">
+          <span v-if="slotProps.data.policy_description" class="text-xs text-gray-500 dark:text-gray-300 text-center w-full max-w-xs">
             {{ slotProps.data.policy_description }}
           </span>
         </div>
@@ -14,13 +14,13 @@
     </Column>
     <Column field="rule_name" header="Regra">
       <template #body="slotProps">
-          <span class="capitalize text-gray-700 text-sm font-bold">{{ slotProps.data.rule_name }}</span>
+          <span class="capitalize text-gray-700 dark:text-gray-200 text-sm font-bold">{{ slotProps.data.rule_name }}</span>
       </template>
     </Column>
     <Column field="rule_description" header="Regra">
       <template #body="slotProps">
           <div class="text-center">
-              <span class="capitalize text-gray-500 text-xs">{{ slotProps.data.rule_description }}</span>
+              <span class="capitalize text-gray-500 dark:text-gray-300 text-xs">{{ slotProps.data.rule_description }}</span>
           </div>
       </template>
     </Column>
