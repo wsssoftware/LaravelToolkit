@@ -2,6 +2,17 @@
 
 All notable changes to `LaravelToolkit` will be documented in this file.
 
+## 1.0.0-beta.1 - 2024-10-31
+
+### What's Changed
+
+* fixed problem on duplicated messages due async inertia v2 by @allanmcarvalho in https://github.com/wsssoftware/LaravelToolkit/pull/15
+* implemented lazy load by @allanmcarvalho in https://github.com/wsssoftware/LaravelToolkit/pull/16
+* Format components by @allanmcarvalho in https://github.com/wsssoftware/LaravelToolkit/pull/17
+* PrimeVue data adapter by @allanmcarvalho in https://github.com/wsssoftware/LaravelToolkit/pull/18
+
+**Full Changelog**: https://github.com/wsssoftware/LaravelToolkit/compare/0.9.2...1.0.0-beta.1
+
 ## 0.9.2 - 2024-10-28
 
 **Full Changelog**: https://github.com/wsssoftware/LaravelToolkit/compare/0.9.1...0.9.2
