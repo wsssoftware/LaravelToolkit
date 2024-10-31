@@ -64,6 +64,11 @@ export default defineComponent({
             this.load();
         }
     },
+    beforeUpdate() {
+        if (this.paginator === undefined) {
+            this.load();
+        }
+    },
     methods: {
         clearFilters(): void {
             Object.keys(this.filters).forEach((key: string) => {
