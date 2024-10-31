@@ -10,7 +10,6 @@ use LaravelToolkit\Facades\ACL;
  */
 trait HasUserPermission
 {
-
     public function userPermission(): HasOne
     {
         $relation = $this->hasOne(ACL::model() ?? UserPermission::class, 'id', 'id');
@@ -18,6 +17,7 @@ trait HasUserPermission
             $relation->create(['roles' => collect()]);
             $this->refresh();
         }
+
         return $relation;
     }
 }

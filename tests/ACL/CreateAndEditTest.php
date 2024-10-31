@@ -6,7 +6,6 @@ use LaravelToolkit\Tests\Model\User;
 use LaravelToolkit\Tests\Model\UserPermission;
 use LaravelToolkit\Tests\UserRole;
 
-
 it('create user permission on user create', function () {
     expect(User::query()->where('id', 100)->exists())
         ->toBeFalse()

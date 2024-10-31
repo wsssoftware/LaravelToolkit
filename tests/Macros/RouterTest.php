@@ -1,7 +1,5 @@
 <?php
 
-
-
 it('can generate column', function () {
     $route = Route::getAndPost('/', function () {});
     expect($route)

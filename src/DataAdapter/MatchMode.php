@@ -20,10 +20,10 @@ enum MatchMode: string
         $builder->where($column, $this->operator(), $this->value($value), 'and');
     }
 
-    public function applyGlobal(EloquentBuilder $builder, null|array $columns, string $value): void
+    public function applyGlobal(EloquentBuilder $builder, ?array $columns, string $value): void
     {
         $columns ??= collect(Schema::getColumns($builder->getModel()->getTable()))
-            ->map(fn(array $column) => $column['name'])
+            ->map(fn (array $column) => $column['name'])
             ->toArray();
         $builder->whereNested(function (QueryBuilder $query) use ($columns, $value) {
             foreach ($columns as $column) {

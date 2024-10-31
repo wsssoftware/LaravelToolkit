@@ -9,13 +9,12 @@ use Illuminate\Support\Arr;
 
 readonly class QueryHelper
 {
-
     protected array $options;
 
     public function __construct(
         protected Request $request,
         protected string $pageName,
-        protected null|array $globalFilterColumn,
+        protected ?array $globalFilterColumn,
     ) {
         $this->options = $this->request->post("$this->pageName-options", []);
         //
@@ -41,7 +40,7 @@ readonly class QueryHelper
             $filters = $filters->where('global', false);
         }
         $builder->whereNested(function (QueryBuilder $query) use ($filters) {
-            $filters->each(fn(Filter $filter) => $filter->matchMode->apply($query, $filter->field, $filter->value));
+            $filters->each(fn (Filter $filter) => $filter->matchMode->apply($query, $filter->field, $filter->value));
         });
     }
 
@@ -51,8 +50,8 @@ readonly class QueryHelper
             return;
         }
         collect(explode(',', $sort))
-            ->map(fn(string $item) => explode(':', $item))
-            ->mapWithKeys(fn(array $item) => [$item[0] => $item[1]])
+            ->map(fn (string $item) => explode(':', $item))
+            ->mapWithKeys(fn (array $item) => [$item[0] => $item[1]])
             ->each(function (string $dir, string $column) use ($builder) {
                 $builder->orderBy($column, $dir);
             });

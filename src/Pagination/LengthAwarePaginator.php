@@ -10,7 +10,7 @@ class LengthAwarePaginator extends \Illuminate\Pagination\LengthAwarePaginator
     {
         return [
             'page_name' => Arr::get($this->options, 'pageName'),
-            ...parent::toArray()
+            ...parent::toArray(),
         ];
     }
 }

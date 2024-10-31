@@ -18,7 +18,7 @@ class BuilderMacro
     {
         Builder::macro(
             'primevueData',
-            function (string $pageName = 'page', array $globalFilterColumn = null): LengthAwarePaginator {
+            function (string $pageName = 'page', ?array $globalFilterColumn = null): LengthAwarePaginator {
                 app()->bind(LaravelLengthAwarePaginator::class, LengthAwarePaginator::class);
                 $helper = app()->make(
                     QueryHelper::class,
@@ -26,10 +26,9 @@ class BuilderMacro
                 );
                 $helper->filters($this);
                 $helper->sort($this);
+
                 return $this->paginate($helper->rows(), pageName: $pageName);
             }
         );
     }
-
-
 }
