@@ -32,6 +32,7 @@ readonly class QueryHelper
 
     public function filters(EloquentBuilder $builder): void
     {
+
         if (($filters = Filter::create($this->get('filters'), $this->get('global_filter_name'))) === null) {
             return;
         }
@@ -49,6 +50,7 @@ readonly class QueryHelper
         if (($sort = $this->get('sort')) === null) {
             return;
         }
+        $builder->reorder();
         collect(explode(',', $sort))
             ->map(fn (string $item) => explode(':', $item))
             ->mapWithKeys(fn (array $item) => [$item[0] => $item[1]])
