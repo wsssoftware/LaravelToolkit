@@ -2,6 +2,14 @@
 
 All notable changes to `LaravelToolkit` will be documented in this file.
 
+## 1.0.0-beta.5 - 2024-11-01
+
+### What's Changed
+
+* Document formatter component by @allanmcarvalho in https://github.com/wsssoftware/LaravelToolkit/pull/21
+
+**Full Changelog**: https://github.com/wsssoftware/LaravelToolkit/compare/1.0.0-beta.4...1.0.0-beta.5
+
 ## 1.0.0-beta.4 - 2024-11-01
 
 ### What's Changed
