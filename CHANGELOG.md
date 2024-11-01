@@ -2,6 +2,14 @@
 
 All notable changes to `LaravelToolkit` will be documented in this file.
 
+## 1.0.0-beta.4 - 2024-11-01
+
+### What's Changed
+
+* Fix on data adapter sort by @allanmcarvalho in https://github.com/wsssoftware/LaravelToolkit/pull/20
+
+**Full Changelog**: https://github.com/wsssoftware/LaravelToolkit/compare/1.0.0-beta.3...1.0.0-beta.4
+
 ## 1.0.0-beta.3 - 2024-10-31
 
 **Full Changelog**: https://github.com/wsssoftware/LaravelToolkit/compare/1.0.0-beta.2...1.0.0-beta.3
