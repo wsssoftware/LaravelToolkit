@@ -49,6 +49,7 @@ readonly class QueryHelper
         if (($sort = $this->get('sort')) === null) {
             return;
         }
+        $builder->reorder();
         collect(explode(',', $sort))
             ->map(fn (string $item) => explode(':', $item))
             ->mapWithKeys(fn (array $item) => [$item[0] => $item[1]])
