@@ -3,7 +3,6 @@
       ref="input"
       :auto-clear="false"
       v-model="value"
-      :unmask="true"
       :mask="mask"
   />
 </template>
