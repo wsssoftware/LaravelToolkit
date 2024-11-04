@@ -13,3 +13,14 @@ it('can apply mask', function () {
         ->toEqual('12');
 
 });
+
+it('can format personal name', function () {
+    expect(Str::personalName('ALLAN MARIUCCI DE CARVALHO'))
+        ->toEqual('Allan Mariucci de Carvalho')
+        ->and(str('ALLAN MARIUCCI DE CARVALHO')->personalName())
+        ->toEqual('Allan Mariucci de Carvalho')
+        ->and(Str::personalName('luiz ap. de carvalho'))
+        ->toEqual('Luiz Ap. de Carvalho')
+        ->and(str('Luiz ap. De Carvalho')->personalName())
+        ->toEqual('Luiz Ap. de Carvalho');
+});
