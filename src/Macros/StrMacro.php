@@ -82,7 +82,7 @@ class StrMacro
                 ->map(function (string $word) use ($toIgnore) {
                     $word = mb_strtolower($word);
                     if (! in_array($word, $toIgnore)) {
-                        $word = mb_ucfirst($word);
+                        $word = mb_strtoupper(mb_substr($word, 0, 1)).mb_substr($word, 1);
                     }
 
                     return $word;
