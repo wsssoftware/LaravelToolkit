@@ -2,6 +2,15 @@
 
 All notable changes to `LaravelToolkit` will be documented in this file.
 
+## 1.0.0-beta.6 - 2024-11-04
+
+### What's Changed
+
+* Phone and zip masks ans some improvements by @allanmcarvalho in https://github.com/wsssoftware/LaravelToolkit/pull/22
+* Complex input mask added by @allanmcarvalho in https://github.com/wsssoftware/LaravelToolkit/pull/23
+
+**Full Changelog**: https://github.com/wsssoftware/LaravelToolkit/compare/1.0.0-beta.5...1.0.0-beta.6
+
 ## 1.0.0-beta.5 - 2024-11-01
 
 ### What's Changed
