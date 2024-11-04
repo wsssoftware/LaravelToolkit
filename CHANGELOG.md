@@ -2,6 +2,14 @@
 
 All notable changes to `LaravelToolkit` will be documented in this file.
 
+## 1.0.0-beta.7 - 2024-11-04
+
+### What's Changed
+
+* Personal name stringable formatation by @allanmcarvalho in https://github.com/wsssoftware/LaravelToolkit/pull/24
+
+**Full Changelog**: https://github.com/wsssoftware/LaravelToolkit/compare/1.0.0-beta.6...1.0.0-beta.7
+
 ## 1.0.0-beta.6 - 2024-11-04
 
 ### What's Changed
