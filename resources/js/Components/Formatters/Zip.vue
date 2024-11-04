@@ -3,15 +3,15 @@
     {{ fFinalValue }}
   </template>
   <span v-else>
-    {{ fFinalValue }}
-  </span>
+        {{ fFinalValue }}
+    </span>
 </template>
 
 <script lang="ts">
 import {defineComponent} from "vue";
 
 export default defineComponent({
-  name: "Document",
+  name: "Zip",
   props: {
     asTemplate: Boolean,
     value: String,
@@ -22,16 +22,11 @@ export default defineComponent({
       if (typeof this.$slots.default === 'function' && this.$slots.default()[0] !== undefined) {
         fallback = this.$slots?.default()[0].children as string;
       }
-      return (this.value ?? fallback).replace(/[^a-zA-Z0-9]/g, '');
+      return (this.value ?? fallback).replace(/[^0-9]/g, '');
     },
     fFinalValue(): string {
-      let v = this.finalValue;
-      if (v.length === 11) {
-        return `${v.substring(0, 3)}.${v.substring(3, 6)}.${v.substring(6, 9)}-${v.substring(9, 11)}`
-      } else if (v.length === 14) {
-        return `${v.substring(0, 2)}.${v.substring(2, 5)}.${v.substring(5, 8)}/${v.substring(8, 12)}-${v.substring(12, 15)}`
-      }
-      return this.finalValue
+      let value = this.finalValue;
+      return `${value.substring(0, 2)}.${value.substring(2, 5)}-${value.substring(5, 8)}`
     }
   },
 });
