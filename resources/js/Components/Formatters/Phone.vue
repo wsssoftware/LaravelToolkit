@@ -26,8 +26,7 @@ export default defineComponent({
     },
     fFinalValue(): string {
       let value = this.finalValue;
-      const regex = /^1[0-9]{2}$/;
-      if (value.length === 3 && regex.test(value)) {
+      if (value.length === 3 && /^1[0-9]{2}$/.test(value)) {
         return value;
       } else if (/^[1-9][0-9]9$/.test(value.substring(0, 3))) {
         return `(${value.substring(0, 2)}) ${value.substring(3, 2)}  ${value.substring(3, 7)}-${value.substring(7, 11)}`
