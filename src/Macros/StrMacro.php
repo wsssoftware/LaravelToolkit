@@ -10,6 +10,7 @@ class StrMacro
     public function __invoke(): void
     {
         $this->applyMask();
+        $this->personalName();
     }
 
     public function applyMask(): void
@@ -63,6 +64,34 @@ class StrMacro
 
         Stringable::macro('applyMask', function (string $mask): Stringable {
             return new Stringable(Str::applyMask($this->value, $mask));
+        });
+    }
+
+    public function personalName(): void
+    {
+        Str::macro('personalName', function (string $name): string {
+            $toIgnore = [
+                'da', 'de', 'di', 'do', 'du',
+                'das', 'des', 'dis', 'dos', 'dus',
+                'a', 'e', 'i', 'o', 'u',
+                'as', 'es', 'is', 'os', 'us',
+                'd’',
+            ];
+            $words = str($name)->deduplicate()
+                ->explode(' ')
+                ->map(function (string $word) use ($toIgnore) {
+                    $word = mb_strtolower($word);
+                    if (! in_array($word, $toIgnore)) {
+                        $word = mb_ucfirst($word);
+                    }
+
+                    return $word;
+                });
+
+            return $words->implode(' ');
+        });
+        Stringable::macro('personalName', function (): Stringable {
+            return new Stringable(Str::personalName($this->value));
         });
     }
 }
