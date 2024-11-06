@@ -2,6 +2,14 @@
 
 All notable changes to `LaravelToolkit` will be documented in this file.
 
+## 1.0.0-beta.9 - 2024-11-06
+
+### What's Changed
+
+* Colors helper by @allanmcarvalho in https://github.com/wsssoftware/LaravelToolkit/pull/26
+
+**Full Changelog**: https://github.com/wsssoftware/LaravelToolkit/compare/1.0.0-beta.8...1.0.0-beta.9
+
 ## 1.0.0-beta.8 - 2024-11-04
 
 ### What's Changed
