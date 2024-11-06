@@ -91,6 +91,35 @@ class Colors
         };
     }
 
+    public function palete(
+        ?string $hex = null,
+        ?array $rbg = null,
+        ?array $hsl = null,
+        ColorStep $baseStep = ColorStep::STEP_500,
+        ColorFormat $outputFormat = ColorFormat::HEX,
+    ): array {
+        return [];
+    }
+
+    public function randHex(): string
+    {
+        return $this->rgbToHex(...$this->randRgb());
+    }
+
+    public function randHsl(): array
+    {
+        return $this->rgbToHsl(...$this->randRgb());
+    }
+
+    public function randRgb(): array
+    {
+        return [
+            rand(0, 255),
+            rand(0, 255),
+            rand(0, 255),
+        ];
+    }
+
     public function rgbToHex(int $r, int $g, int $b): string
     {
         return sprintf('#%02X%02X%02X', $r, $g, $b);
