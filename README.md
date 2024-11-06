@@ -51,6 +51,9 @@ To Laravel Toolkit be able to compile its tailwind you must add this line on tai
 ### [ACL](docs/ACL.md)
 A minimalist implementation of an access control level
 
+### [Colors](docs/COLORS.md)
+A toolset of helpers for colors.
+
 ### [Flash](docs/FLASH.md)
 Simple flash messages from backend to front end.
 
