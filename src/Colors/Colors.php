@@ -91,14 +91,26 @@ class Colors
         };
     }
 
-    public function palete(
+    /**
+     * @throws \Exception
+     */
+    public function palette(
         ?string $hex = null,
         ?array $rbg = null,
         ?array $hsl = null,
         ColorStep $baseStep = ColorStep::STEP_500,
         ColorFormat $outputFormat = ColorFormat::HEX,
+        float $thresholdLightest = 5,
+        float $thresholdDarkest = 6,
     ): array {
-        return [];
+        [$h, $s, $l] = match (true) {
+            ! empty($hex) => $this->hexToHsl($hex),
+            ! empty($rbg) => $this->rgbToHsl(...$rbg),
+            ! empty($hsl) => $hsl,
+            default => throw new Exception('You must provide at lest one color'),
+        };
+
+        return (new PaletteGenerator($h, $s, $l, $baseStep, $outputFormat, $thresholdLightest, $thresholdDarkest))();
     }
 
     public function randHex(): string
