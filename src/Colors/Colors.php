@@ -96,7 +96,7 @@ class Colors
      */
     public function palette(
         ?string $hex = null,
-        ?array $rbg = null,
+        ?array $rgb = null,
         ?array $hsl = null,
         ColorStep $baseStep = ColorStep::STEP_500,
         ColorFormat $outputFormat = ColorFormat::HEX,
@@ -105,9 +105,9 @@ class Colors
     ): array {
         [$h, $s, $l] = match (true) {
             ! empty($hex) => $this->hexToHsl($hex),
-            ! empty($rbg) => $this->rgbToHsl(...$rbg),
+            ! empty($rgb) => $this->rgbToHsl(...$rgb),
             ! empty($hsl) => $hsl,
-            default => throw new Exception('You must provide at lest one color'),
+            default => throw new Exception('You must provide one color format.'),
         };
 
         return (new PaletteGenerator($h, $s, $l, $baseStep, $outputFormat, $thresholdLightest, $thresholdDarkest))();

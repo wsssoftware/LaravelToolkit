@@ -11,7 +11,7 @@ use LaravelToolkit\Colors\ColorStep;
  * @method static int[] hexToRgb(string $hex)
  * @method static string hslToHex(int $h, int $s, int $l)
  * @method static array hslToRgb(int $h, int $s, int $l)
- * @method static array palette(null|string $hex = null, null|array $rbg = null, null|array $hsl = null, ColorStep $baseStep = ColorStep::STEP_500, ColorFormat $outputFormat = ColorFormat::HEX, float $thresholdLightest = 0.9, float $thresholdDarkest = 0.1)
+ * @method static array palette(null|string $hex = null, null|array $rgb = null, null|array $hsl = null, ColorStep $baseStep = ColorStep::STEP_500, ColorFormat $outputFormat = ColorFormat::HEX, float $thresholdLightest = 5, float $thresholdDarkest = 6)
  * @method static string randHex()
  * @method static array randHsl()
  * @method static array randRgb()

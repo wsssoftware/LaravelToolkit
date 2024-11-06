@@ -1,5 +1,7 @@
 <?php
 
+use LaravelToolkit\Colors\ColorFormat;
+use LaravelToolkit\Colors\ColorStep;
 use LaravelToolkit\Facades\Colors;
 
 it('test conversion', function (string $hex, array $rgb, array $hsl, string $hexFromHsl, $rgbFromHsl) {
@@ -87,7 +89,12 @@ it('test conversion', function (string $hex, array $rgb, array $hsl, string $hex
     ],
 ]);
 
-it('rand colors', function () {
+it('throw on invalid hex on conversion', function () {
+    expect(fn () => Colors::hexToRgb('#CC'))
+        ->toThrow('Invalid hex string');
+});
+
+it('can generate rand colors', function () {
     expect(Colors::randHex())
         ->toBeString()
         ->toStartWith('#')
@@ -98,3 +105,54 @@ it('rand colors', function () {
         ->toBeArray()
         ->toHaveCount(3);
 })->repeat(5);
+
+it('test color step enum', function () {
+    $enum = ColorStep::STEP_200;
+    expect($enum->beforeSteps())
+        ->toBeArray()
+        ->toHaveCount(2)
+        ->each
+        ->toBeInstanceOf(ColorStep::class)
+        ->and($enum->afterSteps())
+        ->toBeArray()
+        ->toHaveCount(8)
+        ->each
+        ->toBeInstanceOf(ColorStep::class);
+
+    $enum = ColorStep::STEP_400;
+    expect($enum->beforeSteps())
+        ->toBeArray()
+        ->toHaveCount(4)
+        ->each
+        ->toBeInstanceOf(ColorStep::class)
+        ->and($enum->afterSteps())
+        ->toBeArray()
+        ->toHaveCount(6)
+        ->each
+        ->toBeInstanceOf(ColorStep::class);
+});
+
+it('can generate a palette', function () {
+    expect(Colors::palette('#b2d600'))
+        ->toBeArray()
+        ->toHaveCount(11)
+        ->toHaveKeys([50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950])
+        ->each
+        ->toBeString()
+        ->and(Colors::palette(rgb: [211, 246, 219], outputFormat: ColorFormat::RGB))
+        ->toBeArray()
+        ->toHaveCount(11)
+        ->toHaveKeys([50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950])
+        ->each
+        ->toBeArray()
+        ->toHaveKeys([0, 1, 2])
+        ->and(Colors::palette(hsl: [134, 66, 89], outputFormat: ColorFormat::HSL))
+        ->toBeArray()
+        ->toHaveCount(11)
+        ->toHaveKeys([50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950])
+        ->each
+        ->toBeArray()
+        ->toHaveKeys([0, 1, 2])
+        ->and(fn () => Colors::palette())
+        ->toThrow('You must provide one color format.');
+});
