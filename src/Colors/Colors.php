@@ -44,15 +44,15 @@ class Colors
         }
     }
 
-    public function hlsToHex(float $h, float $s, float $l): string
+    public function hslToHex(int $h, int $s, int $l): string
     {
-        return $this->rgbToHex(...$this->hlsToRgb($h, $s, $l));
+        return $this->rgbToHex(...$this->hslToRgb($h, $s, $l));
     }
 
     /**
      * @return array{0: int, 1: int, 2: int}
      */
-    public function hlsToRgb(float $h, float $s, float $l): array
+    public function hslToRgb(int $h, int $s, int $l): array
     {
         $h /= 360;
         $s /= 100;
@@ -125,9 +125,9 @@ class Colors
         }
 
         return [
-            round($h * 360),
-            round($s * 100),
-            round($l * 100),
+            intval(round($h * 360)),
+            intval(round($s * 100)),
+            intval(round($l * 100)),
         ];
     }
 }
