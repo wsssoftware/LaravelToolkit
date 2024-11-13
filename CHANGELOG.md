@@ -2,6 +2,10 @@
 
 All notable changes to `LaravelToolkit` will be documented in this file.
 
+## 1.0.0-beta.10 - 2024-11-13
+
+**Full Changelog**: https://github.com/wsssoftware/LaravelToolkit/compare/1.0.0-beta.9...1.0.0-beta.10
+
 ## 1.0.0-beta.9 - 2024-11-06
 
 ### What's Changed
