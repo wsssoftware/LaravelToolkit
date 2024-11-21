@@ -2,16 +2,15 @@
 
 namespace LaravelToolkit\DataAdapter;
 
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 readonly class Filter
 {
+
     private function __construct(
         public string $field,
-        public MatchMode $matchMode,
-        public string $value,
-        public bool $global
+        public Operator $operator,
+        public Collection $constraints,
     ) {}
 
     /**
@@ -23,17 +22,19 @@ readonly class Filter
             return null;
         }
 
-        return collect($filters)
+        $collection = collect($filters)
             ->mapWithKeys(function (array $filter, string $key) use ($globalFilterName) {
-                if (
-                    ($mode = MatchMode::tryFrom(Arr::get($filter, 'matchMode', ''))) !== null &&
-                    ! empty(($value = Arr::get($filter, 'value')))
-                ) {
-                    return [$key => new static($key, $mode, $value, $key === $globalFilterName)];
-                }
-
-                return [$key => null];
+                return [$key => self::createItem($key, $globalFilterName, $filter)];
             })
             ->filter(fn ($filter) => $filter instanceof Filter);
+
+        return $collection->count() > 0 ? $collection : null;
+    }
+
+    protected static function createItem(string $field, string $globalFilterName, array $data): ?Filter
+    {
+        ray($field, $globalFilterName, $data);
+
+        return null;
     }
 }

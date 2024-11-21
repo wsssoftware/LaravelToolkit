@@ -12,12 +12,7 @@
 <script lang="ts">
 import {defineComponent, PropType} from "vue";
 import {Paginator} from "../index";
-import {
-    DataTableFilterMeta, DataTableFilterMetaData,
-    DataTablePageEvent,
-    DataTableSortEvent,
-    DataTableSortMeta
-} from "primevue/datatable";
+import {DataTableFilterMeta, DataTablePageEvent, DataTableSortEvent, DataTableSortMeta} from "primevue/datatable";
 import {router} from "@inertiajs/vue3";
 import {debounce} from 'lodash-es';
 
@@ -98,22 +93,13 @@ export default defineComponent({
             this.loading = true
             let data: {[key: string]: any} = {}
             let sort = undefined
-            let filters :DataTableFilterMeta = {}
             if (this.sort && this.sort.length > 0) {
                 sort = this.sort?.map((i: DataTableSortMeta) => `${i.field}:${i.order === 1 ? 'asc' : 'desc'}`).join(',')
-            }
-            if (this.filters) {
-                Object.keys(this.filters).forEach(key => {
-                    let filter = this.filters[key] as DataTableFilterMetaData
-                    if (!!filter.value) {
-                        filters[key] = filter;
-                    }
-                })
             }
             data[`${this.pageName}-options`] = {
                 rows: this.rows,
                 sort: sort,
-                filters: Object.keys(filters).length > 0 ? filters : undefined,
+                filters: Object.keys(this.filters).length > 0 ? this.filters : undefined,
                 global_filter_name: this.globalFilterName,
             }
             data[this.pageName] = undefined;
