@@ -15,24 +15,24 @@ enum MatchMode: string
     case EQUALS = 'equals';
     case NOT_EQUALS = 'notEquals';
 
-    public function apply(QueryBuilder $builder, string $column, string $value): void
+    public function apply(QueryBuilder $builder, string $column, mixed $value, string $boolean): void
     {
-        $builder->where($column, $this->operator(), $this->value($value), 'and');
+        $builder->where($column, $this->operator($value), $this->value($value), $boolean);
     }
 
-    public function applyGlobal(EloquentBuilder $builder, ?array $columns, string $value): void
+    public function applyGlobal(EloquentBuilder $builder, ?array $columns, mixed $value): void
     {
         $columns ??= collect(Schema::getColumns($builder->getModel()->getTable()))
             ->map(fn (array $column) => $column['name'])
             ->toArray();
         $builder->whereNested(function (QueryBuilder $query) use ($columns, $value) {
             foreach ($columns as $column) {
-                $query->where($column, $this->operator(), $this->value($value), 'or');
+                $query->where($column, $this->operator($value), $this->value($value), 'or');
             }
         });
     }
 
-    protected function operator(): string
+    protected function operator(mixed $value): string
     {
         return match ($this) {
             self::STARTS_WITH, self::CONTAINS, self::ENDS_WITH => 'LIKE',
@@ -44,6 +44,7 @@ enum MatchMode: string
 
     protected function value(string $value): string
     {
+        $value = trim($value);
         return match ($this) {
             self::STARTS_WITH => "$value%",
             self::CONTAINS, self::NOT_CONTAINS => "%$value%",

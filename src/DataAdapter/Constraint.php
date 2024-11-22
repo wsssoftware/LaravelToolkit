@@ -2,12 +2,22 @@
 
 namespace LaravelToolkit\DataAdapter;
 
+use Illuminate\Support\Arr;
+
 readonly class Constraint
 {
-    public function __construct(
+    protected function __construct(
         public MatchMode $matchMode,
-        public string $value,
+        public mixed $value,
     ) {
         //
+    }
+
+    public static function create(array $constraint): ?self
+    {
+        $matchMode = MatchMode::tryFrom(Arr::get($constraint, 'matchMode'));
+        $value = Arr::get($constraint, 'value');
+
+        return $matchMode !== null && (is_bool($value) || ! empty($value)) ? new self($matchMode, $value) : null;
     }
 }
