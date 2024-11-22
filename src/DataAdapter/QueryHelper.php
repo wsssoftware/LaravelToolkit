@@ -14,7 +14,7 @@ readonly class QueryHelper
     public function __construct(
         protected Request $request,
         protected string $pageName,
-        protected ?array $globalFilterColumn,
+        protected ?array $globalFilterColumns,
     ) {
         $this->options = $this->request->post("$this->pageName-options", []);
         //
@@ -32,17 +32,14 @@ readonly class QueryHelper
 
     public function filters(EloquentBuilder $builder): void
     {
-
         if (($filters = Filter::create($this->get('filters'), $this->get('global_filter_name'))) === null) {
             return;
         }
         if (($filter = $filters->where('global', true)->first()) !== null) {
-            $filter->matchMode->applyGlobal($builder, $this->globalFilterColumn, $filter->value);
+            $filter->applyGlobal($builder, $this->globalFilterColumns);
             $filters = $filters->where('global', false);
         }
-        $builder->whereNested(function (QueryBuilder $query) use ($filters) {
-            $filters->each(fn (Filter $filter) => $filter->matchMode->apply($query, $filter->field, $filter->value));
-        });
+        $builder->whereNested(fn (QueryBuilder $q) => $filters->each(fn (Filter $f) => $f->apply($q)));
     }
 
     public function sort(EloquentBuilder $builder): void
