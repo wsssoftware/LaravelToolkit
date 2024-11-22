@@ -163,7 +163,11 @@ it('test id filter with contains', function () {
         'page-options' => [
             'global_filter_name' => 'global',
             'rows' => 15,
-            'filters' => ['id' => ['value' => '1', 'matchMode' => 'contains']],
+            'filters' => [
+                'id' => [
+                    'operator' => 'and', 'constraints' => [['value' => '1', 'matchMode' => 'contains']],
+                ],
+            ],
         ],
     ]);
     $response->assertSuccessful();
