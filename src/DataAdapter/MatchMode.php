@@ -45,6 +45,7 @@ enum MatchMode: string
     protected function value(string $value): string
     {
         $value = trim($value);
+
         return match ($this) {
             self::STARTS_WITH => "$value%",
             self::CONTAINS, self::NOT_CONTAINS => "%$value%",

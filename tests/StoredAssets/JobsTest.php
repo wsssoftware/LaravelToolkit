@@ -5,7 +5,6 @@ use LaravelToolkit\Facades\StoredAssets;
 use LaravelToolkit\StoredAssets\Jobs\GarbageCollectorManager;
 use LaravelToolkit\Tests\Model\Product;
 
-
 it('can run all jobs', function () {
     \Illuminate\Support\Facades\Log::spy();
     $disk = Storage::fake('local');
