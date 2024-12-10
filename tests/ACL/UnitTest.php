@@ -36,3 +36,23 @@ it('PolicyMaker works properly', function () {
         ->and(fn () => $policy->create->foo)
         ->toThrow('Property foo does not exist.');
 });
+
+it('PolicyMaker has default rules working', function () {
+    $pm = new PolicyMaker(collect(), 'users', 'Users', 'Manage users')
+        ->cancel()
+        ->create()
+        ->delete()
+        ->download()
+        ->execute()
+        ->export()
+        ->import()
+        ->read()
+        ->share()
+        ->update()
+        ->upload();
+
+    expect($pm)
+        ->toBeInstanceOf(PolicyMaker::class)
+        ->and($pm->rules->count())
+        ->toBe(11);
+});
