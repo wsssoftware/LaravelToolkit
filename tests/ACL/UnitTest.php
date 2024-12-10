@@ -38,7 +38,7 @@ it('PolicyMaker works properly', function () {
 });
 
 it('PolicyMaker has default rules working', function () {
-    $pm = new PolicyMaker(collect(), 'users', 'Users', 'Manage users')
+    $pm = (new PolicyMaker(collect(), 'users', 'Users', 'Manage users'))
         ->cancel()
         ->create()
         ->delete()
