@@ -121,6 +121,18 @@ class PolicyMaker
         return $this;
     }
 
+    public function print(?int $denyStatus = null): self
+    {
+        $this->rule(
+            'print',
+            __('laraveltoolkit::acl.print.name'),
+            __('laraveltoolkit::acl.print.description', ['name' => mb_strtolower($this->name)]),
+            $denyStatus
+        );
+
+        return $this;
+    }
+
     public function read(?int $denyStatus = null): self
     {
         $this->rule(

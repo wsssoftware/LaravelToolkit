@@ -46,6 +46,7 @@ it('PolicyMaker has default rules working', function () {
         ->execute()
         ->export()
         ->import()
+        ->print()
         ->read()
         ->share()
         ->update()

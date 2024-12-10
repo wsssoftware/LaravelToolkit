@@ -37,6 +37,10 @@ return [
         'name' => 'Importar',
         'description' => 'Permite ao usuário importar :name',
     ],
+    'print' => [
+        'name' => 'Imprimir',
+        'description' => 'Permite ao usuário imprimir :name',
+    ],
     'read' => [
         'name' => 'Ler',
         'description' => 'Permite ao usuário ler :name',

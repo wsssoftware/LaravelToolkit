@@ -37,6 +37,10 @@ return [
         'name' => 'Import',
         'description' => 'Allows to user import :name',
     ],
+    'print' => [
+        'name' => 'Print',
+        'description' => 'Allows to user print :name',
+    ],
     'read' => [
         'name' => 'Read',
         'description' => 'Allows to user read :name',
