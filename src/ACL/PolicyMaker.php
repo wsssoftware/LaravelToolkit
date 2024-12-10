@@ -27,14 +27,26 @@ class PolicyMaker
         return $this;
     }
 
+    public function cancel(?int $denyStatus = null): self
+    {
+        $this->rule(
+            'cancel',
+            __('laraveltoolkit::acl.cancel.name'),
+            __('laraveltoolkit::acl.cancel.description', ['name' => mb_strtolower($this->name)]),
+            $denyStatus,
+        );
+
+        return $this;
+    }
+
     public function create(?int $denyStatus = null): self
     {
-        $this->rules->put('create', new Rule(
+        $this->rule(
             'create',
             __('laraveltoolkit::acl.create.name'),
             __('laraveltoolkit::acl.create.description', ['name' => mb_strtolower($this->name)]),
             $denyStatus
-        ));
+        );
 
         return $this;
     }
@@ -51,24 +63,84 @@ class PolicyMaker
 
     public function delete(?int $denyStatus = null): self
     {
-        $this->rules->put('delete', new Rule(
+        $this->rule(
             'delete',
             __('laraveltoolkit::acl.delete.name'),
             __('laraveltoolkit::acl.delete.description', ['name' => mb_strtolower($this->name)]),
-            $denyStatus
-        ));
+            $denyStatus,
+        );
+
+        return $this;
+    }
+
+    public function download(?int $denyStatus = null): self
+    {
+        $this->rule(
+            'download',
+            __('laraveltoolkit::acl.download.name'),
+            __('laraveltoolkit::acl.download.description', ['name' => mb_strtolower($this->name)]),
+            $denyStatus,
+        );
+
+        return $this;
+    }
+
+    public function execute(?int $denyStatus = null): self
+    {
+        $this->rule(
+            'execute',
+            __('laraveltoolkit::acl.execute.name'),
+            __('laraveltoolkit::acl.execute.description', ['name' => mb_strtolower($this->name)]),
+            $denyStatus,
+        );
+
+        return $this;
+    }
+
+    public function export(?int $denyStatus = null): self
+    {
+        $this->rule(
+            'export',
+            __('laraveltoolkit::acl.export.name'),
+            __('laraveltoolkit::acl.export.description', ['name' => mb_strtolower($this->name)]),
+            $denyStatus,
+        );
+
+        return $this;
+    }
+
+    public function import(?int $denyStatus = null): self
+    {
+        $this->rule(
+            'import',
+            __('laraveltoolkit::acl.import.name'),
+            __('laraveltoolkit::acl.import.description', ['name' => mb_strtolower($this->name)]),
+            $denyStatus,
+        );
 
         return $this;
     }
 
     public function read(?int $denyStatus = null): self
     {
-        $this->rules->put('read', new Rule(
+        $this->rule(
             'read',
             __('laraveltoolkit::acl.read.name'),
             __('laraveltoolkit::acl.read.description', ['name' => mb_strtolower($this->name)]),
             $denyStatus
-        ));
+        );
+
+        return $this;
+    }
+
+    public function share(?int $denyStatus = null): self
+    {
+        $this->rule(
+            'share',
+            __('laraveltoolkit::acl.share.name'),
+            __('laraveltoolkit::acl.share.description', ['name' => mb_strtolower($this->name)]),
+            $denyStatus,
+        );
 
         return $this;
     }
@@ -80,12 +152,24 @@ class PolicyMaker
 
     public function update(?int $denyStatus = null): self
     {
-        $this->rules->put('update', new Rule(
+        $this->rule(
             'update',
             __('laraveltoolkit::acl.update.name'),
             __('laraveltoolkit::acl.update.description', ['name' => mb_strtolower($this->name)]),
             $denyStatus
-        ));
+        );
+
+        return $this;
+    }
+
+    public function upload(?int $denyStatus = null): self
+    {
+        $this->rule(
+            'upload',
+            __('laraveltoolkit::acl.upload.name'),
+            __('laraveltoolkit::acl.upload.description', ['name' => mb_strtolower($this->name)]),
+            $denyStatus
+        );
 
         return $this;
     }
