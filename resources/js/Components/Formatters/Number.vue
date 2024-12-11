@@ -42,13 +42,21 @@ export default defineComponent({
             finalValue: this.startValue
         }
     },
-    watch: {
-        newValue(newValue: number) {
+    mounted() {
+        this.handleChange(this.value ?? 0)
+    },
+    methods: {
+        handleChange(newValue: number) {
             if (this.animated) {
                 gsap.to(this, { duration: this.animationDuration, finalValue: Number(newValue) || 0 })
             } else {
                 this.finalValue = this.newValue
             }
+        }
+    },
+    watch: {
+        newValue(newValue: number) {
+           this.handleChange(newValue)
         }
     },
 });
