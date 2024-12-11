@@ -1,5 +1,6 @@
 <?php
 
+use LaravelToolkit\Tests\Model\Product;
 use LaravelToolkit\Tests\Model\User;
 
 it('test base functionality', function () {
@@ -297,4 +298,42 @@ it('test id filter with not equals', function () {
         ->toBeArray()
         ->and($response->json('users.total'))
         ->toEqual(100);
+});
+
+it('test join feature', function () {
+    $user = User::factory()->create();
+    foreach (range(1, 10) as $item) {
+        Product::create(['user_id' => $user->id, 'name' => 'Product '.$item]);
+    }
+    Route::getAndPost('/', function () {
+        return response()->json([
+            'products' => Product::query()
+                ->select('products.*', 'users.email_verified_at')
+                ->selectSub('users.name', 'user_name')
+                ->join('users', 'users.id', '=', 'products.user_id')
+                ->primevueData(),
+        ]);
+    });
+    $response = $this->post('/', [
+        'page' => 1,
+        'page-options' => [
+            'global_filter_name' => 'global',
+            'rows' => 15,
+            'filters' => [
+                'user_name' => [
+                    'operator' => 'and', 'constraints' => [['value' => $user->name, 'matchMode' => 'contains']],
+                ],
+                'email_verified_at' => [
+                    'operator' => 'and', 'constraints' => [['value' => 'foo', 'matchMode' => 'notContains']],
+                ],
+            ],
+        ],
+    ]);
+    $response->assertSuccessful();
+    expect($response->content())
+        ->toBeJson()
+        ->and($response->json('products'))
+        ->toBeArray()
+        ->and($response->json('products.total'))
+        ->toEqual(10);
 });

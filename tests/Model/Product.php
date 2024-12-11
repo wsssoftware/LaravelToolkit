@@ -7,6 +7,7 @@ use LaravelToolkit\StoredAssets\HasStoredAssets;
 
 /**
  * @property int $id
+ * @property int|null $user_id
  * @property string|\LaravelToolkit\StoredAssets\Assets $image
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
@@ -22,6 +23,7 @@ class Product extends Model
      */
     protected $fillable = [
         'id',
+        'user_id',
         'image',
         'created_at',
         'updated_at',
