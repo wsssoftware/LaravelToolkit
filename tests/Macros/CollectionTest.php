@@ -61,3 +61,25 @@ it('test value label', function () {
         ->toBeArray()
         ->toHaveKeys(['foo', 'bar']);
 });
+
+it('test value label with keys to preserve', function () {
+    $collection = collect([
+        new FakeModel(['id' => 1, 'name' => 'João', 'optional' => 'optional1']),
+        new FakeModel(['id' => 2, 'name' => 'Paulo', 'optional' => 'optional2']),
+        new FakeModel(['id' => 3, 'name' => 'Lucas', 'optional' => 'optional3']),
+        new FakeModel(['id' => 4, 'name' => 'Fabio', 'optional' => 'optional4']),
+        new FakeModel(['id' => 5, 'name' => 'Carlos', 'optional' => 'optional5']),
+    ]);
+    expect($collection->toValueLabelFromObject('name', 'id', keysToPreserve: ['optional']))
+        ->toBeInstanceOf(Collection::class)
+        ->toHaveCount(5)
+        ->each
+        ->toBeArray()
+        ->toHaveKeys(['label', 'value', 'optional'])
+        ->and($collection->toValueLabelFromObject('name', 'id', 'foo', 'bar', keysToPreserve: ['abc' => 'optional']))
+        ->toBeInstanceOf(Collection::class)
+        ->toHaveCount(5)
+        ->each
+        ->toBeArray()
+        ->toHaveKeys(['foo', 'bar', 'abc']);
+});
