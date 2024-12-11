@@ -32,7 +32,7 @@ readonly class QueryHelper
 
     public function filters(EloquentBuilder $builder): void
     {
-        if (($filters = Filter::create($this->get('filters'), $this->get('global_filter_name'))) === null) {
+        if (($filters = Filter::create($this->get('filters'), $this->get('global_filter_name'), $builder)) === null) {
             return;
         }
         if (($filter = $filters->where('global', true)->first()) !== null) {
