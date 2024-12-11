@@ -53,8 +53,19 @@ class CollectionMacro
         );
         Collection::macro(
             'toValueLabelFromObject',
-            function (string $label, string $value, string $labelKey = 'label', string $valueKey = 'value'): Collection {
+            function (
+                string $label,
+                string $value,
+                string $labelKey = 'label',
+                string $valueKey = 'value',
+                array $keysToPreserve = [],
+            ): Collection {
                 return $this->map(fn (object $item) => [
+                    ...collect($keysToPreserve)
+                        ->mapWithKeys(fn (string $key, mixed $index) => [
+                            is_string($index) && ! is_numeric($index) ? $index : $key => $item->{$key},
+                        ])
+                        ->toArray(),
                     $valueKey => $item->{$value},
                     $labelKey => $item->{$label},
                 ]);
