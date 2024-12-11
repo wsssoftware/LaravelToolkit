@@ -55,5 +55,5 @@ it('PolicyMaker has default rules working', function () {
     expect($pm)
         ->toBeInstanceOf(PolicyMaker::class)
         ->and($pm->rules->count())
-        ->toBe(11);
+        ->toBe(12);
 });
