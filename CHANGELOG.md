@@ -2,6 +2,14 @@
 
 All notable changes to `LaravelToolkit` will be documented in this file.
 
+## 1.0.0-beta.15 - 2024-12-11
+
+### What's Changed
+
+* Add support for preserving additional keys in macro of to label value by @allanmcarvalho in https://github.com/wsssoftware/LaravelToolkit/pull/32
+
+**Full Changelog**: https://github.com/wsssoftware/LaravelToolkit/compare/1.0.0-beta.14...1.0.0-beta.15
+
 ## 1.0.0-beta.14 - 2024-12-11
 
 ### What's Changed
