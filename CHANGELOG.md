@@ -2,6 +2,14 @@
 
 All notable changes to `LaravelToolkit` will be documented in this file.
 
+## 1.0.0-beta.17 - 2024-12-12
+
+### What's Changed
+
+* Add NumberMacro for currency spelling support by @allanmcarvalho in https://github.com/wsssoftware/LaravelToolkit/pull/33
+
+**Full Changelog**: https://github.com/wsssoftware/LaravelToolkit/compare/1.0.0-beta.16...1.0.0-beta.17
+
 ## 1.0.0-beta.16 - 2024-12-11
 
 **Full Changelog**: https://github.com/wsssoftware/LaravelToolkit/compare/1.0.0-beta.15...1.0.0-beta.16
