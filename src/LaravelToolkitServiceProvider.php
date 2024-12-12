@@ -13,6 +13,7 @@ use LaravelToolkit\Facades\ACL;
 use LaravelToolkit\Macros\BlueprintMacro;
 use LaravelToolkit\Macros\BuilderMacro;
 use LaravelToolkit\Macros\CollectionMacro;
+use LaravelToolkit\Macros\NumberMacro;
 use LaravelToolkit\Macros\RequestMacro;
 use LaravelToolkit\Macros\RouterMacro;
 use LaravelToolkit\Macros\StrMacro;
@@ -91,6 +92,7 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
         (new BlueprintMacro)();
         (new BuilderMacro)();
         (new CollectionMacro)();
+        (new NumberMacro)();
         (new RequestMacro)();
         (new RouterMacro)();
         (new StrMacro)();
