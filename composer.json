@@ -18,7 +18,7 @@
         "php": "^8.3",
         "ext-dom": "*",
         "ext-intl": "*",
-        "inertiajs/inertia-laravel": "^v1.3.0|^2.x-dev",
+        "inertiajs/inertia-laravel": "^v1.3.0|^v2.0.0",
         "jaybizzle/crawler-detect": "^v1.2.120",
         "spatie/laravel-package-tools": "^1.16.5",
         "illuminate/contracts": "^11.24"
