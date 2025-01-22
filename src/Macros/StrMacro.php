@@ -69,7 +69,10 @@ class StrMacro
 
     public function personalName(): void
     {
-        Str::macro('personalName', function (string $name): string {
+        Str::macro('personalName', function (?string $name): ?string {
+            if ($name === null) {
+                return null;
+            }
             $toIgnore = [
                 'da', 'de', 'di', 'do', 'du',
                 'das', 'des', 'dis', 'dos', 'dus',

@@ -22,5 +22,13 @@ it('can format personal name', function () {
         ->and(Str::personalName('luiz ap. de carvalho'))
         ->toEqual('Luiz Ap. de Carvalho')
         ->and(str('Luiz ap. De Carvalho')->personalName())
-        ->toEqual('Luiz Ap. de Carvalho');
+        ->toEqual('Luiz Ap. de Carvalho')
+        ->and(Str::personalName(''))
+        ->toEqual('')
+        ->and(str('')->personalName())
+        ->toEqual('')
+        ->and(Str::personalName(null))
+        ->toBeNull()
+        ->and(str(null)->personalName()->value())
+        ->toEqual('');
 });
