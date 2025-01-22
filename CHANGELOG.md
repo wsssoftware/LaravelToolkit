@@ -2,6 +2,14 @@
 
 All notable changes to `LaravelToolkit` will be documented in this file.
 
+## 1.0.0-beta.18 - 2025-01-14
+
+### What's Changed
+
+* Bump codecov/codecov-action from 5.1.1 to 5.1.2 by @dependabot in https://github.com/wsssoftware/LaravelToolkit/pull/34
+
+**Full Changelog**: https://github.com/wsssoftware/LaravelToolkit/compare/1.0.0-beta.17...1.0.0-beta.18
+
 ## 1.0.0-beta.17 - 2024-12-12
 
 ### What's Changed
