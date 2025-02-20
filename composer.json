@@ -15,8 +15,8 @@
     }
   ],
   "require": {
-    "ext-bcmath": "*",
     "php": "^8.4",
+    "ext-bcmath": "*",
     "ext-dom": "*",
     "ext-intl": "*",
     "inertiajs/inertia-laravel": "^v1.3.0|^v2.0.0",
