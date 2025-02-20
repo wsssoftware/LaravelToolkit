@@ -58,10 +58,10 @@ class NumberMacro
                 ?float $min = null,
                 ?float $max = null,
             ): BcNumber {
-                $value = new BcNumber(strval($value));
-                $min = is_float($min) ? new BcNumber(strval($min)) : null;
-                $max = is_float($max) ? new BcNumber(strval($max)) : null;
-                $step = new BcNumber(strval($step));
+                $value = floatToBcNumber($value);
+                $min = is_float($min) ? floatToBcNumber(strval($min)) : null;
+                $max = is_float($max) ? floatToBcNumber(strval($max)) : null;
+                $step = floatToBcNumber(strval($step));
 
                 $value = $value
                     ->div($step)

@@ -24,6 +24,7 @@ it('can round as multiple', function () {
     $num8 = Number::roundAsMultipleOf(1.025, 0.01, RoundingMode::PositiveInfinity)->value;
     $num9 = Number::roundAsMultipleOf(0.001, 0.01, RoundingMode::HalfAwayFromZero, 0.01)->value;
     $num10 = Number::roundAsMultipleOf(20, 0.01, RoundingMode::PositiveInfinity, max: 10)->value;
+    $num11 = Number::roundAsMultipleOf(0.00000000005, 0.0000000001, RoundingMode::HalfAwayFromZero)->value;
 
     expect($num1)->toEqual('1.03')
         ->and($num2)->toEqual('1.02')
@@ -34,5 +35,5 @@ it('can round as multiple', function () {
         ->and($num7)->toEqual('1.02')
         ->and($num8)->toEqual('1.03')
         ->and($num9)->toEqual('0.01')
-        ->and($num10)->toEqual('10');
+        ->and($num11)->toEqual('0.0000000001');
 });
