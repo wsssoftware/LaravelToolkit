@@ -2,13 +2,16 @@
 
 namespace LaravelToolkit\Macros;
 
+use BcMath\Number as BcNumber;
 use Illuminate\Support\Number;
+use RoundingMode;
 
 class NumberMacro
 {
     public function __invoke(): void
     {
         $this->spellCurrency();
+        $this->roundAsMultipleOf();
     }
 
     public function spellCurrency(): void
@@ -42,5 +45,35 @@ class NumberMacro
 
             return implode(' ', $spelled);
         });
+    }
+
+    public function roundAsMultipleOf(): void
+    {
+        Number::macro(
+            'roundAsMultipleOf',
+            function (
+                float $value,
+                float $step,
+                RoundingMode $roundMode,
+                ?float $min = null,
+                ?float $max = null,
+            ): BcNumber {
+                $value = new BcNumber(strval($value));
+                $min = is_float($min) ? new BcNumber(strval($min)) : null;
+                $max = is_float($max) ? new BcNumber(strval($max)) : null;
+                $step = new BcNumber(strval($step));
+
+                $value = $value
+                    ->div($step)
+                    ->round(0, $roundMode)
+                    ->mul($step);
+
+                return match (true) {
+                    $min instanceof BcNumber && $value < $min => $min,
+                    $max instanceof BcNumber && $value > $max => $max,
+                    default => $value
+                };
+            }
+        );
     }
 }
