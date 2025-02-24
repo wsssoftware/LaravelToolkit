@@ -21,7 +21,7 @@ jobs:
         laravel: [12.*, 11.*]
         stability: [prefer-lowest, prefer-stable]
         include:
-          - laravel: 11.*
+          - laravel: 12.*
             testbench: ^v10.0
             carbon: ^3.0
 
