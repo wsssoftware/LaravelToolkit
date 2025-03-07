@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use LaravelToolkit\ACL\MakeACLModelCommand;
 use LaravelToolkit\ACL\RolesFirewallMiddleware;
+use LaravelToolkit\Deploy\Commands\Run;
+use LaravelToolkit\Deploy\Commands\Step1;
+use LaravelToolkit\Deploy\Commands\Step2;
 use LaravelToolkit\Facades\ACL;
 use LaravelToolkit\Macros\BlueprintMacro;
 use LaravelToolkit\Macros\BuilderMacro;
@@ -50,6 +53,9 @@ class LaravelToolkitServiceProvider extends PackageServiceProvider
             ->hasCommands([
                 MakeACLModelCommand::class,
                 MakeStoreRecipeCommand::class,
+                Run::class,
+                Step1::class,
+                Step2::class,
             ])
             ->hasMigration('create_stored_assets_table')
             ->hasMigration('create_user_permissions_table');

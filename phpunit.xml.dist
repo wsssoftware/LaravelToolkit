@@ -27,5 +27,8 @@
         <include>
             <directory suffix=".php">./src</directory>
         </include>
+        <exclude>
+            <directory suffix=".php">./src/Deploy/Commands/Actions</directory>
+        </exclude>
     </source>
 </phpunit>

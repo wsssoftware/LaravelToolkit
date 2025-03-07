@@ -8,7 +8,12 @@ use LaravelToolkit\Actions\Filepond\Restore;
 use LaravelToolkit\Actions\Filepond\Revert;
 use LaravelToolkit\Actions\Flash\GetMessages;
 use LaravelToolkit\Actions\Sitemap\RenderSitemap;
+use LaravelToolkit\Deploy\MaintenanceController;
 use LaravelToolkit\Facades\SEO;
+
+Route::middleware('web')
+    ->domain(config('laraveltoolkit.deploy.domain'))
+    ->get(config('laraveltoolkit.deploy.path'), MaintenanceController::class)->name('maintenance');
 
 Route::middleware('web')->get('/lt/flash-get-messages', GetMessages::class)
     ->name('lt.flash.get_messages');
