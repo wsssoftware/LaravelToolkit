@@ -46,7 +46,7 @@ class Step1 extends Step
     {
         $params = [
             '--secret' => config('laraveltoolkit.deploy.bypass_secret'),
-            '--redirect' => config('laraveltoolkit.deploy.path'),
+            '--redirect' => route('maintenance'),
         ];
         $this->call('down', $params);
     }
