@@ -54,6 +54,9 @@ A minimalist implementation of an access control level
 ### [Colors](docs/COLORS.md)
 A toolset of helpers for colors.
 
+### [Deploy](docs/DEPLOY.md)
+A simple deploy and maintenance mode.
+
 ### [Flash](docs/FLASH.md)
 Simple flash messages from backend to front end.
 

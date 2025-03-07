@@ -1,15 +1,34 @@
 <?php
 
+use LaravelToolkit\Deploy\Intent;
+use LaravelToolkit\StoredAssets\FilenameStoreType;
+use LaravelToolkit\StoredAssets\StoredAssetModel;
+
 return [
 
     /*
     |--------------------------------------------------------------------------
-    | Extended redirector
+    | Deploy config
     |--------------------------------------------------------------------------
     | Extends the default Laravel redirector to handle with Inertia redirects
     | to another domains.
     */
-    'extended_redirector' => true,
+    'deploy' => [
+        'domain' => env('APP_DOMAIN', 'localhost'),
+        'path' => '/maintenance',
+        'bypass_secret' => \Illuminate\Support\Str::password(10, true, true, false),
+        'inertia_component' => 'Maintenance',
+        'redirect_callback' => '/',
+        'step1' => [],
+        'step2' => [
+            Intent::make(\LaravelToolkit\Deploy\Commands\Actions\NpmUpdateAndBuild::class),
+            Intent::make(\LaravelToolkit\Deploy\Commands\Actions\MigrateDatabase::class),
+            Intent::make(\LaravelToolkit\Deploy\Commands\Actions\SeedDatabase::class),
+            Intent::make(\LaravelToolkit\Deploy\Commands\Actions\CacheApplication::class),
+            Intent::make(\LaravelToolkit\Deploy\Commands\Actions\TerminateHorizon::class),
+            Intent::make(\LaravelToolkit\Deploy\Commands\Actions\Pm2Restart::class),
+        ],
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -164,9 +183,9 @@ return [
     */
     'stored_assets' => [
         'disk' => env('LT_STORED_ASSETS_DISK', env('FILESYSTEM_DISK', 'local')),
-        'model' => \LaravelToolkit\StoredAssets\StoredAssetModel::class,
+        'model' => StoredAssetModel::class,
         'path' => env('LT_STORED_ASSETS_PATH', 'assets'),
-        'filename_store_type' => \LaravelToolkit\StoredAssets\FilenameStoreType::UUID,
+        'filename_store_type' => FilenameStoreType::UUID,
         'subdirectory_chars' => env('LT_STORED_ASSETS_SUBDIRECTORY_CHARS', 2),
         'trash_bin' => [
             'folder' => env('LT_STORED_ASSETS_TRASH_BIN_FOLDER', '$TRASH_BIN'),
