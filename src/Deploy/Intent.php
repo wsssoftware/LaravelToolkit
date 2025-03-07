@@ -19,9 +19,9 @@ readonly class Intent
         return [$commandFqn, $arguments];
     }
 
-    public function call(Command $command): void
+    public function call(Command $command): int
     {
-        $command->call($this->commandFqn, $this->arguments);
+        return $command->call($this->commandFqn, $this->arguments);
     }
 
     public function shortLabel(): string

@@ -14,7 +14,7 @@ abstract class Action extends Command
 
     public static function fake(): void
     {
-        static::$fake = true;
+        self::$fake = true;
     }
 
     protected function getCwdOption(): string

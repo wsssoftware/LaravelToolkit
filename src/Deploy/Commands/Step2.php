@@ -35,6 +35,8 @@ class Step2 extends Step
         Cache::forget('deploy::must_offer_step_two_as_default');
         MaintenanceDisabledEvent::dispatch();
 
+        $this->components->info('Step 2 finished, your deploy was done!');
+
         return self::SUCCESS;
     }
 }
