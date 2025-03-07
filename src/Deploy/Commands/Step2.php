@@ -6,8 +6,6 @@ use Illuminate\Support\Facades\Cache;
 use LaravelToolkit\Deploy\Events\MaintenanceDisabledEvent;
 use LaravelToolkit\Deploy\Intent;
 
-use function Laravel\Prompts\confirm;
-
 class Step2 extends Step
 {
     /**
@@ -33,33 +31,8 @@ class Step2 extends Step
         $this->intents(2)
             ->each(fn (Intent $intent) => $intent->call($this));
 
-        //        $this->call('migrate', ['--force' => true]);
-        //        $this->call('db:seed', ['--force' => true]);
-        //
-        //        $this->call('cache:clear');
-        //
-        //        if (
-        //            $isProduction ||
-        //            confirm('This isn\'t a production application, do you want to cache route, config and views?', false)
-        //        ) {
-        //            $this->call('route:cache');
-        //            $this->call('config:cache');
-        //            $this->call('event:cache');
-        //            $this->call('view:cache');
-        //            $this->call('storage:link');
-        //        } else {
-        //            $this->call('route:clear');
-        //            $this->call('config:clear');
-        //            $this->call('event:clear');
-        //            $this->call('view:clear');
-        //        }
-        //
-        //        $this->call('horizon:terminate');
-        //        $this->call('pm2:restart');
-        //
-
         $this->call('up');
-        Cache::forget('must_offer_step_two_as_default');
+        Cache::forget('deploy::must_offer_step_two_as_default');
         MaintenanceDisabledEvent::dispatch();
 
         return self::SUCCESS;

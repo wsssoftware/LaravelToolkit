@@ -35,7 +35,7 @@ class Run extends Command
         $selected = select(
             'Witch step of deploy do you want to run?',
             [1 => $this->getLabel(1), 2 => $this->getLabel(2)],
-            Cache::has('must_offer_step_two_as_default') ? 2 : 1
+            Cache::has('deploy::must_offer_step_two_as_default') ? 2 : 1
         );
         if ($selected === 1) {
             $this->call('deploy:1');

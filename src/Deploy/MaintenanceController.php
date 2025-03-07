@@ -15,7 +15,7 @@ class MaintenanceController
     public function __invoke(Request $request): Response|RedirectResponse
     {
         if (! app()->isDownForMaintenance()) {
-            return redirect(request()->query('redirect') ?? config('laraveltoolkit.deploy.redirect_callback'));
+            return redirect(request()->query('redirect') ?? config('laraveltoolkit.deploy.default_redirect'));
         }
 
         return Inertia::render(config('laraveltoolkit.deploy.inertia_component'));

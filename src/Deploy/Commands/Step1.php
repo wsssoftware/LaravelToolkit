@@ -4,6 +4,7 @@ namespace LaravelToolkit\Deploy\Commands;
 
 use Illuminate\Support\Facades\Cache;
 use LaravelToolkit\Deploy\Events\MaintenanceEnabledEvent;
+use LaravelToolkit\Deploy\Intent;
 
 class Step1 extends Step
 {
@@ -26,19 +27,17 @@ class Step1 extends Step
      */
     public function handle(): int
     {
-        $this->components->info('Deploying application Step 1');
+        $this->components->alert('Deploying application Step 1');
 
         $this->down();
         MaintenanceEnabledEvent::dispatch();
 
-        //        $this->call('git:pull', ['--release' => '2.']);
-        //        Cache::forget(Onnix::VERSION_CACHE_KEY);
-        //
-        //        $this->call('composer:update');
-        //
-        //        $this->components->warn('Step 1 finished, php deploy gain and choose step 2');
+        $this->intents(1)
+            ->each(fn (Intent $intent) => $intent->call($this));
 
-        Cache::remember('must_offer_step_two_as_default', 300, fn () => true);
+        $this->components->warn('Step 1 finished, php deploy gain and choose step 2');
+
+        Cache::remember('deploy::must_offer_step_two_as_default', 300, fn () => true);
 
         return self::SUCCESS;
     }

@@ -18,8 +18,11 @@ return [
         'path' => '/maintenance',
         'bypass_secret' => \Illuminate\Support\Str::password(10, true, true, false),
         'inertia_component' => 'Maintenance',
-        'redirect_callback' => '/',
-        'step1' => [],
+        'default_redirect' => '/',
+        'step1' => [
+            Intent::make(\LaravelToolkit\Deploy\Commands\Actions\GitPull::class, ['--release' => '1.']),
+            Intent::make(\LaravelToolkit\Deploy\Commands\Actions\ComposerUpdate::class),
+        ],
         'step2' => [
             Intent::make(\LaravelToolkit\Deploy\Commands\Actions\NpmUpdateAndBuild::class),
             Intent::make(\LaravelToolkit\Deploy\Commands\Actions\MigrateDatabase::class),
