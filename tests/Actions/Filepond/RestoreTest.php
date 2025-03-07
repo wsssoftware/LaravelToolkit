@@ -7,8 +7,8 @@ it('can restore a file', function () {
     $id = Str::uuid()->toString();
     Filepond::disk()->put(Filepond::path($id, 'foo.zip'), 'content example');
 
-    $this->get(route('lt.filepond.restore', ['id' => $id]))
-        ->assertSuccessful()
+    $response = $this->get(route('lt.filepond.restore', ['id' => $id]));
+    $response->assertSuccessful()
         ->assertContent('content example')
         ->assertHeader('Content-Disposition', 'inline; filename="foo.zip"')
         ->assertHeader('Content-Type');

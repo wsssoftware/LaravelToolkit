@@ -15,6 +15,7 @@ class TestCase extends Orchestra
     protected function setUp(): void
     {
         parent::setUp();
+        $this->app->maintenanceMode()->deactivate();
 
         Factory::guessFactoryNamesUsing(
             fn (string $modelName) => 'LaravelToolkit\\Database\\Factories\\'.class_basename($modelName).'Factory'
