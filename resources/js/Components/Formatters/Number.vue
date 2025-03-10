@@ -17,6 +17,7 @@ export default defineComponent({
             type: Number,
             default: 1
         },
+        bigDecimals: Boolean,
         locale: String,
         options: Object as PropType<Intl.NumberFormatOptions>,
         startValue: {
@@ -42,13 +43,43 @@ export default defineComponent({
             finalValue: this.startValue
         }
     },
+    beforeMount() {
+        if (gsap.plugins['precise'] === undefined) {
+            gsap.registerPlugin({
+                name: "precise",
+                init(target, vars, tween, index, targets) {
+                    let data = this,
+                        p, value;
+                    data.t = target;
+                    for (p in vars) {
+                        value = vars[p];
+                        typeof(value) === "function" && (value = value.call(tween, index, target, targets));
+                        data.pt = {n: data.pt, p: p, s: target[p], c: value - target[p]};
+                        data._props.push(p);
+                    }
+                },
+                render(ratio, data) {
+                    let pt = data.pt;
+                    while (pt) {
+                        data.t[pt.p] = pt.s + pt.c * ratio;
+                        pt = pt.n;
+                    }
+                }
+            });
+        }
+    },
     mounted() {
         this.handleChange(this.value ?? 0)
     },
     methods: {
         handleChange(newValue: number) {
             if (this.animated) {
-                gsap.to(this, { duration: this.animationDuration, finalValue: Number(newValue) || 0 })
+                if(this.bigDecimals) {
+                    gsap.to(this, { duration: this.animationDuration, precise: {finalValue: newValue}})
+                } else {
+                    gsap.to(this, { duration: this.animationDuration, finalValue: newValue || 0 })
+                }
+
             } else {
                 this.finalValue = this.newValue
             }
