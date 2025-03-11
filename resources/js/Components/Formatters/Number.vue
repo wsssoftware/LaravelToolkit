@@ -17,7 +17,6 @@ export default defineComponent({
             type: Number,
             default: 1
         },
-        bigDecimals: Boolean,
         locale: String,
         options: Object as PropType<Intl.NumberFormatOptions>,
         startValue: {
@@ -32,57 +31,35 @@ export default defineComponent({
             if (typeof this.$slots.default === 'function' && this.$slots.default()[0] !== undefined) {
                 fallback = parseFloat(this.$slots?.default()[0].children as any);
             }
-            return this.value ?? fallback
+            return (this.value ?? fallback) * 100000;
         },
         fFinalValue(): string {
-            return Intl.NumberFormat(this.locale ?? this.$laravelToolkit.locale, this.options ?? {}).format(this.finalValue)
+            let value = this.finalValue / 100000;
+            if (this.options?.maximumFractionDigits || this.options?.maximumSignificantDigits) {
+                value = this.roundDecimal(value, this.options?.maximumFractionDigits ?? this.options?.maximumSignificantDigits)
+            }
+            return Intl.NumberFormat(this.locale ?? this.$laravelToolkit.locale, this.options ?? {}).format(value)
         }
     },
     data() {
         return {
-            finalValue: this.startValue
-        }
-    },
-    beforeMount() {
-        if (gsap.plugins['precise'] === undefined) {
-            gsap.registerPlugin({
-                name: "precise",
-                init(target, vars, tween, index, targets) {
-                    let data = this,
-                        p, value;
-                    data.t = target;
-                    for (p in vars) {
-                        value = vars[p];
-                        typeof(value) === "function" && (value = value.call(tween, index, target, targets));
-                        data.pt = {n: data.pt, p: p, s: target[p], c: value - target[p]};
-                        data._props.push(p);
-                    }
-                },
-                render(ratio, data) {
-                    let pt = data.pt;
-                    while (pt) {
-                        data.t[pt.p] = pt.s + pt.c * ratio;
-                        pt = pt.n;
-                    }
-                }
-            });
+            finalValue: this.startValue * 100000
         }
     },
     mounted() {
-        this.handleChange(this.value ?? 0)
+        this.handleChange((this.value ?? 0) * 100000)
     },
     methods: {
         handleChange(newValue: number) {
             if (this.animated) {
-                if(this.bigDecimals) {
-                    gsap.to(this, { duration: this.animationDuration, precise: {finalValue: newValue}})
-                } else {
-                    gsap.to(this, { duration: this.animationDuration, finalValue: newValue || 0 })
-                }
-
+                gsap.to(this, { duration: this.animationDuration, finalValue: newValue || 0 })
             } else {
                 this.finalValue = this.newValue
             }
+        },
+        roundDecimal(num: number, precision: number):number {
+            const p = Math.pow(10, precision);
+            return Math.round(num * p) / p;
         }
     },
     watch: {
