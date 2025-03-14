@@ -1,4 +1,5 @@
 export {default as Collapse} from './Components/Collapse.vue'
+export {default as Copy} from './Components/Copy.vue'
 export {default as DataTableAdapter} from './Components/DataTableAdapter.vue'
 export {default as DataViewAdapter} from './Components/DataViewAdapter.vue'
 export {default as FilepondInput} from './Components/Form/FilepondInput.vue'
