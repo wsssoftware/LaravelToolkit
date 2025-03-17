@@ -17,6 +17,7 @@ class GitPull extends Action
      * @var string
      */
     protected $signature = 'git:pull {--c|cwd= : Current work directory for command}
+                                     {--b|branch=main : Release that will be checked out}
                                      {--r|release= : Release that will be checked out}';
 
     /**
@@ -34,15 +35,16 @@ class GitPull extends Action
         if (self::$fake) {
             return self::SUCCESS;
         }
+        $mainBranch = $this->option('branch');
         $cwd = $this->getCwdOption();
         $release = $this->option('release');
         $this->components->info(sprintf('Running GIT git pull on "%s"', $cwd));
 
         $repository = (new Git)->open($cwd);
-        if ($repository->getCurrentBranchName() !== 'main') {
+        if ($repository->getCurrentBranchName() !== $mainBranch) {
             $this->components->warn(sprintf('Current branch is "%s", switching to "main"',
                 $repository->getCurrentBranchName()));
-            $repository->checkout('main');
+            $repository->checkout($mainBranch);
         }
         if ($repository->hasChanges()) {
             if (

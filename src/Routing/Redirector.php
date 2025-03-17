@@ -2,6 +2,7 @@
 
 namespace LaravelToolkit\Routing;
 
+use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
@@ -18,7 +19,7 @@ class Redirector extends \Illuminate\Routing\Redirector
         }
     }
 
-    protected function createRedirect($path, $status, $headers): Response
+    protected function createRedirect($path, $status, $headers): Response|Responsable
     {
         $host = $this->generator->getRequest()->getSchemeAndHttpHost();
         $isHttp = str($path)->startsWith(['http://', 'https://']);

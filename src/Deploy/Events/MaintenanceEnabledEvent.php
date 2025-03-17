@@ -30,4 +30,12 @@ class MaintenanceEnabledEvent implements ShouldBroadcastNow
             new Channel('deploy'),
         ];
     }
+
+    /**
+     * The event's broadcast name.
+     */
+    public function broadcastAs(): string
+    {
+        return 'server_down';
+    }
 }
