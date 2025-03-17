@@ -33,14 +33,14 @@ Flash::success('Success Test in other group')->withGroup('foo_bar');
 ```
 
 You must first configure primevue Toast service following [this guide](https://primevue.org/toast/) and then put `ToastReceiver`
-component on some Vue layout or where its needed.
+Composable on created Vue method to init it.
 
 ```vue
 
 <template>
     <div>
-        <ToastReceiver @close="event" @life-end="event"/>
-        <!-- or just  <ToastReceiver/>-->
+        <!-- lt-default is de default group -->
+        <Toast group="lt-default"/>
         <slot/>
     </div>
 </template>
@@ -48,21 +48,16 @@ component on some Vue layout or where its needed.
 <script lang="ts">
     import {defineComponent} from "vue";
     import {ToastReceiver} from 'laraveltoolkit';
-    import {Message} from "laraveltoolkit/resources/js/Flash";
+    import {Toast} from 'primevue';
 
     export default defineComponent({
         name: "Flash",
         components: {
-            ToastReceiver,
+            Toast,
         },
-        mounted() {
-
+        created() {
+            ToastReceiver(this.$toast)
         },
-        methods: {
-            event(message: Message) {
-                console.log(message)
-            }
-        }
     });
 </script>
 ```
