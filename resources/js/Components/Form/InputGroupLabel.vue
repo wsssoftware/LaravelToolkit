@@ -28,7 +28,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 label {
     @apply ml-1.5 flex items-center gap-x-1.5 text-primary-800 dark:text-primary-400;
     &.invalid {

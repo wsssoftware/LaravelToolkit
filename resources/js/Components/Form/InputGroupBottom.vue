@@ -39,7 +39,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .max-length-feedback {
     @apply text-gray-400 dark:text-gray-500 self-start mr-1.5 transition-all;
     &.warning1 {
