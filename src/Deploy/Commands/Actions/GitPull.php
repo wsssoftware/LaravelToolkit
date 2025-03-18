@@ -42,8 +42,11 @@ class GitPull extends Action
 
         $repository = (new Git)->open($cwd);
         if ($repository->getCurrentBranchName() !== $mainBranch) {
-            $this->components->warn(sprintf('Current branch is "%s", switching to "main"',
-                $repository->getCurrentBranchName()));
+            $this->components->warn(sprintf(
+                'Current branch is "%s", switching to "%s"',
+                $repository->getCurrentBranchName()),
+                $mainBranch
+            );
             $repository->checkout($mainBranch);
         }
         if ($repository->hasChanges()) {
@@ -63,7 +66,7 @@ class GitPull extends Action
             }
         }
 
-        $outputLines = spin(fn () => $repository->execute('pull', 'origin', 'main'), 'pulling git remote changes');
+        $outputLines = spin(fn () => $repository->execute('pull', 'origin', $mainBranch), 'pulling git remote changes');
         foreach ($outputLines as $output) {
             $this->components->info('GIT: '.$output);
         }
