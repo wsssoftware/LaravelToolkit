@@ -2,6 +2,10 @@
 
 All notable changes to `LaravelToolkit` will be documented in this file.
 
+## 1.5.1 - 2025-03-18
+
+**Full Changelog**: https://github.com/wsssoftware/LaravelToolkit/compare/1.5.0...1.5.1
+
 ## 1.5.0 - 2025-03-17
 
 **Full Changelog**: https://github.com/wsssoftware/LaravelToolkit/compare/1.4.0...1.5.0
