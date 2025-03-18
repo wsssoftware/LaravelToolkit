@@ -44,9 +44,9 @@ class GitPull extends Action
         if ($repository->getCurrentBranchName() !== $mainBranch) {
             $this->components->warn(sprintf(
                 'Current branch is "%s", switching to "%s"',
-                $repository->getCurrentBranchName()),
+                $repository->getCurrentBranchName(),
                 $mainBranch
-            );
+            ));
             $repository->checkout($mainBranch);
         }
         if ($repository->hasChanges()) {
