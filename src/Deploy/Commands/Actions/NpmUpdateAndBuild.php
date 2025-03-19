@@ -56,7 +56,7 @@ class NpmUpdateAndBuild extends Action
     protected function build(): void
     {
         $cwd = $this->getCwdOption();
-        $this->components->info(sprintf('Building resources on "%s"', $cwd), 300);
+        $this->components->info(sprintf('Building resources on "%s"', $cwd));
 
         $process = new Process(['npm', 'run', 'build'], $cwd, timeout: 300);
         $result = spin(fn () => $process->run(), 'Building Frontend using vite...');
