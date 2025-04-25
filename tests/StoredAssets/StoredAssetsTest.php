@@ -5,6 +5,7 @@ use LaravelToolkit\Facades\StoredAssets;
 use LaravelToolkit\StoredAssets\Assets;
 use LaravelToolkit\StoredAssets\FilenameStoreType;
 use LaravelToolkit\StoredAssets\StoredAssetModel;
+use LaravelToolkit\Tests\StoredAssets\MoveDirectoryFilesystemTest;
 
 it('can get base assets', function () {
     $path1 = StoredAssets::basePath();
@@ -170,4 +171,39 @@ it('can move to and restore from trash bin', function () {
         ->toBeFalse()
         ->and($disk->exists($originalPath))
         ->toBeTrue();
+});
+
+it('test move folder and fail on copy', function () {
+    Storage::extend('local', fn ($app, $config) => (new MoveDirectoryFilesystemTest)->failOnCopy());
+    $disk = Storage::disk('local');
+
+    $storedAsset = new LaravelToolkit\StoredAssets\StoredAssets;
+
+    Log::shouldReceive('warning')
+        ->once()
+        ->with('Failed to create a copy from "foo" to  "/abc"', Mockery::andAnyOtherArgs());
+
+    $classReflection = new ReflectionClass($storedAsset);
+    $method = $classReflection->getMethod('moveDirectory');
+    $method->setAccessible(true);
+    expect($method->invoke($storedAsset, $disk, 'foo', '/abc'))
+        ->toBeFalse();
+});
+
+it('test move folder and fail on delete', function () {
+    Storage::extend('local', fn ($app, $config) => (new MoveDirectoryFilesystemTest)->failOnDeleteDirectory());
+    $disk = Storage::disk('local');
+
+    $storedAsset = new LaravelToolkit\StoredAssets\StoredAssets;
+
+    Log::shouldReceive('warning')
+        ->once()
+        ->with('Failed to delete original directory "foo" after creating a copy to "/abc".',
+            Mockery::andAnyOtherArgs());
+
+    $classReflection = new ReflectionClass($storedAsset);
+    $method = $classReflection->getMethod('moveDirectory');
+    $method->setAccessible(true);
+    expect($method->invoke($storedAsset, $disk, 'foo', '/abc'))
+        ->toBeFalse();
 });

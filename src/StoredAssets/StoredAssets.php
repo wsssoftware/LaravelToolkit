@@ -4,6 +4,7 @@ namespace LaravelToolkit\StoredAssets;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -85,6 +86,41 @@ class StoredAssets
         return $this->modelFQN()::query();
     }
 
+    protected function moveDirectory($disk, string $from, string $to): bool
+    {
+        $disk->deleteDirectory($to);
+        $trimmedFrom = str($from)->trim('/')->trim('\\')->toString();
+        $trimmedTo = str($to)->trim('/')->trim('\\')->toString();
+        $toCopy = collect($disk->files($from, true))
+            ->mapWithKeys(
+                fn (string $path) => [
+                    $path => str($path)
+                        ->trim('/')
+                        ->trim('\\')
+                        ->replace($trimmedFrom, $trimmedTo)
+                        ->toString(),
+                ]
+            );
+        foreach ($toCopy as $copyFrom => $copyTo) {
+            if (! $disk->copy($copyFrom, $copyTo)) {
+                Log::warning(
+                    sprintf('Failed to create a copy from "%s" to  "%s"', $from, $to)
+                );
+
+                return false;
+            }
+        }
+        if (! $disk->deleteDirectory($from)) {
+            Log::warning(
+                sprintf('Failed to delete original directory "%s" after creating a copy to "%s".', $from, $to)
+            );
+
+            return false;
+        }
+
+        return true;
+    }
+
     public function moveToTrashBin(string $disk, string $uuid): bool
     {
         $disk = Storage::disk($disk);
@@ -94,7 +130,7 @@ class StoredAssets
             return false;
         }
 
-        return $disk->move($originalPath, $this->trashBinPath($trashBinUuidFolderName));
+        return $this->moveDirectory($disk, $originalPath, $this->trashBinPath($trashBinUuidFolderName));
     }
 
     public function path(string $uuid, ?string $path = null): string
@@ -125,7 +161,7 @@ class StoredAssets
             return false;
         }
 
-        return $disk->move($path, $this->path($uuid));
+        return $this->moveDirectory($disk, $path, $this->path($uuid));
     }
 
     public function subdirectoryChars(): int

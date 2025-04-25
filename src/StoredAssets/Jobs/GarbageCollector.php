@@ -59,8 +59,11 @@ class GarbageCollector implements ShouldBeUnique, ShouldQueue
                     ->get()
                     ->groupBy(fn (StoredAssetModel $asset) => "$asset->field::$asset->model")
                     ->each(fn (Collection $group) => $this->inspectGroup($group, $inspectedUuids));
-                $inspectedUuids->each(fn (string $uuid) => StoredAssets::moveToTrashBin($this->disk, $uuid));
-                self::incrementCount($inspectedUuids->count());
+
+                /** @var Collection $result */
+                $result = $inspectedUuids->mapWithKeys(fn (string $uuid
+                ) => [$uuid => StoredAssets::moveToTrashBin($this->disk, $uuid)]);
+                self::incrementCount($result->filter(fn (bool $success) => $success)->count());
             } while ($collection->count() > 0);
         }
     }
