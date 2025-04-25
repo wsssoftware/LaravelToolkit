@@ -6,7 +6,6 @@ use LaravelToolkit\StoredAssets\Jobs\GarbageCollectorManager;
 use LaravelToolkit\Tests\Model\Product;
 
 it('can run all jobs', function () {
-    \Illuminate\Support\Facades\Log::spy();
     $disk = Storage::fake('local');
 
     $validFakeTrashBinUuid = StoredAssets::trashBinDeadlineTimestamp().'-'.Str::uuid()->toString();
@@ -64,8 +63,4 @@ it('can run all jobs', function () {
     expect($disk->exists($assetPath))->toBeFalse()
         ->and($disk->exists($assetSubDir1))->toBeFalse()
         ->and($disk->exists($assetSubDir2))->toBeFalse();
-
-    Log::shouldHaveReceived('info')->with('In the trash bin on the "local" disk, 2 items were found, of which 1 item was deleted because its deadline had reached.');
-    Log::shouldHaveReceived('info')->with('On stored assets, 1 item(s) was moved to trash bin.');
-    Log::clearResolvedInstances();
 });

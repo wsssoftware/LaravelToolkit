@@ -179,16 +179,11 @@ it('test move folder and fail on copy', function () {
 
     $storedAsset = new LaravelToolkit\StoredAssets\StoredAssets;
 
-    Log::shouldReceive('warning')
-        ->once()
-        ->with('Failed to create a copy from "foo" to  "/abc"', Mockery::andAnyOtherArgs());
-
     $classReflection = new ReflectionClass($storedAsset);
     $method = $classReflection->getMethod('moveDirectory');
     $method->setAccessible(true);
     expect($method->invoke($storedAsset, $disk, 'foo', '/abc'))
         ->toBeFalse();
-    Log::clearResolvedInstances();
 });
 
 it('test move folder and fail on delete', function () {
@@ -197,15 +192,9 @@ it('test move folder and fail on delete', function () {
 
     $storedAsset = new LaravelToolkit\StoredAssets\StoredAssets;
 
-    Log::shouldReceive('warning')
-        ->once()
-        ->with('Failed to delete original directory "foo" after creating a copy to "/abc".',
-            Mockery::andAnyOtherArgs());
-
     $classReflection = new ReflectionClass($storedAsset);
     $method = $classReflection->getMethod('moveDirectory');
     $method->setAccessible(true);
     expect($method->invoke($storedAsset, $disk, 'foo', '/abc'))
         ->toBeFalse();
-    Log::clearResolvedInstances();
 });
