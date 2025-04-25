@@ -46,6 +46,7 @@ it('can run all jobs', function () {
         ->and($disk->exists($assetSubDir2))->toBeTrue()
         ->and($disk->exists($validFakeTrashBinPathname))->toBeTrue()
         ->and($disk->exists($invalidFakeTrashBinPathname))->toBeTrue();
+
     GarbageCollectorManager::dispatch();
 
     expect($disk->exists($assetPath))->toBeFalse()
@@ -66,4 +67,5 @@ it('can run all jobs', function () {
 
     Log::shouldHaveReceived('info')->with('In the trash bin on the "local" disk, 2 items were found, of which 1 item was deleted because its deadline had reached.');
     Log::shouldHaveReceived('info')->with('On stored assets, 1 item(s) was moved to trash bin.');
+    Log::clearResolvedInstances();
 });

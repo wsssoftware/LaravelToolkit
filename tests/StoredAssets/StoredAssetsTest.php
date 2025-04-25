@@ -188,6 +188,7 @@ it('test move folder and fail on copy', function () {
     $method->setAccessible(true);
     expect($method->invoke($storedAsset, $disk, 'foo', '/abc'))
         ->toBeFalse();
+    Log::clearResolvedInstances();
 });
 
 it('test move folder and fail on delete', function () {
@@ -206,4 +207,5 @@ it('test move folder and fail on delete', function () {
     $method->setAccessible(true);
     expect($method->invoke($storedAsset, $disk, 'foo', '/abc'))
         ->toBeFalse();
+    Log::clearResolvedInstances();
 });
