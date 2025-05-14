@@ -10,8 +10,8 @@ it('test extended fluent', function () {
             return \Illuminate\Database\Eloquent\Casts\Attribute::make(
                 get: fn ($value) => $this->attributes['name'].' '.$this->attributes['last_name'],
                 set: function ($value) {
-                    $this->attributes['name'] = explode(' ', $value)[0];
-                    $this->attributes['last_name'] = explode(' ', $value)[1];
+                    $this->name = explode(' ', $value)[0];
+                    $this->last_name = explode(' ', $value)[1];
                 },
             );
         }
