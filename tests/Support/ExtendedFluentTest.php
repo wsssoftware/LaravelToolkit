@@ -16,11 +16,9 @@ it('test extended fluent', function () {
             );
         }
     };
-    $fluent->fill([
-        'id' => 12,
-        'name' => 'Paul',
-        'last_name' => 'Job',
-    ]);
+
+    $fluent->name = 'Paul';
+    $fluent->last_name = 'Job';
 
     expect($fluent->full_name)
         ->toEqual('Paul Job');
