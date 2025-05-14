@@ -75,10 +75,11 @@ class RenderSitemap
 
         if ($size > $maxAllowedSize) {
             Log::warning(sprintf(
-                'The sitemap file size limit of %s was exceeded in %s. This may cause search engines to reject it.',
+                'The sitemap file size limit of %s was exceeded. This may cause search engines to reject it.',
                 Number::fileSize($maxAllowedSize, 2),
-                Number::fileSize($size - $maxAllowedSize, 2),
-            ));
+            ), [
+                'exceeded' => Number::fileSize($size - $maxAllowedSize, 2),
+            ]);
         }
 
         return $content;

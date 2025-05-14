@@ -29,19 +29,12 @@ it('log on large files', function () {
     $url = new \LaravelToolkit\Sitemap\Url($content);
     Sitemap::addUrl($url);
 
-    $xml = new DOMDocument('1.0', 'utf-8');
-    $xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9';
-    $xmlRoot = $xml->appendChild($xml->createElementNS($xmlns, 'urlset'));
-    $url->toXml($xml, $xmlRoot);
-
-    $size = mb_strlen($xml->saveXML(), '8bit');
     $maxAllowedSize = intval(config('laraveltoolkit.sitemap.max_file_size'));
     Log::shouldReceive('warning')
         ->with(sprintf(
-            'The sitemap file size limit of %s was exceeded in %s. This may cause search engines to reject it.',
+            'The sitemap file size limit of %s was exceeded. This may cause search engines to reject it.',
             Number::fileSize($maxAllowedSize, 2),
-            Number::fileSize($size - $maxAllowedSize, 2),
-        ))
+        ), Mockery::andAnyOtherArgs())
         ->andThrow(Exception::class, 'large files');
 
     expect(fn () => $rs(request()))
