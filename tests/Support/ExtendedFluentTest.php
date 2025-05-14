@@ -8,7 +8,7 @@ it('test extended fluent', function () {
         protected function fullName(): \Illuminate\Database\Eloquent\Casts\Attribute
         {
             return \Illuminate\Database\Eloquent\Casts\Attribute::make(
-                get: fn ($value) => $this->attributes['name'].' '.$this->attributes['last_name'],
+                get: fn ($value) => $this->name.' '.$this->last_name,
                 set: function ($value) {
                     $this->name = explode(' ', $value)[0];
                     $this->last_name = explode(' ', $value)[1];
