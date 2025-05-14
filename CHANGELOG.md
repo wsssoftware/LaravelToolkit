@@ -2,6 +2,14 @@
 
 All notable changes to `LaravelToolkit` will be documented in this file.
 
+## 1.6.0 - 2025-05-14
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 2.3.0 to 2.4.0 by @dependabot in https://github.com/wsssoftware/LaravelToolkit/pull/41
+
+**Full Changelog**: https://github.com/wsssoftware/LaravelToolkit/compare/1.5.3...1.6.0
+
 ## 1.5.3 - 2025-04-25
 
 ### What's Changed
