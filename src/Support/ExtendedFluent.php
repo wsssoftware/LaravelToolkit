@@ -30,7 +30,7 @@ abstract class ExtendedFluent extends Fluent
     {
         if ($attribute = $this->getAttribute($offset)) {
             $callable = $attribute->set;
-            $value = $callable($value);
+            $value = ! empty($callable) ? $callable($value) : $value;
         }
         parent::offsetSet($offset, $value);
     }
@@ -40,7 +40,7 @@ abstract class ExtendedFluent extends Fluent
         $value = parent::value($key, $default);
         if ($attribute = $this->getAttribute($key)) {
             $callable = $attribute->get;
-            $value = $callable($value);
+            $value = ! empty($callable) ? $callable($value) : $value;
         }
 
         return $value;
