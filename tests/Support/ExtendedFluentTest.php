@@ -34,7 +34,7 @@ it('test extended fluent', function () {
         ->toEqual('Bar');
 });
 
-it('test extended cast', function () {
+it('test extended casts', function () {
 
     $cast = AsExtendedFluent::castUsing([FooBarExtendedFluent::class]);
     $model = new User;

@@ -39,7 +39,7 @@ class AsExtendedFluent implements Castable
             public function get(Model $model, string $key, mixed $value, array $attributes)
             {
                 if (json_validate($value)) {
-                    return $this->fqn::make(json_decode($value, true));
+                    return new $this->fqn(json_decode($value, true));
                 }
 
                 return $value;
