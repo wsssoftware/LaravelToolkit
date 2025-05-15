@@ -2,6 +2,7 @@
 
 use LaravelToolkit\Tests\Model\Product;
 use LaravelToolkit\Tests\Model\User;
+use LaravelToolkit\Tests\UserResource;
 
 it('test base functionality', function () {
     User::factory()->count(100)->create();
@@ -336,4 +337,86 @@ it('test join feature', function () {
         ->toBeArray()
         ->and($response->json('products.total'))
         ->toEqual(10);
+});
+
+it('test closure functionality', function () {
+    User::factory()->count(100)->create();
+    Route::getAndPost('/', function () {
+        return response()->json([
+            'users' => User::query()->primevueData('foo', mapOrResource: fn (User $user) => ['id' => $user->id]),
+        ]);
+    });
+
+    $response = $this->post('/', [
+        'foo' => 2,
+        'foo-options' => [
+            'global_filter_name' => 'global',
+            'rows' => 22,
+        ],
+    ]);
+
+    $response->assertSuccessful();
+
+    expect($response->content())
+        ->toBeJson()
+        ->and($response->json('users'))
+        ->toBeArray()
+        ->toHaveKeys([
+            'page_name', 'current_page', 'data', 'first_page_url', 'from', 'last_page', 'last_page_url',
+            'links', 'next_page_url', 'path', 'per_page', 'prev_page_url', 'to', 'total',
+        ])
+        ->and($response->json('users.total'))
+        ->toEqual(101)
+        ->and($response->json('users.page_name'))
+        ->toEqual('foo')
+        ->and($response->json('users.current_page'))
+        ->toEqual(2)
+        ->and($response->json('users.data'))
+        ->toBeArray()
+        ->toHaveCount(22)
+        ->and($response->json('users.data.0'))
+        ->toHaveKey('id')
+        ->toBeArray()
+        ->toHaveCount(1);
+});
+
+it('test resource functionality', function () {
+    User::factory()->count(100)->create();
+    Route::getAndPost('/', function () {
+        return response()->json([
+            'users' => User::query()->primevueData('foo', mapOrResource: UserResource::class),
+        ]);
+    });
+
+    $response = $this->post('/', [
+        'foo' => 2,
+        'foo-options' => [
+            'global_filter_name' => 'global',
+            'rows' => 22,
+        ],
+    ]);
+
+    $response->assertSuccessful();
+
+    expect($response->content())
+        ->toBeJson()
+        ->and($response->json('users'))
+        ->toBeArray()
+        ->toHaveKeys([
+            'page_name', 'current_page', 'data', 'first_page_url', 'from', 'last_page', 'last_page_url',
+            'links', 'next_page_url', 'path', 'per_page', 'prev_page_url', 'to', 'total',
+        ])
+        ->and($response->json('users.total'))
+        ->toEqual(101)
+        ->and($response->json('users.page_name'))
+        ->toEqual('foo')
+        ->and($response->json('users.current_page'))
+        ->toEqual(2)
+        ->and($response->json('users.data'))
+        ->toBeArray()
+        ->toHaveCount(22)
+        ->and($response->json('users.data.0'))
+        ->toHaveKey('id')
+        ->toBeArray()
+        ->toHaveCount(1);
 });

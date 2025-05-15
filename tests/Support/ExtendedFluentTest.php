@@ -1,6 +1,10 @@
 <?php
 
+use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use LaravelToolkit\Support\AsExtendedFluent;
 use LaravelToolkit\Support\ExtendedFluent;
+use LaravelToolkit\Tests\Model\User;
+use LaravelToolkit\Tests\Support\FooBarExtendedFluent;
 
 it('test extended fluent', function () {
     $fluent = new class extends ExtendedFluent
@@ -28,4 +32,29 @@ it('test extended fluent', function () {
         ->toEqual('Foo')
         ->and($fluent->last_name)
         ->toEqual('Bar');
+});
+
+it('test extended cast', function () {
+
+    $cast = AsExtendedFluent::castUsing([FooBarExtendedFluent::class]);
+    $model = new User;
+
+    expect(AsExtendedFluent::of(FooBarExtendedFluent::class))
+        ->toEqual(AsExtendedFluent::class.':'.FooBarExtendedFluent::class)
+        ->and(fn () => AsExtendedFluent::castUsing(['invalid_class']))
+        ->toThrow('Class invalid_class does not exist.')
+        ->and(fn () => AsExtendedFluent::castUsing([AsExtendedFluent::class]))
+        ->toThrow('Class LaravelToolkit\Support\AsExtendedFluent does not extend ExtendedFluent.')
+        ->and($cast)
+        ->toBeInstanceOf(CastsAttributes::class)
+        ->and($cast->get($model, 'foo', '----', []))
+        ->toBe('----')
+        ->and($cast->get($model, 'foo', '{"id": 2}', []))
+        ->toBeInstanceOf(FooBarExtendedFluent::class)
+        ->and($cast->get($model, 'foo', '{"id": 2}', []))
+        ->toBeInstanceOf(FooBarExtendedFluent::class)
+        ->and($cast->set($model, 'foo', new FooBarExtendedFluent(['id' => 2]), []))
+        ->toBeJson()
+        ->and($cast->set($model, 'foo', 'invalid', []))
+        ->toBe('invalid');
 });
