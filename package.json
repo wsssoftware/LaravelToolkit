@@ -1,6 +1,7 @@
 {
   "name": "laraveltoolkit",
   "version": "1.9.12",
+  "type": "module",
   "description": "A Laravel Tools",
   "main": "resources/js/index.ts",
   "directories": {
