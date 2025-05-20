@@ -1,5 +1,6 @@
 <template>
     <slot
+        :first="1 + ((page - 1) * rows)"
         :currentSort="sort ?? []"
         :loading="loading"
         :filter="onFilter"
@@ -24,6 +25,14 @@ import {
 import {router} from "@inertiajs/vue3";
 import {debounce} from "lodash-es";
 import Cookies from 'js-cookie'
+import MD5 from 'crypto-js/md5'
+
+
+type PreserveData = {
+    sort: DataTableSortMeta[] | undefined,
+    filters: DataTableFilterMeta,
+    page: number,
+}
 
 export default defineComponent({
     name: "DataTableAdapter",
@@ -41,8 +50,7 @@ export default defineComponent({
             type: String,
             required: true,
         },
-        rememberFiltersKey: String,
-        rememberSortKey: String,
+        preserveState: Boolean,
         rows: {
             type: Number,
             default: 15
@@ -50,33 +58,18 @@ export default defineComponent({
     },
     emits: ['update:filters'],
     computed: {
-        fRememberFiltersKey(): string | undefined {
-            if (this.rememberFiltersKey === undefined) {
-                return undefined
-            }
-            return `datatable_filters_${this.rememberFiltersKey}`
-        },
-        fRememberSortKey(): string | undefined {
-            if (this.rememberSortKey === undefined) {
-                return undefined
-            }
-            return `datatable_sort_${this.rememberSortKey}`
+        preserveStateKey(): string {
+            let host = location.host;
+            let path = location.pathname;
+            return 'datatable_' + MD5(`${host}::${path}::${this.propName}`)
         },
         localFilters: {
             get(): DataTableFilterMeta {
                 return this.filters ?? this.lFilters
             },
             set(value: DataTableFilterMeta) {
-                if (this.rememberFiltersKey) {
-                    let expire = new Date();
-                    expire.setHours(expire.getHours() + 2);
-                    Cookies.set(
-                        this.fRememberFiltersKey,
-                        JSON.stringify(value),
-                        {expires: expire}
-                    )
-                }
                 this.lFilters = value;
+                this.remember()
                 this.$emit('update:filters', value)
             },
         },
@@ -97,22 +90,21 @@ export default defineComponent({
             loading: false,
             page: 1,
             sort: [] as DataTableSortMeta[] | undefined,
+            cancelToken: null as null | (() => void),
+            preservedGot: false,
         }
     },
     beforeMount() {
-        if (this.rememberFiltersKey) {
+        if (this.preserveState) {
             try {
-                this.localFilters = JSON.parse(Cookies.get(this.fRememberFiltersKey));
+                let preserved: PreserveData = JSON.parse(Cookies.get(this.preserveStateKey));
+                this.localFilters = preserved.filters;
+                this.sort = preserved.sort;
+                this.page = preserved.page;
             } catch (e) {
                 //
             }
-        }
-        if (this.rememberSortKey) {
-            try {
-                this.sort = JSON.parse(Cookies.get(this.fRememberSortKey));
-            } catch (e) {
-                //
-            }
+            this.preservedGot = true;
         }
         if (this.paginator === undefined) {
             this.load();
@@ -133,6 +125,7 @@ export default defineComponent({
         },
         onPage(event: DataTablePageEvent) {
             this.page = event.page + 1
+            this.remember();
         },
         onSort(event: DataTableSortEvent) {
             if (event.sortField !== null) {
@@ -140,19 +133,7 @@ export default defineComponent({
             } else {
                 this.sort = event.multiSortMeta
             }
-            if (this.rememberSortKey) {
-                if (this.sort.length > 0) {
-                    let expire = new Date();
-                    expire.setHours(expire.getHours() + 2);
-                    Cookies.set(
-                        this.fRememberSortKey,
-                        JSON.stringify(this.sort),
-                        {expires: expire}
-                    )
-                } else {
-                    Cookies.remove(this.fRememberSortKey)
-                }
-            }
+            this.remember()
         },
         load(): void {
             this.loading = true
@@ -172,17 +153,41 @@ export default defineComponent({
                 if (this.page !== 1) {
                     data[this.pageName] = this.page
                 }
-                router.cancelAll();
+                if (typeof this.cancelToken === 'function') {
+                    this.cancelToken();
+                }
                 router.reload({
+                    onCancelToken: (cancelToken) => {
+                        this.cancelToken = cancelToken;
+                    },
                     method: 'post',
                     only: [this.propName],
                     data: data,
                     replace: true,
                     async: false,
-                    onSuccess: () => this.loading = false
+                    onSuccess: () => this.loading = false,
+                    onFinish: () => {
+                        this.cancelToken = null;
+                    }
                 })
             })
 
+        },
+        remember(): void {
+            if (this.preserveState && this.preservedGot) {
+                let data: PreserveData = {
+                    filters: this.lFilters,
+                    sort: this.sort,
+                    page: this.page,
+                }
+                let expire = new Date();
+                expire.setHours(expire.getHours() + 2);
+                Cookies.set(
+                    this.preserveStateKey,
+                    JSON.stringify(data),
+                    {expires: expire}
+                )
+            }
         }
     },
     watch: {
