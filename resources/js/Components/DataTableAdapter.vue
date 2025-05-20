@@ -25,7 +25,7 @@ import {
 import {router} from "@inertiajs/vue3";
 import {debounce} from "lodash-es";
 import Cookies from 'js-cookie'
-import md5 from 'crypto-js/md5';
+import md5 from 'js-md5';
 
 
 type PreserveData = {
