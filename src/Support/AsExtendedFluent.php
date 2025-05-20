@@ -23,6 +23,7 @@ class AsExtendedFluent implements Castable
 
     public static function castUsing(array $arguments): CastsAttributes
     {
+
         return new class($arguments[0]) implements CastsAttributes
         {
             public function __construct(
@@ -48,7 +49,7 @@ class AsExtendedFluent implements Castable
             public function set(Model $model, string $key, mixed $value, array $attributes)
             {
                 if ($value instanceof ExtendedFluent) {
-                    return $value->toJson();
+                    return json_encode($value->getAttributes());
                 }
 
                 return $value;

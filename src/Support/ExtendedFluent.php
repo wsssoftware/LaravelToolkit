@@ -2,6 +2,7 @@
 
 namespace LaravelToolkit\Support;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Fluent;
 use ReflectionClass;
@@ -44,5 +45,16 @@ abstract class ExtendedFluent extends Fluent
         }
 
         return $value;
+    }
+
+    public function toArray(): array
+    {
+        $values = [];
+        foreach ($this->getAttributes() as $key => $value) {
+            $value = $this->{$key};
+            $values[$key] = $value instanceof Arrayable ? $value->toArray() : $value;
+        }
+
+        return $values;
     }
 }
