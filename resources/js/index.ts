@@ -24,7 +24,7 @@ export {getInstance as getThemeInstance} from './Theme'
 export {filepondServer} from './Filepond'
 export {default as LaravelToolkitPlugin} from './LaravelToolkitPlugin'
 export {default as ToastReceiver} from './ToastReceiver'
-export {isUUID, isURL} from './Utils'
+export {isUUID, isURL, md5} from './Utils'
 
 export type {FilepondServer} from './Filepond'
 
@@ -58,16 +58,16 @@ export type SEOEntity = {
 
 export type OnlyValuesUserPermissions = {
     [key: string]: boolean
-}|null
+} | null
 export type UserPermissions = {
     id: string,
     policy_column: string,
     policy_name: string,
-    policy_description: null|string,
+    policy_description: null | string,
     rule_key: string,
     rule_name: string,
-    rule_description: null|string,
-    rule_deny_status: null|number,
+    rule_description: null | string,
+    rule_deny_status: null | number,
     rule_value: boolean,
 }[]
 
@@ -75,19 +75,19 @@ export type Paginator<T> = {
     page_name: string,
     current_page: number,
     data: T[],
-    first_page_url: string|null,
+    first_page_url: string | null,
     from: number,
     last_page: number,
-    last_page_url: string|null,
+    last_page_url: string | null,
     links: {
-        url: string|null,
+        url: string | null,
         label: string,
         active: boolean,
     }[],
-    next_page_url: string|null,
+    next_page_url: string | null,
     path: string,
     per_page: number,
-    prev_page_url: string|null,
+    prev_page_url: string | null,
     to: number,
     total: number,
 }

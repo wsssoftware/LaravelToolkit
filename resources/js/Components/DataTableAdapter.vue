@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import {defineComponent, nextTick, PropType} from "vue";
-import {Paginator} from "../index";
+import {md5, Paginator} from "../index";
 import {
     DataTableFilterEvent,
     DataTableFilterMeta,
@@ -25,9 +25,6 @@ import {
 import {router} from "@inertiajs/vue3";
 import {debounce} from "lodash-es";
 import Cookies from 'js-cookie'
-import SparkMD5 from 'spark-md5';
-
-const md5 = SparkMD5.hash;
 
 
 type PreserveData = {
