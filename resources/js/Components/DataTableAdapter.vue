@@ -25,7 +25,7 @@ import {
 import {router} from "@inertiajs/vue3";
 import {debounce} from "lodash-es";
 import Cookies from 'js-cookie'
-import * as CryptoJS from 'crypto-js';
+import md5 from 'crypto-js/md5';
 
 
 type PreserveData = {
@@ -61,7 +61,7 @@ export default defineComponent({
         preserveStateKey(): string {
             let host = location.host;
             let path = location.pathname;
-            return 'datatable_' + CryptoJS.MD5(`${host}::${path}::${this.propName}`).toString();
+            return 'datatable_' + md5(`${host}::${path}::${this.propName}`).toString();
         },
         localFilters: {
             get(): DataTableFilterMeta {
