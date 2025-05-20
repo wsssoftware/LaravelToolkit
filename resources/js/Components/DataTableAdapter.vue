@@ -25,7 +25,7 @@ import {
 import {router} from "@inertiajs/vue3";
 import {debounce} from "lodash-es";
 import Cookies from 'js-cookie'
-import CryptoJS from 'crypto-js';
+import * as CryptoJS from 'crypto-js';
 
 
 type PreserveData = {
