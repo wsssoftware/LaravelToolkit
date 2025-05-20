@@ -25,7 +25,9 @@ import {
 import {router} from "@inertiajs/vue3";
 import {debounce} from "lodash-es";
 import Cookies from 'js-cookie'
-import md5 from 'js-md5';
+import SparkMD5 from 'spark-md5';
+
+const md5 = SparkMD5.hash;
 
 
 type PreserveData = {
