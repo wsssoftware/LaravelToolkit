@@ -2,6 +2,8 @@
 
 namespace LaravelToolkit\Support;
 
+use ArrayAccess;
+use BackedEnum;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Fluent;
@@ -47,12 +49,65 @@ abstract class ExtendedFluent extends Fluent
         return $value;
     }
 
+    public function toStorageArray(): array
+    {
+        $values = [];
+        foreach ($this->getAttributes() as $key => $value) {
+            $values[$key] = $this->normalizeStorage($this->{$key});
+        }
+
+        return $values;
+    }
+
+    protected function normalizeStorage(mixed $value): mixed
+    {
+        return match (true) {
+            $value instanceof ExtendedFluent => $value->toStorageArray(),
+            $value instanceof ArrayAccess || is_array($value) => $this->normalizeArrayAccessStorage($value),
+            $value instanceof BackedEnum => $value->value,
+            default => $value
+        };
+    }
+
+    protected function normalizeArrayAccessStorage(ArrayAccess|array $arrayAccess): array
+    {
+        $values = [];
+        foreach ($arrayAccess as $key => $item) {
+            $values[$key] = $this->normalizeStorage($item);
+        }
+
+        return $values;
+    }
+
+    public function toStorageJson($options = 0): string
+    {
+        return json_encode($this->toStorageArray(), $options);
+    }
+
     public function toArray(): array
     {
         $values = [];
         foreach ($this->getAttributes() as $key => $value) {
-            $value = $this->{$key};
-            $values[$key] = $value instanceof Arrayable ? $value->toArray() : $value;
+            $values[$key] = $this->normalizeArray($this->{$key});
+        }
+
+        return $values;
+    }
+
+    protected function normalizeArray(mixed $value): mixed
+    {
+        return match (true) {
+            $value instanceof Arrayable => $value->toArray(),
+            $value instanceof ArrayAccess || is_array($value) => $this->normalizeArrayAccessArray($value),
+            default => $value
+        };
+    }
+
+    protected function normalizeArrayAccessArray(ArrayAccess|array $arrayAccess): array
+    {
+        $values = [];
+        foreach ($arrayAccess as $key => $item) {
+            $values[$key] = $this->normalizeArray($item);
         }
 
         return $values;

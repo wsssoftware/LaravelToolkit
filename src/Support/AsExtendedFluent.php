@@ -49,7 +49,7 @@ class AsExtendedFluent implements Castable
             public function set(Model $model, string $key, mixed $value, array $attributes)
             {
                 if ($value instanceof ExtendedFluent) {
-                    return json_encode($value->getAttributes());
+                    return $value->toStorageJson();
                 }
 
                 return $value;

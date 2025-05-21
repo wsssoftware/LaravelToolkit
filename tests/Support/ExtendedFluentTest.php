@@ -5,6 +5,7 @@ use LaravelToolkit\Support\AsExtendedFluent;
 use LaravelToolkit\Support\ExtendedFluent;
 use LaravelToolkit\Tests\Model\User;
 use LaravelToolkit\Tests\Support\FooBarExtendedFluent;
+use LaravelToolkit\Tests\Support\TestEnum;
 
 it('test extended fluent', function () {
     $fluent = new class extends ExtendedFluent
@@ -19,19 +20,59 @@ it('test extended fluent', function () {
                 },
             );
         }
+
+        protected function enumValue(): \Illuminate\Database\Eloquent\Casts\Attribute
+        {
+            return \Illuminate\Database\Eloquent\Casts\Attribute::make(
+                get: fn ($value) => TestEnum::from($value),
+            );
+        }
     };
 
+    $fluent->enum_value = 'a';
     $fluent->name = 'Paul';
     $fluent->last_name = 'Job';
+    $fluent->array_value = collect(['enum' => TestEnum::B]);
+    $fluent->array_values = [
+        ['enum' => TestEnum::C],
+    ];
 
     expect($fluent->full_name)
         ->toEqual('Paul Job');
 
     $fluent->full_name = 'Foo Bar';
+
+    $array = $fluent->toArray();
+    $storageArray = $fluent->toStorageArray();
     expect($fluent->name)
         ->toEqual('Foo')
         ->and($fluent->last_name)
-        ->toEqual('Bar');
+        ->toEqual('Bar')
+        ->and($fluent->enum_value)
+        ->toEqual(TestEnum::A)
+        ->and($array)
+        ->toBeArray()
+        ->and($array['enum_value'])
+        ->toBeArray()
+        ->toHaveKey('id')
+        ->and($array['array_value'])
+        ->toBeArray()
+        ->toHaveKey('enum.id')
+        ->and($array['array_values'])
+        ->toBeArray()
+        ->toHaveKey('0.enum.id')
+        ->and($storageArray)
+        ->toBeArray()
+        ->and($storageArray['enum_value'])
+        ->toBe('a')
+        ->and($storageArray['array_value'])
+        ->toBeArray()
+        ->and($storageArray['array_value']['enum'])
+        ->toBe('b')
+        ->and($storageArray['array_values'])
+        ->toBeArray()
+        ->and($storageArray['array_values'][0]['enum'])
+        ->toBe('c');
 });
 
 it('test extended casts', function () {
