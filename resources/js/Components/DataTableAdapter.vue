@@ -14,7 +14,8 @@
 
 <script lang="ts">
 import {defineComponent, nextTick, PropType} from "vue";
-import {md5, Paginator} from "../index";
+import {md5} from "../Utils";
+import {Paginator} from "../index";
 import {
     DataTableFilterEvent,
     DataTableFilterMeta,
@@ -68,7 +69,6 @@ export default defineComponent({
             },
             set(value: DataTableFilterMeta) {
                 this.lFilters = value;
-                this.remember()
                 this.$emit('update:filters', value)
             },
         },
@@ -117,6 +117,8 @@ export default defineComponent({
     methods: {
         onFilter(event: DataTableFilterEvent) {
             this.localFilters = event.filters;
+            this.page = 1;
+            this.remember()
             this.load();
         },
         onManualFilter(filters: DataTableFilterMeta) {
